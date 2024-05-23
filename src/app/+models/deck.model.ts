@@ -22,6 +22,10 @@ export class Deck {
         return new Deck(cards);
     }
 
+    clone(): Deck {
+        return new Deck([...this.cards]);
+    }
+
     extractCharacterDeck(): Deck {
         const characters = new Deck(this.cards.filter(card => card.value >= 8));
         this.cards = this.cards.filter(card => card.value < 8);

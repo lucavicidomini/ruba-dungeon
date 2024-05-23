@@ -5,6 +5,10 @@ import { Character } from '../+models/character.model';
 
 export const draw = createAction('[Game] Draw');
 
+export const error = createAction('[Game] Error',
+    props<{ error: any }>()
+);
+
 export const uncover = createAction('[Game] Uncover',
     props<{ event: Deck, dungeon: Deck }>()
 );

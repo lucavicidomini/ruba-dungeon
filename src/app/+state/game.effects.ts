@@ -17,13 +17,14 @@ export class GamesEffects {
       this.store.select(GameSelectors.selectEventDeck),
       this.store.select(GameSelectors.selectDungeonDeck),
     ),
-    map(([, event, dungeon]) => {
-      console.log('draw')
+    map(([, eventIm, dungeonIm]) => {
+      const event = eventIm.clone();
+      const dungeon = dungeonIm.clone();
       const eventCard = dungeon.pop();
-      if (eventCard) {
-        event.push(eventCard);
+      if (!eventCard) {
+        return GameActions.error({ error: 'Dungeon deck is empty' });
       }
-
+      event.push(eventCard);
       return GameActions.uncover({ event, dungeon });
     })
   ));
