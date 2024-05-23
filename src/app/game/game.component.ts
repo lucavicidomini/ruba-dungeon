@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { DeckComponent } from '../deck/deck.component';
 import { CardComponent } from '../card/card.component';
 import { CharacterComponent } from '../character/character.component';
+import { StatusIsDirective } from '../directives/status-is.directive';
+import { GameStatus } from '../+models/game.model';
 
 @Component({
   selector: 'app-game',
@@ -13,11 +15,14 @@ import { CharacterComponent } from '../character/character.component';
     CardComponent,
     CharacterComponent,
     DeckComponent,
+    StatusIsDirective,
   ],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss'
 })
 export class GameComponent implements OnInit {
+
+  GameStatus = GameStatus;
 
   aidDeck$ = this.gameFacade.aidDeck$;
 
