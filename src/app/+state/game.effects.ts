@@ -16,11 +16,12 @@ export class GamesEffects {
         const heroHp = 12;
         const character = dungeon.extractCharacterDeck();
         const relic = dungeon.extractRelicDeck();
+        const aid = Deck.empty();
+        const catacomb = Deck.empty();
         const event = Deck.empty();
         const gold = Deck.empty();
-        const aid = Deck.empty();
         dungeon.shuffle();
-        return GameActions.setup({ dungeon, heroCard, heroHp, character, relic, event, gold, aid });
+        return GameActions.setup({ aid, catacomb, dungeon, character, event, gold, relic, heroCard, heroHp });
     })
   ));
 

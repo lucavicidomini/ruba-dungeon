@@ -7,12 +7,13 @@ export const start = createAction('[Game] Start');
 export const setup = createAction(
     '[Game] Setup',
     props<{
-        dungeon: Deck,
+        aid: Deck,
+        catacomb: Deck,
         character: Deck,
-        relic: Deck,
+        dungeon: Deck,
         event: Deck,
         gold: Deck,
-        aid: Deck,
+        relic: Deck,
         heroHp: number,
         heroCard: Card;
     }>()

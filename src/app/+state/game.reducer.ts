@@ -8,12 +8,13 @@ export const GAME_STATE_KEY = 'game';
 
 export interface GameState {
   decks: {
-    dungeon: Deck;
+    aid: Deck;
+    catacomb: Deck;
     character: Deck;
-    relic: Deck;
+    dungeon: Deck;
     event: Deck;
     gold: Deck;
-    aid: Deck;
+    relic: Deck;
   };
   hero: {
     hp: number;
@@ -24,12 +25,13 @@ export interface GameState {
 
 export const initialState: GameState = {
   decks: {
-    dungeon: Deck.empty(),
+    aid: Deck.empty(),
+    catacomb: Deck.empty(),
     character: Deck.empty(),
-    relic: Deck.empty(),
+    dungeon: Deck.empty(),
     event: Deck.empty(),
     gold: Deck.empty(),
-    aid: Deck.empty(),
+    relic: Deck.empty(),
   },
   hero: {
     hp: 0,
@@ -40,15 +42,16 @@ export const initialState: GameState = {
 export const gameReducer = createReducer(
   initialState,
 
-  on(ScoreboardPageActions.setup, (state, { dungeon, character, relic, event, gold, aid, heroHp, heroCard }) => ({
+  on(ScoreboardPageActions.setup, (state, { aid, catacomb, character, dungeon, event, gold, relic, heroHp, heroCard }) => ({
     ...state,
     decks: {
-      dungeon,
+      aid,
+      catacomb,
       character,
-      relic,
+      dungeon,
       event,
       gold,
-      aid,
+      relic,
     },
     hero: {
       hp: heroHp,
