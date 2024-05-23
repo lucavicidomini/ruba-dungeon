@@ -48,7 +48,8 @@ export const gameReducer = createReducer(
       ... state.decks,
       event,
       dungeon,
-    }
+    },
+    status: GameStatus.CRAWL_ACT,
   })),
 
   on(GameActions.setup, (state, { aid, catacomb, character, dungeon, event, gold, relic, obtainedRelic, hero }) => ({
@@ -64,6 +65,7 @@ export const gameReducer = createReducer(
       obtainedRelic,
     },
     hero,
+    status: GameStatus.CRAWL_READY,
   })),
 
 );
