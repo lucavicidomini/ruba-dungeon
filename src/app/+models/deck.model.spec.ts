@@ -32,9 +32,25 @@ describe ('Deck', () => {
 
     });
 
-    describe('pop() and push()', () => {
+    describe('When deck is empty', () => {
 
-        it('Should pop() the last push()\'ed card', () => {
+        it('pop() should return undefined', () => {
+            const deck = Deck.empty();
+            const actualCard = deck.pop();
+            expect(actualCard).toBeUndefined();
+        });
+
+        it('peek() should return undefined', () => {
+            const deck = Deck.empty();
+            const actualCard = deck.peek();
+            expect(actualCard).toBeUndefined();
+        });
+
+    });
+
+    describe('When deck is not empty', () => {
+
+        it('Should pop the last pushed card', () => {
             const deck = Deck.empty();
             const expectedCard = new Card(5, 'coins');
             deck.push(new Card(1, 'clubs'));
@@ -43,21 +59,16 @@ describe ('Deck', () => {
             expect(actualCard).toEqual(expectedCard);
         });
 
-        describe('When deck is empty', () => {
-
-            it('Should pop() undefined', () => {
-                const deck = Deck.empty();
-                const actualCard = deck.pop();
-                expect(actualCard).toBeUndefined();
-            });
-
+        it('Should peek the last pushed card', () => {
+            const deck = Deck.empty();
+            const expectedCard = new Card(5, 'coins');
+            deck.push(new Card(1, 'clubs'));
+            deck.push(expectedCard);
+            const actualCard = deck.peek();
+            expect(actualCard).toEqual(expectedCard);
         });
 
-    });
-
-    describe('popPlayerCard()', () => {
-
-        it('Should pop() a card with value 8 or 9', () => {
+        it('Should pop a player card a card with value 8 or 9', () => {
             const deck = Deck.full();
             const playerCard = deck.popPlayerCard();
             expect(playerCard).toBeDefined();
@@ -66,10 +77,6 @@ describe ('Deck', () => {
             expect(deck.length).toEqual(DECK_LENGTH_FULL - 1);
         });
 
-    });
-
-    describe('extractCharacterDeck()', () => {
-
         it('Should extract all card in deck with value 8 or 9', () => {
             const deck = Deck.full();
             deck.popPlayerCard();
@@ -77,10 +84,6 @@ describe ('Deck', () => {
             expect(extractedDeck.length).toEqual(CHARACTERS_COUNT - 1);
             expect(deck.length).toBe(DECK_LENGTH_FULL - CHARACTERS_COUNT)
         });
-
-    });
-
-    describe('extractRelicDeck()', () => {
 
         it('Should extract all card in deck with value 1', () => {
             const deck = Deck.full();

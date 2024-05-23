@@ -34,6 +34,10 @@ export class Deck {
         return relics;
     }
 
+    peek(): Card | undefined {
+        return this.cards[this.cards.length - 1];
+    }
+
     pop(): Card | undefined {
         return this.cards.pop();
     }
