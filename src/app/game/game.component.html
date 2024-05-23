@@ -3,7 +3,7 @@
     <tr>
         <td>
             <!-- 1 - Dungeon Deck -->
-
+            <app-deck *ngIf="dungeonDeck$ | async as dungeonDeck" [deck]="dungeonDeck"></app-deck>
         </td>
 
         <td>

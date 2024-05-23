@@ -8,3 +8,8 @@ export const selectStatus = createSelector(
   selectFeature,
   (state: GameState) => state.status
 );
+
+export const selectDungeonDeck = createSelector(
+  selectFeature,
+  (state: GameState) => state.decks.dungeon
+);

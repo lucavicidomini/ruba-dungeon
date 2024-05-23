@@ -8,6 +8,8 @@ export class GameFacade {
 
     private store = inject(Store);
 
+    dungeonDeck$ = this.store.select(GameSelectors.selectDungeonDeck);
+
     status$ = this.store.select(GameSelectors.selectStatus);
 
     start() {
