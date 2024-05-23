@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { GameFacade } from './+state/game.facade';
 
 @Component({
   selector: 'app-root',
@@ -10,15 +9,8 @@ import { GameFacade } from './+state/game.facade';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
 
   title = 'ruba-dungeon';
 
-  constructor(
-    private gameFacade: GameFacade,
-  ) {}
-
-  ngOnInit(): void {
-     this.gameFacade.start(); 
-  }
 }

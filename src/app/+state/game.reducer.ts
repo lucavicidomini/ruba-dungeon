@@ -2,8 +2,11 @@ import { Action, createReducer, on } from '@ngrx/store';
 import * as ScoreboardPageActions from './game.actions';
 import { Deck } from '../+models/deck.model';
 import { Card } from '../+models/card.model';
+import { GameStatus } from '../+models/game.model';
 
-export interface State {
+export const GAME_STATE_KEY = 'game';
+
+export interface GameState {
   decks: {
     dungeon: Deck;
     character: Deck;
@@ -16,9 +19,10 @@ export interface State {
     hp: number;
     card?: Card;
   }
+  status: GameStatus;
 }
 
-export const initialState: State = {
+export const initialState: GameState = {
   decks: {
     dungeon: Deck.empty(),
     character: Deck.empty(),
@@ -29,7 +33,8 @@ export const initialState: State = {
   },
   hero: {
     hp: 0,
-  }
+  },
+  status: GameStatus.GAME_INIT,
 };
 
 export const gameReducer = createReducer(
