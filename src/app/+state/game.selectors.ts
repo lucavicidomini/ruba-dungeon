@@ -19,6 +19,11 @@ export const selectCharacterDeck = createSelector(
   (state: GameState) => state.decks.character
 );
 
+export const selectDice = createSelector(
+  selectFeature,
+  (state: GameState) => state.dice
+);
+
 export const selectDungeonDeck = createSelector(
   selectFeature,
   (state: GameState) => state.decks.dungeon

@@ -7,4 +7,7 @@ export enum GameStatus {
 
     /** Player draw a card */
     CRAWL_ACT = 'CRAWL_ACT',
+
+    /** Dice was thrown and user can acknowledge it */
+    RESOLVE_THREW_DICE = 'RESOLVE_THREW_DICE',
 }

@@ -10,16 +10,17 @@ export class Character {
         private characterHp: number,
     ) {}
 
+    updateHp(deltaHp: number) {
+        const hp = Math.max(Character.HP_MIN, Math.min(Character.HP_MAX, this.characterHp + deltaHp));
+        return new Character(this.characterCard, hp);
+    }
+
     get card(): Card {
         return this.characterCard;
     }
 
     get hp(): number {
         return this.characterHp;
-    }
-
-    set hp(value: number) {
-        this.characterHp = Math.max(Character.HP_MIN, Math.min(Character.HP_MAX, value));
     }
 
 }

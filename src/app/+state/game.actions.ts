@@ -18,6 +18,17 @@ export const error = createAction('[Game] Error',
     props<{ error: any }>()
 );
 
+export const resolveCard = createAction('[Game] Resolve Card');
+
+export const resolvedCard = createAction(
+    '[Game] Resolved Card',
+    props<{ hpDelta: number }>()
+);
+
+export const resolveCardSuccess = createAction('[Game] Resolve Success');
+
+export const resolveCardFailure = createAction('[Game] Resolve Failure');
+
 export const setup = createAction(
     '[Game] Setup',
     props<{
@@ -34,3 +45,11 @@ export const setup = createAction(
 );
 
 export const start = createAction('[Game] Start');
+
+export const throwDice = createAction('[Game] Throw Dice');
+
+export const threwDice = createAction(
+    '[Game] Threw Dice',
+    props<{ dice: number }>()
+);
+

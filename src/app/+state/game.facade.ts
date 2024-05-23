@@ -10,23 +10,25 @@ export class GameFacade {
 
     aidDeck$ = this.store.select(GameSelectors.selectAidDeck);
 
-    enemy$ = this.store.select(GameSelectors.selectEnemy);
-
-    eventCard$ = this.store.select(GameSelectors.selectEventCard);
-
     catacombDeck$ = this.store.select(GameSelectors.selectCatacombDeck);
 
     characterDeck$ = this.store.select(GameSelectors.selectCharacterDeck);
+    
+    dice$ = this.store.select(GameSelectors.selectDice);
 
     dungeonDeck$ = this.store.select(GameSelectors.selectDungeonDeck);
+    
+    enemy$ = this.store.select(GameSelectors.selectEnemy);
+
+    eventCard$ = this.store.select(GameSelectors.selectEventCard);
 
     goldDeck$ = this.store.select(GameSelectors.selectGoldDeck);
 
     hero$ = this.store.select(GameSelectors.selectHero);
 
-    relicDeck$ = this.store.select(GameSelectors.selectRelicDeck);
-
     obtainedRelicDeck$ = this.store.select(GameSelectors.selectObtainedRelicDeck);
+
+    relicDeck$ = this.store.select(GameSelectors.selectRelicDeck);
 
     status$ = this.store.select(GameSelectors.selectStatus);
 
@@ -40,9 +42,17 @@ export class GameFacade {
         this.store.dispatch(GameActions.draw());
     }
 
+    resolveDice() {
+        this.store.dispatch(GameActions.resolveCard());
+    }
+
     /** Starts a new game */
     start() {
         this.store.dispatch(GameActions.start());
+    }
+
+    throwDice() {
+        this.store.dispatch(GameActions.throwDice())
     }
 
 }

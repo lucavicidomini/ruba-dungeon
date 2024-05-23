@@ -30,6 +30,8 @@ export class GameComponent implements OnInit {
   catacombDeck$ = this.gameFacade.catacombDeck$;
 
   characterDeck$ = this.gameFacade.characterDeck$;
+
+  dice$ = this.gameFacade.dice$;
   
   enemy$ = this.gameFacade.enemy$;
 
@@ -67,8 +69,16 @@ export class GameComponent implements OnInit {
     return status === GameStatus.CRAWL_ACT && eventCard.suit === 'swords';
   }
 
+  enableDraw(status: GameStatus): boolean {
+    return status === GameStatus.CRAWL_READY;
+  }
+
   enableDice(status: GameStatus, eventCard: Card): boolean {
     return status === GameStatus.CRAWL_ACT && (eventCard.suit === 'clubs' || eventCard.suit === 'cups');
+  }
+
+  enableDiceOk(status: GameStatus): boolean {
+    return status === GameStatus.RESOLVE_THREW_DICE;
   }
 
   onBribe() {
@@ -88,7 +98,11 @@ export class GameComponent implements OnInit {
   }
 
   onDice() {
+    this.gameFacade.throwDice();
+  }
 
+  onDiceOk() {
+    this.gameFacade.resolveDice();
   }
 
 }

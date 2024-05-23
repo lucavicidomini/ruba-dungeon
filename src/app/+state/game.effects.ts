@@ -32,7 +32,7 @@ export class GamesEffects {
     })
   ));
 
-  drawn$ = createEffect(() => this.actions$.pipe(
+  draw$ = createEffect(() => this.actions$.pipe(
     ofType(GameActions.draw),
     withLatestFrom(
       this.store.select(GameSelectors.selectEventDeck),
@@ -50,6 +50,69 @@ export class GamesEffects {
     })
   ));
 
+  resolveCard$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.resolveCard),
+    withLatestFrom(
+      this.store.select(GameSelectors.selectEventCard),
+      this.store.select(GameSelectors.selectDice),
+    ),
+    map(([, eventCard, dice]) => {
+      if (dice === 1) {
+        return GameActions.resolveCardFailure()
+      }
+
+      if (dice === 6) {
+        return GameActions.resolveCardSuccess();
+      }
+
+      const eventCardValue = eventCard?.value;
+
+      if (!dice || !eventCardValue) {
+        return GameActions.error({ error: `Invalid state for action ${GameActions.resolveCard.type}: dice=${dice}, eventCardValue=${eventCardValue}` });
+      }
+
+      if (dice >= eventCardValue) {
+        return GameActions.resolveCardSuccess();
+      }
+
+      return GameActions.resolveCardFailure();
+    }),
+  ));
+
+  resolveCardFailure$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.resolveCardFailure),
+    withLatestFrom(
+      this.store.select(GameSelectors.selectEventCard),
+    ),
+    map(([, eventCard]) => {
+      const eventCardSuit = eventCard?.suit;
+      let hpDelta = 0;
+
+      if (eventCardSuit === 'clubs' || eventCardSuit == 'cups') {
+        hpDelta = -Math.floor((eventCard?.value ?? 0) / 2);
+      }
+
+      return GameActions.resolvedCard({ hpDelta });
+    })
+  ));
+
+  resolveCardSuccess$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.resolveCardSuccess),
+    withLatestFrom(
+      this.store.select(GameSelectors.selectEventCard),
+    ),
+    map(([, eventCard]) => {
+      const eventCardSuit = eventCard?.suit;
+      let hpDelta = 0;
+
+      if (eventCardSuit === 'cups') {
+        hpDelta = eventCard?.value ?? 0;
+      }
+
+      return GameActions.resolvedCard({ hpDelta });
+    })
+  ));
+
   start$ = createEffect(() => this.actions$.pipe(
     ofType(GameActions.start),
     map(() => {
@@ -64,6 +127,14 @@ export class GamesEffects {
         const obtainedRelic = Deck.empty();
         dungeon.shuffle();
         return GameActions.setup({ aid, catacomb, dungeon, character, event, gold, relic, obtainedRelic, hero });
+    })
+  ));
+
+  throwDice$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.throwDice),
+    map(() => {
+      const dice = Math.floor(Math.random() * 6 + 1);
+      return GameActions.threwDice({ dice });
     })
   ));
 
