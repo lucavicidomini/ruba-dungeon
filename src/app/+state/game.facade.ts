@@ -30,6 +30,12 @@ export class GameFacade {
 
     status$ = this.store.select(GameSelectors.selectStatus);
 
+    /** Draw a card from dungeon deck */
+    draw() {
+        this.store.dispatch(GameActions.draw());
+    }
+
+    /** Starts a new game */
     start() {
         this.store.dispatch(GameActions.start());
     }

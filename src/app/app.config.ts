@@ -10,7 +10,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideStore(),
-    provideState({ name: GAME_STATE_KEY, reducer: gameReducer }),
+    // provideState({ name: GAME_STATE_KEY, reducer: gameReducer }),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
   ]
 };

@@ -39,6 +39,11 @@ export const selectEventCard = createSelector(
   (state: GameState) => state.decks.event.peek()
 );
 
+export const selectEventDeck = createSelector(
+  selectFeature,
+  (state: GameState) => state.decks.event
+);
+
 export const selectHero = createSelector(
   selectFeature,
   (state: GameState) => state.hero

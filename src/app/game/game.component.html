@@ -4,6 +4,7 @@
         <td>
             <!-- 1 - Dungeon Deck -->
             <app-deck *ngIf="dungeonDeck$ | async as deck" [deck]="deck" [cover]="true"></app-deck>
+            <button type="button" (click)="onDraw()">Draw</button>
         </td>
 
         <td>

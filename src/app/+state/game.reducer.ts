@@ -1,5 +1,5 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import * as ScoreboardPageActions from './game.actions';
+import * as GameActions from './game.actions';
 import { Deck } from '../+models/deck.model';
 import { Card } from '../+models/card.model';
 import { GameStatus } from '../+models/game.model';
@@ -42,7 +42,16 @@ export const initialState: GameState = {
 export const gameReducer = createReducer(
   initialState,
 
-  on(ScoreboardPageActions.setup, (state, { aid, catacomb, character, dungeon, event, gold, relic, obtainedRelic, hero }) => ({
+  on(GameActions.uncover, (state, { event, dungeon }) => ({
+    ... state,
+    decks: {
+      ... state.decks,
+      event,
+      dungeon,
+    }
+  })),
+
+  on(GameActions.setup, (state, { aid, catacomb, character, dungeon, event, gold, relic, obtainedRelic, hero }) => ({
     ...state,
     decks: {
       aid,

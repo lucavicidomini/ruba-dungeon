@@ -1,13 +1,32 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { EMPTY } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, withLatestFrom } from 'rxjs/operators';
 import * as GameActions from './game.actions';
+import * as GameSelectors from './game.selectors';
 import { Deck } from '../+models/deck.model';
 import { Character } from '../+models/character.model';
+import { Store } from '@ngrx/store';
+import { AppState } from './app.reducer';
 
 @Injectable()
 export class GamesEffects {
+
+  draw$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.draw),
+    withLatestFrom(
+      this.store.select(GameSelectors.selectEventDeck),
+      this.store.select(GameSelectors.selectDungeonDeck),
+    ),
+    map(([, event, dungeon]) => {
+      console.log('draw')
+      const eventCard = dungeon.pop();
+      if (eventCard) {
+        event.push(eventCard);
+      }
+
+      return GameActions.uncover({ event, dungeon });
+    })
+  ));
 
   start$ = createEffect(() => this.actions$.pipe(
     ofType(GameActions.start),
@@ -28,5 +47,6 @@ export class GamesEffects {
 
   constructor(
     private actions$: Actions,
+    private store: Store<AppState>,
   ) {}
 }

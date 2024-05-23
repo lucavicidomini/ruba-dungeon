@@ -11,7 +11,7 @@ export const routes: Routes = [
         path: 'game',
         component: GameComponent,
         providers: [
-            // provideState({ name: [GAME_STATE_KEY], reducer: gameReducer }),
+            provideState({ name: GAME_STATE_KEY, reducer: gameReducer }),
             provideEffects(GamesEffects),
             GameFacade,
         ],

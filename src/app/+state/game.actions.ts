@@ -3,7 +3,11 @@ import { Deck } from '../+models/deck.model';
 import { Card } from '../+models/card.model';
 import { Character } from '../+models/character.model';
 
-export const start = createAction('[Game] Start');
+export const draw = createAction('[Game] Draw');
+
+export const uncover = createAction('[Game] Uncover',
+    props<{ event: Deck, dungeon: Deck }>()
+);
 
 export const setup = createAction(
     '[Game] Setup',
@@ -19,3 +23,5 @@ export const setup = createAction(
         hero: Character,
     }>()
 );
+
+export const start = createAction('[Game] Start');

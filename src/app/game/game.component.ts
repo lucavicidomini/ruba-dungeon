@@ -49,4 +49,8 @@ export class GameComponent implements OnInit {
     this.gameFacade.start(); 
   }
 
+  onDraw() {
+    this.gameFacade.draw();
+  }
+
 }
