@@ -13,8 +13,13 @@
 
             <td>
                 <!-- 2 - Event Card -->
-                <app-card *ngIf="eventCard$ | async as card" [card]="card"></app-card>
-                <button type="button" *ngIf="status === GameStatus.CRAWL_ACT" (click)="onCollect()">Collect</button>
+                <ng-container *ngIf="eventCard$ | async as card">
+                    <app-card [card]="card"></app-card>
+                    <button type="button" *ngIf="enableCollect(status, card)" (click)="onCollect()">Collect</button>
+                    <button type="button" *ngIf="enableDice(status, card)" (click)="onDice()">Dice</button>
+                    <button type="button" *ngIf="enableBribe(status, card)" (click)="onBribe()">Bribe</button>
+                    <button type="button" *ngIf="enableCombat(status, card)" (click)="onCombat()">Combat</button>
+                </ng-container>
             </td>
 
             <td>

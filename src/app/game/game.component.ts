@@ -6,6 +6,7 @@ import { CardComponent } from '../card/card.component';
 import { CharacterComponent } from '../character/character.component';
 import { EnableIfStatusDirective } from '../directives/enable-if-status.directive';
 import { GameStatus } from '../+models/game.model';
+import { Card } from '../+models/card.model';
 
 @Component({
   selector: 'app-game',
@@ -54,12 +55,40 @@ export class GameComponent implements OnInit {
     this.gameFacade.start(); 
   }
 
+  enableBribe(status: GameStatus, eventCard: Card): boolean {
+    return status === GameStatus.CRAWL_ACT && eventCard.suit !== 'coins';
+  }
+
+  enableCollect(status: GameStatus, eventCard: Card): boolean {
+    return status === GameStatus.CRAWL_ACT && eventCard.suit === 'coins';
+  }
+
+  enableCombat(status: GameStatus, eventCard: Card): boolean {
+    return status === GameStatus.CRAWL_ACT && eventCard.suit === 'swords';
+  }
+
+  enableDice(status: GameStatus, eventCard: Card): boolean {
+    return status === GameStatus.CRAWL_ACT && (eventCard.suit === 'clubs' || eventCard.suit === 'cups');
+  }
+
+  onBribe() {
+    
+  }
+
   onCollect() {
     this.gameFacade.collect();
   }
 
+  onCombat() {
+
+  }
+
   onDraw() {
     this.gameFacade.draw();
+  }
+
+  onDice() {
+
   }
 
 }
