@@ -8,7 +8,7 @@
 
         <td>
             <!-- 2 - Event Card -->
-
+            <app-card *ngIf="eventCard$ | async as card" [card]="card"></app-card>
         </td>
 
         <td>
@@ -33,7 +33,7 @@
 
         <td>
             <!-- 5 - Enemy -->
-
+            <app-character *ngIf="enemy$ | async as character" [character]="character"></app-character>
         </td>
 
         <td>
@@ -60,7 +60,7 @@
 
         <td>
             <!-- 7 - Hero -->
-
+            <app-character *ngIf="hero$ | async as character" [character]="character"></app-character>
         </td>
 
         <td>
@@ -87,7 +87,7 @@
 
         <td>
             <!-- 9 - Aid (Cards are arranged vertically) -->
-
+            <app-deck *ngIf="aidDeck$ | async as deck" [deck]="deck"></app-deck>
         </td>
 
         <td>

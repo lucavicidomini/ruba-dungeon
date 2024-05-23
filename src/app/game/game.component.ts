@@ -2,12 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { GameFacade } from '../+state/game.facade';
 import { CommonModule } from '@angular/common';
 import { DeckComponent } from '../deck/deck.component';
+import { CardComponent } from '../card/card.component';
+import { CharacterComponent } from '../character/character.component';
 
 @Component({
   selector: 'app-game',
   standalone: true,
   imports: [
     CommonModule,
+    CardComponent,
+    CharacterComponent,
     DeckComponent,
   ],
   templateUrl: './game.component.html',
@@ -21,7 +25,7 @@ export class GameComponent implements OnInit {
 
   characterDeck$ = this.gameFacade.characterDeck$;
   
-  enemyCard$ = this.gameFacade.enemyCard$;
+  enemy$ = this.gameFacade.enemy$;
 
   eventCard$ = this.gameFacade.eventCard$;
 
@@ -29,7 +33,7 @@ export class GameComponent implements OnInit {
 
   goldDeck$ = this.gameFacade.goldDeck$;
 
-  heroCard$ = this.gameFacade.heroCard$;
+  hero$ = this.gameFacade.hero$;
 
   relicDeck$ = this.gameFacade.relicDeck$;
 
