@@ -11,7 +11,28 @@ import { AppState } from './app.reducer';
 @Injectable()
 export class GamesEffects {
 
-  draw$ = createEffect(() => this.actions$.pipe(
+  collect$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.collect),
+    withLatestFrom(
+      this.store.select(GameSelectors.selectEventDeck),
+      this.store.select(GameSelectors.selectGoldDeck),
+    ),
+    map(([, eventIm, goldIm]) => {
+      const event = eventIm.clone();
+      const gold = goldIm.clone();
+      const eventCard = event.pop();
+      if (!eventCard) {
+        return GameActions.error({ error: 'No event card' });
+      }
+      if (eventCard.suit !== 'coins') {
+        return GameActions.error({ error: `Event card is ${eventCard.suit} while coins where expected` });
+      }
+      gold.push(eventCard);
+      return GameActions.collected({ event, gold });
+    })
+  ));
+
+  drawn$ = createEffect(() => this.actions$.pipe(
     ofType(GameActions.draw),
     withLatestFrom(
       this.store.select(GameSelectors.selectEventDeck),
@@ -20,12 +41,12 @@ export class GamesEffects {
     map(([, eventIm, dungeonIm]) => {
       const event = eventIm.clone();
       const dungeon = dungeonIm.clone();
-      const eventCard = dungeon.pop();
-      if (!eventCard) {
+      const dungeonCard = dungeon.pop();
+      if (!dungeonCard) {
         return GameActions.error({ error: 'Dungeon deck is empty' });
       }
-      event.push(eventCard);
-      return GameActions.uncover({ event, dungeon });
+      event.push(dungeonCard);
+      return GameActions.drawn({ event, dungeon });
     })
   ));
 

@@ -30,6 +30,11 @@ export class GameFacade {
 
     status$ = this.store.select(GameSelectors.selectStatus);
 
+    /** If the event card is coins, collect it */
+    collect() {
+        this.store.dispatch(GameActions.collect());
+    }
+
     /** Draw a card from dungeon deck */
     draw() {
         this.store.dispatch(GameActions.draw());

@@ -42,7 +42,17 @@ export const initialState: GameState = {
 export const gameReducer = createReducer(
   initialState,
 
-  on(GameActions.uncover, (state, { event, dungeon }) => ({
+  on(GameActions.collected, (state, { event, gold }) => ({
+    ... state,
+    decks: {
+      ... state.decks,
+      event,
+      gold,
+    },
+    status: GameStatus.CRAWL_READY,
+  })),
+
+  on(GameActions.drawn, (state, { event, dungeon }) => ({
     ... state,
     decks: {
       ... state.decks,

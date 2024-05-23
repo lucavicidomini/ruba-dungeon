@@ -1,114 +1,118 @@
-{{ status$ | async }}
+<ng-container *ngIf="status$ | async as status">
 
-<table>
+    {{ status }}
 
-    <tr>
-        <td>
-            <!-- 1 - Dungeon Deck -->
-            <app-deck *ngIf="dungeonDeck$ | async as deck" [deck]="deck" [cover]="true"></app-deck>
-            <button type="button" [appStatusIs]="GameStatus.CRAWL_READY" (click)="onDraw()">Draw</button>
-        </td>
+    <table>
 
-        <td>
-            <!-- 2 - Event Card -->
-            <app-card *ngIf="eventCard$ | async as card" [card]="card"></app-card>
-        </td>
+        <tr>
+            <td>
+                <!-- 1 - Dungeon Deck -->
+                <app-deck *ngIf="dungeonDeck$ | async as deck" [deck]="deck" [cover]="true"></app-deck>
+                <button type="button" [appEnableIfStatus]="GameStatus.CRAWL_READY" (click)="onDraw()">Draw</button>
+            </td>
 
-        <td>
-            <!-- 3 - Character Deck -->
-            <app-deck *ngIf="characterDeck$ | async as deck" [deck]="deck" [cover]="true"></app-deck>
-        </td>
+            <td>
+                <!-- 2 - Event Card -->
+                <app-card *ngIf="eventCard$ | async as card" [card]="card"></app-card>
+                <button type="button" *ngIf="status === GameStatus.CRAWL_ACT" (click)="onCollect()">Collect</button>
+            </td>
 
-        <td>
-            <!-- Empty -->
-        </td>
+            <td>
+                <!-- 3 - Character Deck -->
+                <app-deck *ngIf="characterDeck$ | async as deck" [deck]="deck" [cover]="true"></app-deck>
+            </td>
 
-        <td>
-            <!-- 4 - Catacomb -->
-            <app-deck *ngIf="catacombDeck$ | async as deck" [deck]="deck"></app-deck>
-        </td>
-    </tr>
+            <td>
+                <!-- Empty -->
+            </td>
 
-    <tr>
-        <td>
-            <!-- Empty -->
-            &nbsp;
-        </td>
+            <td>
+                <!-- 4 - Catacomb -->
+                <app-deck *ngIf="catacombDeck$ | async as deck" [deck]="deck"></app-deck>
+            </td>
+        </tr>
 
-        <td>
-            <!-- 5 - Enemy -->
-            <app-character *ngIf="enemy$ | async as character" [character]="character"></app-character>
-        </td>
+        <tr>
+            <td>
+                <!-- Empty -->
+                &nbsp;
+            </td>
 
-        <td>
-            <!-- EAC - Enemy Action Card -->
+            <td>
+                <!-- 5 - Enemy -->
+                <app-character *ngIf="enemy$ | async as character" [character]="character"></app-character>
+            </td>
 
-        </td>
+            <td>
+                <!-- EAC - Enemy Action Card -->
 
-        <td>
-            <!-- EAC - Enemy Action Card -->
+            </td>
 
-        </td>
+            <td>
+                <!-- EAC - Enemy Action Card -->
 
-        <td>
-            <!-- EAC - Enemy Action Card -->
+            </td>
 
-        </td>
-    </tr>
+            <td>
+                <!-- EAC - Enemy Action Card -->
 
-    <tr>
-        <td>
-            <!-- 6 - Relics Obtained (Cards are arranged horizontally) -->
-            <app-deck *ngIf="obtainedRelicDeck$ | async as deck" [deck]="deck"></app-deck>
-        </td>
+            </td>
+        </tr>
 
-        <td>
-            <!-- 7 - Hero -->
-            <app-character *ngIf="hero$ | async as character" [character]="character"></app-character>
-        </td>
+        <tr>
+            <td>
+                <!-- 6 - Relics Obtained (Cards are arranged horizontally) -->
+                <app-deck *ngIf="obtainedRelicDeck$ | async as deck" [deck]="deck"></app-deck>
+            </td>
 
-        <td>
-            <!-- HAC - Hero Action Card -->
+            <td>
+                <!-- 7 - Hero -->
+                <app-character *ngIf="hero$ | async as character" [character]="character"></app-character>
+            </td>
 
-        </td>
+            <td>
+                <!-- HAC - Hero Action Card -->
 
-        <td>
-            <!-- HAC - Hero Action Card -->
+            </td>
 
-        </td>
+            <td>
+                <!-- HAC - Hero Action Card -->
 
-        <td>
-            <!-- HAC - Hero Action Card -->
-            
-        </td>
-    </tr>
+            </td>
 
-    <tr>
-        <td>
-            <!-- 8 - Gold (Cards are arranged horizontally) -->
-            <app-deck *ngIf="goldDeck$ | async as deck" [deck]="deck"></app-deck>
-        </td>
+            <td>
+                <!-- HAC - Hero Action Card -->
+                
+            </td>
+        </tr>
 
-        <td>
-            <!-- 9 - Aid (Cards are arranged vertically) -->
-            <app-deck *ngIf="aidDeck$ | async as deck" [deck]="deck"></app-deck>
-        </td>
+        <tr>
+            <td>
+                <!-- 8 - Gold (Cards are arranged horizontally) -->
+                <app-deck *ngIf="goldDeck$ | async as deck" [deck]="deck"></app-deck>
+            </td>
 
-        <td>
-            <!-- Empty -->
+            <td>
+                <!-- 9 - Aid (Cards are arranged vertically) -->
+                <app-deck *ngIf="aidDeck$ | async as deck" [deck]="deck"></app-deck>
+            </td>
 
-        </td>
+            <td>
+                <!-- Empty -->
 
-        <td>
-            <!-- Empty -->
+            </td>
 
-        </td>
+            <td>
+                <!-- Empty -->
 
-        <td>
-            <!-- 10 - Relic Deck (Cards are arranged vertically) -->
-            <app-deck *ngIf="relicDeck$ | async as deck" [deck]="deck"></app-deck>
-        </td>
-    </tr>
+            </td>
 
+            <td>
+                <!-- 10 - Relic Deck (Cards are arranged vertically) -->
+                <app-deck *ngIf="relicDeck$ | async as deck" [deck]="deck"></app-deck>
+            </td>
+        </tr>
 
-</table>
+    </table>
+
+</ng-container>

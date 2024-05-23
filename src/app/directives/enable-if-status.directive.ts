@@ -4,12 +4,12 @@ import { GameStatus } from '../+models/game.model';
 import { Subject, map, tap } from 'rxjs';
 
 @Directive({
-  selector: '[appStatusIs]',
+  selector: '[appEnableIfStatus]',
   standalone: true
 })
-export class StatusIsDirective implements OnInit, OnDestroy {
+export class EnableIfStatusDirective implements OnInit, OnDestroy {
 
-  @Input() appStatusIs!: GameStatus;
+  @Input() appEnableIfStatus!: GameStatus;
 
   destroy$ = new Subject<void>();
 
@@ -22,7 +22,7 @@ export class StatusIsDirective implements OnInit, OnDestroy {
 
   ngOnInit(): void {
       this.status$.pipe(
-        map(status => !this.appStatusIs || status == this.appStatusIs),
+        map(status => !this.appEnableIfStatus || status == this.appEnableIfStatus),
         tap(enabled => this.el.nativeElement.disabled = !enabled)
       ).subscribe();
   }

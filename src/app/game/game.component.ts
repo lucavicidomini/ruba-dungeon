@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { DeckComponent } from '../deck/deck.component';
 import { CardComponent } from '../card/card.component';
 import { CharacterComponent } from '../character/character.component';
-import { StatusIsDirective } from '../directives/status-is.directive';
+import { EnableIfStatusDirective } from '../directives/enable-if-status.directive';
 import { GameStatus } from '../+models/game.model';
 
 @Component({
@@ -15,7 +15,7 @@ import { GameStatus } from '../+models/game.model';
     CardComponent,
     CharacterComponent,
     DeckComponent,
-    StatusIsDirective,
+    EnableIfStatusDirective,
   ],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss'
@@ -52,6 +52,10 @@ export class GameComponent implements OnInit {
 
   ngOnInit(): void {
     this.gameFacade.start(); 
+  }
+
+  onCollect() {
+    this.gameFacade.collect();
   }
 
   onDraw() {
