@@ -3,7 +3,7 @@
     <tr>
         <td>
             <!-- 1 - Dungeon Deck -->
-            <app-deck *ngIf="dungeonDeck$ | async as deck" [deck]="deck"></app-deck>
+            <app-deck *ngIf="dungeonDeck$ | async as deck" [deck]="deck" [cover]="true"></app-deck>
         </td>
 
         <td>
@@ -13,7 +13,7 @@
 
         <td>
             <!-- 3 - Character Deck -->
-            <app-deck *ngIf="characterDeck$ | async as deck" [deck]="deck"></app-deck>
+            <app-deck *ngIf="characterDeck$ | async as deck" [deck]="deck" [cover]="true"></app-deck>
         </td>
 
         <td>
