@@ -14,6 +14,7 @@ export const setup = createAction(
         event: Deck,
         gold: Deck,
         relic: Deck,
+        obtainedRelic: Deck,
         heroHp: number,
         heroCard: Card;
     }>()

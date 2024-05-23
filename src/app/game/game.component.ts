@@ -15,8 +15,26 @@ import { DeckComponent } from '../deck/deck.component';
 })
 export class GameComponent implements OnInit {
 
+  aidDeck$ = this.gameFacade.aidDeck$;
+
+  catacombDeck$ = this.gameFacade.catacombDeck$;
+
+  characterDeck$ = this.gameFacade.characterDeck$;
+  
+  enemyCard$ = this.gameFacade.enemyCard$;
+
+  eventCard$ = this.gameFacade.eventCard$;
+
   dungeonDeck$ = this.gameFacade.dungeonDeck$;
 
+  goldDeck$ = this.gameFacade.goldDeck$;
+
+  heroCard$ = this.gameFacade.heroCard$;
+
+  relicDeck$ = this.gameFacade.relicDeck$;
+
+  obtainedRelicDeck$ = this.gameFacade.obtainedRelicDeck$;
+  
   status$ = this.gameFacade.status$;
 
   constructor(

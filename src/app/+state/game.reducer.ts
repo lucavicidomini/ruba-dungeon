@@ -14,11 +14,16 @@ export interface GameState {
     dungeon: Deck;
     event: Deck;
     gold: Deck;
+    obtainedRelic: Deck;
     relic: Deck;
   };
-  hero: {
+  enemy?: {
     hp: number;
-    card?: Card;
+    card: Card;
+  },
+  hero?: {
+    hp: number;
+    card: Card;
   }
   status: GameStatus;
 }
@@ -31,18 +36,18 @@ export const initialState: GameState = {
     dungeon: Deck.empty(),
     event: Deck.empty(),
     gold: Deck.empty(),
+    obtainedRelic: Deck.empty(),
     relic: Deck.empty(),
   },
-  hero: {
-    hp: 0,
-  },
+  enemy: undefined,
+  hero: undefined,
   status: GameStatus.GAME_INIT,
 };
 
 export const gameReducer = createReducer(
   initialState,
 
-  on(ScoreboardPageActions.setup, (state, { aid, catacomb, character, dungeon, event, gold, relic, heroHp, heroCard }) => ({
+  on(ScoreboardPageActions.setup, (state, { aid, catacomb, character, dungeon, event, gold, relic, obtainedRelic, heroHp, heroCard }) => ({
     ...state,
     decks: {
       aid,
@@ -52,6 +57,7 @@ export const gameReducer = createReducer(
       event,
       gold,
       relic,
+      obtainedRelic,
     },
     hero: {
       hp: heroHp,

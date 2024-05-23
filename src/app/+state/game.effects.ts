@@ -20,8 +20,9 @@ export class GamesEffects {
         const catacomb = Deck.empty();
         const event = Deck.empty();
         const gold = Deck.empty();
+        const obtainedRelic = Deck.empty();
         dungeon.shuffle();
-        return GameActions.setup({ aid, catacomb, dungeon, character, event, gold, relic, heroCard, heroHp });
+        return GameActions.setup({ aid, catacomb, dungeon, character, event, gold, relic, obtainedRelic, heroCard, heroHp });
     })
   ));
 
