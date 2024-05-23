@@ -3,6 +3,7 @@ import * as ScoreboardPageActions from './game.actions';
 import { Deck } from '../+models/deck.model';
 import { Card } from '../+models/card.model';
 import { GameStatus } from '../+models/game.model';
+import { Character } from '../+models/character.model';
 
 export const GAME_STATE_KEY = 'game';
 
@@ -17,14 +18,8 @@ export interface GameState {
     obtainedRelic: Deck;
     relic: Deck;
   };
-  enemy?: {
-    hp: number;
-    card: Card;
-  },
-  hero?: {
-    hp: number;
-    card: Card;
-  }
+  enemy?: Character,
+  hero?: Character,
   status: GameStatus;
 }
 
@@ -47,7 +42,7 @@ export const initialState: GameState = {
 export const gameReducer = createReducer(
   initialState,
 
-  on(ScoreboardPageActions.setup, (state, { aid, catacomb, character, dungeon, event, gold, relic, obtainedRelic, heroHp, heroCard }) => ({
+  on(ScoreboardPageActions.setup, (state, { aid, catacomb, character, dungeon, event, gold, relic, obtainedRelic, hero }) => ({
     ...state,
     decks: {
       aid,
@@ -59,10 +54,7 @@ export const gameReducer = createReducer(
       relic,
       obtainedRelic,
     },
-    hero: {
-      hp: heroHp,
-      card: heroCard
-    }
+    hero,
   })),
 
 );

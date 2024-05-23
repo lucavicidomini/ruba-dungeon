@@ -24,9 +24,9 @@ export const selectDungeonDeck = createSelector(
   (state: GameState) => state.decks.dungeon
 );
 
-export const selectEnemyCard = createSelector(
+export const selectEnemy = createSelector(
   selectFeature,
-  (state: GameState) => state.enemy?.card
+  (state: GameState) => state.enemy
 );
 
 export const selectGoldDeck = createSelector(
@@ -39,9 +39,9 @@ export const selectEventCard = createSelector(
   (state: GameState) => state.decks.event.peek()
 );
 
-export const selectHeroCard = createSelector(
+export const selectHero = createSelector(
   selectFeature,
-  (state: GameState) => state.hero?.card
+  (state: GameState) => state.hero
 );
 
 export const selectRelicDeck = createSelector(

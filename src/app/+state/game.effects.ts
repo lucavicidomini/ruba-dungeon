@@ -4,6 +4,7 @@ import { EMPTY } from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as GameActions from './game.actions';
 import { Deck } from '../+models/deck.model';
+import { Character } from '../+models/character.model';
 
 @Injectable()
 export class GamesEffects {
@@ -12,8 +13,7 @@ export class GamesEffects {
     ofType(GameActions.start),
     map(() => {
         const dungeon = Deck.full();
-        const heroCard = dungeon.popPlayerCard();
-        const heroHp = 12;
+        const hero = new Character(dungeon.popPlayerCard(), 12);
         const character = dungeon.extractCharacterDeck();
         const relic = dungeon.extractRelicDeck();
         const aid = Deck.empty();
@@ -22,7 +22,7 @@ export class GamesEffects {
         const gold = Deck.empty();
         const obtainedRelic = Deck.empty();
         dungeon.shuffle();
-        return GameActions.setup({ aid, catacomb, dungeon, character, event, gold, relic, obtainedRelic, heroCard, heroHp });
+        return GameActions.setup({ aid, catacomb, dungeon, character, event, gold, relic, obtainedRelic, hero });
     })
   ));
 

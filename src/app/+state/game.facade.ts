@@ -10,7 +10,7 @@ export class GameFacade {
 
     aidDeck$ = this.store.select(GameSelectors.selectAidDeck);
 
-    enemyCard$ = this.store.select(GameSelectors.selectEnemyCard);
+    enemy$ = this.store.select(GameSelectors.selectEnemy);
 
     eventCard$ = this.store.select(GameSelectors.selectEventCard);
 
@@ -22,7 +22,7 @@ export class GameFacade {
 
     goldDeck$ = this.store.select(GameSelectors.selectGoldDeck);
 
-    heroCard$ = this.store.select(GameSelectors.selectHeroCard);
+    hero$ = this.store.select(GameSelectors.selectHero);
 
     relicDeck$ = this.store.select(GameSelectors.selectRelicDeck);
 
