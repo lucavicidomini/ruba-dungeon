@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { GameFacade } from '../+state/game.facade';
 import { CommonModule } from '@angular/common';
-import { DeckComponent } from '../deck/deck.component';
+import { Component, OnInit } from '@angular/core';
+import { Card } from '../+models/card.model';
+import { GameStatus } from '../+models/game.model';
+import { GameFacade } from '../+state/game.facade';
 import { CardComponent } from '../card/card.component';
 import { CharacterComponent } from '../character/character.component';
-import { EnableIfStatusDirective } from '../directives/enable-if-status.directive';
-import { GameStatus } from '../+models/game.model';
-import { Card } from '../+models/card.model';
+import { DeckComponent } from '../deck/deck.component';
+import { SelectableDeckComponent } from '../selectable-deck/selectable-deck.component';
 
 @Component({
   selector: 'app-game',
@@ -16,7 +16,7 @@ import { Card } from '../+models/card.model';
     CardComponent,
     CharacterComponent,
     DeckComponent,
-    EnableIfStatusDirective,
+    SelectableDeckComponent,
   ],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss'

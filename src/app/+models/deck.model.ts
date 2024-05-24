@@ -5,7 +5,7 @@ export class Deck {
     static suits: Set<Suits> = new Set(['clubs', 'cups', 'coins', 'swords']);
 
     private constructor(
-        private cards: Card[] = [],
+        private deckCards: Card[] = [],
     ) {}
 
     static empty(): Deck {
@@ -23,52 +23,56 @@ export class Deck {
     }
 
     clone(): Deck {
-        return new Deck([...this.cards]);
+        return new Deck([...this.deckCards]);
     }
 
     extractCharacterDeck(): Deck {
-        const characters = new Deck(this.cards.filter(card => card.value >= 8));
-        this.cards = this.cards.filter(card => card.value < 8);
+        const characters = new Deck(this.deckCards.filter(card => card.value >= 8));
+        this.deckCards = this.deckCards.filter(card => card.value < 8);
         return characters;
     }
 
     extractRelicDeck(): Deck {
-        const relics = new Deck(this.cards.filter(card => card.value === 1));
-        this.cards = this.cards.filter(card => card.value > 1);
+        const relics = new Deck(this.deckCards.filter(card => card.value === 1));
+        this.deckCards = this.deckCards.filter(card => card.value > 1);
         return relics;
     }
 
     peek(): Card | undefined {
-        return this.cards[this.cards.length - 1];
+        return this.deckCards[this.deckCards.length - 1];
     }
 
     pop(): Card | undefined {
-        return this.cards.pop();
+        return this.deckCards.pop();
     }
 
     popPlayerCard() {
         const rndValue = Math.floor(Math.random() * 2 + 8);
         const rndSuit = Array.from(Deck.suits)[Math.floor(Math.random() * Deck.suits.size)];
-        const i = this.cards.findIndex(card => card.suit === rndSuit && card.value == rndValue);
-        return this.cards.splice(i, 1)[0];
+        const i = this.deckCards.findIndex(card => card.suit === rndSuit && card.value == rndValue);
+        return this.deckCards.splice(i, 1)[0];
     }
 
     push(card: Card): void {
-        this.cards.push(card);
+        this.deckCards.push(card);
     }
 
     shuffle() {
-        this.cards.sort(
+        this.deckCards.sort(
             () => Math.random() - .5
         );
     }
 
+    get cards(): Card[] {
+        return this.deckCards;
+    }
+
     get length(): number {
-        return this.cards.length;
+        return this.deckCards.length;
     }
 
     get value(): number {
-        return this.cards.reduce(
+        return this.deckCards.reduce(
             (accValue, card) => accValue += card.value,
             0
         );
