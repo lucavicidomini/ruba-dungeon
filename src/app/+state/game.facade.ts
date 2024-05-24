@@ -2,6 +2,7 @@ import { Injectable, inject } from "@angular/core";
 import { Store } from "@ngrx/store";
 import * as GameActions from './game.actions';
 import * as GameSelectors from './game.selectors';
+import { Deck } from "../+models/deck.model";
 
 @Injectable()
 export class GameFacade {
@@ -42,6 +43,11 @@ export class GameFacade {
     /** Draw a card from dungeon deck */
     draw() {
         this.store.dispatch(GameActions.draw());
+    }
+
+    /** User selected/deselected a gold card */
+    goldSelected(goldSelected: Deck) {
+        this.store.dispatch(GameActions.goldSelected({ goldSelected }));
     }
 
     resolveDice() {

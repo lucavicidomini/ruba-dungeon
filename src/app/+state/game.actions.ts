@@ -19,6 +19,10 @@ export const error = createAction('[Game] Error',
     props<{ error: any }>()
 );
 
+export const goldSelected = createAction('[Game] Gold Selected',
+    props<{ goldSelected: Deck }>()
+);
+
 export const resolveCard = createAction('[Game] Resolve Card');
 
 export const resolvedCard = createAction(

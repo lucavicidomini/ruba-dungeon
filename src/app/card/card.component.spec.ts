@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CardComponent } from './card.component';
 import { GameFacade } from '../+state/game.facade';
+import { Card } from '../+models/card.model';
 
 describe('CardComponent', () => {
   let component: CardComponent;
@@ -15,6 +16,7 @@ describe('CardComponent', () => {
     
     fixture = TestBed.createComponent(CardComponent);
     component = fixture.componentInstance;
+    component.card = new Card(1, 'clubs');
     fixture.detectChanges();
   });
 

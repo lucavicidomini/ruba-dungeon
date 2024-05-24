@@ -17,13 +17,26 @@ export class SelectableDeckComponent {
 
   @Input() selectedDeck: Deck | null = null;
 
-  @Output() selectCard = new EventEmitter<Deck>();
+  @Output() selectCards = new EventEmitter<Deck>();
 
-  onToggle(card: Card) {
-
+  isSelected(card: Card): boolean {
+    return this.selectedDeck?.includes(card) ?? false;
   }
 
-  get selectedCards() {
+  onToggle(card: Card): void {
+    const newSelectedDeck = this.selectedDeck?.clone() ?? Deck.empty();
+
+    if (this.isSelected(card)) {
+      newSelectedDeck.remove(card);
+    } else {
+      newSelectedDeck.push(card);
+    }
+
+    console.log(newSelectedDeck);
+    this.selectCards.emit(newSelectedDeck);
+  }
+
+  get selectedCards(): Card[] {
     return this.selectedDeck?.cards ?? [];
   }
 

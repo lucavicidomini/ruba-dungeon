@@ -66,6 +66,14 @@ export const gameReducer = createReducer(
     status: GameStatus.CRAWL_ACT,
   })),
 
+  on(GameActions.goldSelected, (state, { goldSelected }) => ({
+    ... state,
+    decks: {
+      ... state.decks,
+      goldSelected,
+    },
+  })),
+
   on(GameActions.resolvedCard, (state, { hpDelta }) => ({
     ...state,
     hero: state.hero?.updateHp(hpDelta),

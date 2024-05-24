@@ -7,6 +7,7 @@ import { CardComponent } from '../card/card.component';
 import { CharacterComponent } from '../character/character.component';
 import { DeckComponent } from '../deck/deck.component';
 import { SelectableDeckComponent } from '../selectable-deck/selectable-deck.component';
+import { Deck } from '../+models/deck.model';
 
 @Component({
   selector: 'app-game',
@@ -105,6 +106,10 @@ export class GameComponent implements OnInit {
 
   onDiceOk() {
     this.gameFacade.resolveDice();
+  }
+
+  onGoldSelect(goldSelected: Deck) {
+    this.gameFacade.goldSelected(goldSelected);
   }
 
 }

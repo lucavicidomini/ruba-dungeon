@@ -13,6 +13,8 @@ export class CardComponent {
 
   @Input() card!: Card;
 
+  @Input() selected = false;
+
   @Input() cover = false;
 
   get suit() {
