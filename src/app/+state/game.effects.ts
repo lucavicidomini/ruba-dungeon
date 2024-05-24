@@ -38,6 +38,39 @@ export class GamesEffects {
     }),
   ));
 
+  // Basically the same thing as bribe, but dispatches challenged()
+  challenge$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.challenge),
+    withLatestFrom(
+      this.store.select(GameSelectors.selectCharacterDeck),
+    ),
+    map(([, characterIm]) => {
+      const character = characterIm.clone();
+
+      // Reveal the enemy
+      const enemyCard = character.pop();
+
+      if (!enemyCard) {
+        return GameActions.error({ error: `No enemy found` });  
+      }
+
+      // In easy mode enemies always enter Combat with 6HP
+      // TODO In difficult mode enemies will have as much HP as the value of the respective card
+      const enemyHp = 6;
+
+      const enemy = new Character(enemyCard, enemyHp);
+
+      return GameActions.challenged({ character, enemy });
+    }),
+  ));
+
+  challenged$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.challenged),
+    map(() =>
+      GameActions.combat()
+    ),
+  ));
+
   collect$ = createEffect(() => this.actions$.pipe(
     ofType(GameActions.collect),
     withLatestFrom(
@@ -69,17 +102,20 @@ export class GamesEffects {
   combat$ = createEffect(() => this.actions$.pipe(
     ofType(GameActions.combat),
     withLatestFrom(
-      this.store.select(GameSelectors.selectCharacterDeck),
+      this.store.select(GameSelectors.selectDungeonDeck),
     ),
-    map(([, characterIm]) => {
-      const character = characterIm.clone();
+    map(([, dungeonIm]) => {
+      const dungeon = dungeonIm.clone();
 
-      // Reveal the enemy
-      const enemyCard = character.pop();
+      // Pick three action card for player
+      // TODO Remove cast
+      const heroActions = Array.from({ length: 3 }, () => dungeon.pop()) as Card[];
 
-      
+      // Pick three action card for enemy
+      // TODO Remove cast
+      const enemyActions = Array.from({ length: 3 }, () => dungeon.pop()) as Card[];
 
-      return GameActions.combatStart()
+      return GameActions.combatStarted({ heroActions, enemyActions });
     }),
   ));
 
@@ -324,6 +360,9 @@ export class GamesEffects {
       dungeon.push(new Card(5, 'clubs'));
       dungeon.push(new Card(4, 'cups'));
       dungeon.push(new Card(5, 'cups'));
+      dungeon.push(new Card(6, 'cups'));
+      dungeon.push(new Card(2, 'cups'));
+
       dungeon.reverse();
       
       const decks: PartialDeckState = { dungeon, character, relic };

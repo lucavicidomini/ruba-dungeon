@@ -8,8 +8,16 @@ export const bribe = createAction('[Game] Bribe');
 
 export const combat = createAction('[Game] Combat');
 
-export const combatStart = createAction(
-    '[Game] Combat Start',
+export const challenge = createAction('[Game] Challenge');
+
+export const challenged = createAction(
+    '[Game] Challenged',
+    props<{ character: Deck, enemy: Character }>()
+);
+
+export const combatStarted = createAction(
+    '[Game] Combat Started',
+    props<{ heroActions: Card[], enemyActions: Card[] }>()
 );
 
 export const collected = createAction('[Game] Collected',

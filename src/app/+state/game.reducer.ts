@@ -7,6 +7,12 @@ import { Card } from '../+models/card.model';
 
 export const GAME_STATE_KEY = 'game';
 
+interface CombatState {
+  action: number;
+  heroActions: Card[],
+  enemyActions: Card[],
+}
+
 export interface PartialDeckState {
   aid?: Deck;
   catacomb?: Deck;
@@ -22,7 +28,8 @@ export interface PartialDeckState {
 export interface DeckState extends Required<PartialDeckState> {}
 
 export interface GameState {
-  decks: DeckState;
+  combat?: CombatState,
+  decks: DeckState,
   dice?: number,
   enemy?: Character,
   error: any;
@@ -31,6 +38,7 @@ export interface GameState {
 }
 
 export const initialState: GameState = {
+  combat: undefined,
   decks: {
     aid: Deck.empty(),
     catacomb: Deck.empty(),
@@ -62,6 +70,15 @@ export const gameReducer = createReducer(
     status: GameStatus.CRAWL_READY,
   })),
 
+  on(GameActions.challenged, (state, { character, enemy }) => ({
+    ...state,
+    decks: {
+      ...state.decks,
+      character,
+    },
+    enemy,
+  })),
+
   on(GameActions.collected, (state, { event, gold }) => ({
     ...state,
     decks: {
@@ -77,15 +94,17 @@ export const gameReducer = createReducer(
     status: GameStatus.COMBAT,
   })),
 
-  // on(GameActions.combatStart, (state, { character, enemy }) => ({
-  //   ...state,
-  //   decks: {
-  //     ...state.decks,
-  //     character,
-  //   },
-  //   enemy,
-  //   status: GameStatus.COMBAT,
-  // })),
+  on(GameActions.combatStarted, (state, { heroActions, enemyActions }) => ({
+    ...state,
+    combat: {
+      action: 1,
+      heroActions,
+      enemyActions,
+    },
+    decks: {
+      ...state.decks,
+    },
+  })),
 
   on(GameActions.drawn, (state, { event, dungeon }) => ({
     ...state,
@@ -128,6 +147,7 @@ export const gameReducer = createReducer(
       ...state.decks,
       aid,
     },
+    enemy: undefined,
     status: GameStatus.CRAWL_READY,
   })),
 

@@ -14,12 +14,20 @@ export class GameFacade {
     catacombDeck$ = this.store.select(GameSelectors.selectCatacombDeck);
 
     characterDeck$ = this.store.select(GameSelectors.selectCharacterDeck);
+
+    combatAction$ = this.store.select(GameSelectors.selectCombatAction);
     
     dice$ = this.store.select(GameSelectors.selectDice);
 
     dungeonDeck$ = this.store.select(GameSelectors.selectDungeonDeck);
     
+    hero$ = this.store.select(GameSelectors.selectHero);
+
+    heroActions$ = this.store.select(GameSelectors.selectHeroActions);
+
     enemy$ = this.store.select(GameSelectors.selectEnemy);
+
+    enemyActions$ = this.store.select(GameSelectors.selectEnemyActions);
 
     eventCard$ = this.store.select(GameSelectors.selectEventCard);
 
@@ -29,13 +37,16 @@ export class GameFacade {
 
     selectGoldSelectedDeck$ = this.store.select(GameSelectors.selectGoldSelectedDeck);
 
-    hero$ = this.store.select(GameSelectors.selectHero);
-
     obtainedRelicDeck$ = this.store.select(GameSelectors.selectObtainedRelicDeck);
 
     relicDeck$ = this.store.select(GameSelectors.selectRelicDeck);
 
     status$ = this.store.select(GameSelectors.selectStatus);
+
+    /** Event card was swords and player choose to combat */
+    challenge() {
+        this.store.dispatch(GameActions.challenge());
+    }
 
     /** If the event card is coins, collect it */
     collect() {

@@ -12,12 +12,14 @@
         <tr>
             <td>
                 <!-- 1 - Dungeon Deck -->
+                <div>Dungeon deck</div>
                 <app-deck *ngIf="dungeonDeck$ | async as deck" [deck]="deck" [cover]="true"></app-deck>
                 <button type="button" [disabled]="!showDraw(status)" (click)="onDraw()">Draw</button>
             </td>
 
             <td>
                 <!-- 2 - Event Card -->
+                <div>Event card</div>
                 <ng-container *ngIf="eventCard$ | async as card">
                     <app-card [card]="card"></app-card>
                     <button type="button" *ngIf="showCollect(status, card)" (click)="onCollect()">Collect</button>
@@ -30,6 +32,7 @@
 
             <td>
                 <!-- 3 - Character Deck -->
+                <div>Character deck</div>
                 <app-deck *ngIf="characterDeck$ | async as deck" [deck]="deck" [cover]="true"></app-deck>
             </td>
 
@@ -39,6 +42,7 @@
 
             <td>
                 <!-- 4 - Catacomb -->
+                <div>Catacomb</div>
                 <app-deck *ngIf="catacombDeck$ | async as deck" [deck]="deck"></app-deck>
             </td>
         </tr>
@@ -51,61 +55,67 @@
 
             <td>
                 <!-- 5 - Enemy -->
+                <div>Enemy</div>
                 <app-character *ngIf="enemy$ | async as character" [character]="character"></app-character>
                 <button *ngIf="showRevealOk(status)" type="button" (click)="onRevealedOk()">Ok</button>
             </td>
 
             <td>
                 <!-- EAC - Enemy Action Card -->
+                <app-card *ngIf="(enemyActions$ | async)?.[0] as card" [card]="card" [cover]="(combatAction$ | async) !== 3"></app-card>
+            </td>
+
+            <td>
+                <!-- EAC - Enemy Action Card -->
+                <app-card *ngIf="(enemyActions$ | async)?.[1] as card" [card]="card" [cover]="(combatAction$ | async) !== 2"></app-card>
 
             </td>
 
             <td>
                 <!-- EAC - Enemy Action Card -->
-
-            </td>
-
-            <td>
-                <!-- EAC - Enemy Action Card -->
-
+                <app-card *ngIf="(enemyActions$ | async)?.[2] as card" [card]="card"></app-card>
             </td>
         </tr>
 
         <tr>
             <td>
                 <!-- 6 - Relics Obtained (Cards are arranged horizontally) -->
+                <div>Your relics</div>
                 <app-deck *ngIf="obtainedRelicDeck$ | async as deck" [deck]="deck"></app-deck>
             </td>
 
             <td>
                 <!-- 7 - Hero -->
+                <div>Hero</div>
                 <app-character *ngIf="hero$ | async as character" [character]="character"></app-character>
             </td>
 
             <td>
                 <!-- HAC - Hero Action Card -->
-
+                <app-card *ngIf="(heroActions$ | async)?.[0] as card" [card]="card"></app-card>
             </td>
 
             <td>
                 <!-- HAC - Hero Action Card -->
-
+                <app-card *ngIf="(heroActions$ | async)?.[1] as card" [card]="card"></app-card>
             </td>
 
             <td>
                 <!-- HAC - Hero Action Card -->
-                
+                <app-card *ngIf="(heroActions$ | async)?.[2] as card" [card]="card"></app-card>
             </td>
         </tr>
 
         <tr>
             <td>
                 <!-- 8 - Gold (Cards are arranged horizontally) -->
+                <div>Gold</div>
                 <app-selectable-deck *ngIf="goldDeck$ | async as deck" [deck]="deck" [selectedDeck]="goldSelectedDeck" (selectCards)="onGoldSelect($event)"></app-selectable-deck>
             </td>
 
             <td>
                 <!-- 9 - Aid (Cards are arranged vertically) -->
+                <div>Aids</div>
                 <app-deck *ngIf="aidDeck$ | async as deck" [deck]="deck"></app-deck>
             </td>
 
@@ -121,6 +131,7 @@
 
             <td>
                 <!-- 10 - Relic Deck (Cards are arranged vertically) -->
+                <div>Relics</div>
                 <app-deck *ngIf="relicDeck$ | async as deck" [deck]="deck"></app-deck>
             </td>
         </tr>

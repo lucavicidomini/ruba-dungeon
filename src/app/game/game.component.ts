@@ -30,11 +30,15 @@ export class GameComponent implements OnInit {
 
   catacombDeck$ = this.gameFacade.catacombDeck$;
 
+  combatAction$ = this.gameFacade.combatAction$;
+
   characterDeck$ = this.gameFacade.characterDeck$;
 
   dice$ = this.gameFacade.dice$;
   
   enemy$ = this.gameFacade.enemy$;
+
+  enemyActions$ = this.gameFacade.enemyActions$;
 
   error$ = this.gameFacade.error$;
 
@@ -47,6 +51,8 @@ export class GameComponent implements OnInit {
   goldSelectedDeck$ = this.gameFacade.selectGoldSelectedDeck$;
 
   hero$ = this.gameFacade.hero$;
+
+  heroActions$ = this.gameFacade.heroActions$;
 
   relicDeck$ = this.gameFacade.relicDeck$;
 
@@ -99,7 +105,7 @@ export class GameComponent implements OnInit {
   }
 
   onCombat() {
-    this.gameFacade.combat();
+    this.gameFacade.challenge();
   }
 
   onDraw() {
