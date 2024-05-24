@@ -147,6 +147,16 @@ export const gameReducer = createReducer(
     hero,
   })),
 
+  on(GameActions.gameOver, (state) => ({
+    ...state,
+    status: GameStatus.GAME_OVER,
+  })),
+
+  on(GameActions.gameWon, (state) => ({
+    ...state,
+    status: GameStatus.GAME_WON,
+  })),
+
   on(GameActions.goldSelected, (state, { goldSelected }) => ({
     ...state,
     decks: {

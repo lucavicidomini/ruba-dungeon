@@ -1,6 +1,5 @@
 import { createAction, props } from '@ngrx/store';
 import { Character } from '../+models/character.model';
-import { Deck } from '../+models/deck.model';
 import { PartialDeckState } from './game.reducer';
 
 export * from './combat.actions';

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { map, withLatestFrom } from 'rxjs/operators';
+import { filter, map, withLatestFrom } from 'rxjs/operators';
 import { Card } from '../+models/card.model';
 import { Character } from '../+models/character.model';
 import { Deck } from '../+models/deck.model';
@@ -396,13 +396,21 @@ export class GamesEffects {
     }),
   ));
 
+  resolvedCombat$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.resolvedCombat),
+    withLatestFrom(
+      this.store.select(GameSelectors.selectObtainedRelicDeck),
+    ),
+    filter(([, obtainedRelic]) => obtainedRelic.length === 4),
+    map(() => GameActions.gameWon()),
+  ));
+
   revealedOk$ = createEffect(() => this.actions$.pipe(
     ofType(GameActions.revealedOk),
     withLatestFrom(
       this.store.select(GameSelectors.selectEnemy),
     ),
     map(([, enemy]) => {
-
       if (!enemy) {
         return GameActions.error({ error: `No enemy preview found` });  
       }
@@ -414,7 +422,6 @@ export class GamesEffects {
 
       // Otherwise, the combat automatically ends in you favor
       return GameActions.resolveCombat();
-
     }),
   ));
 

@@ -14,6 +14,10 @@ export enum GameStatus {
     /** After a bribe, the enemy card is revealed */
     ENEMY_REVEALED = 'ENEMY_REVEALED',
 
+    GAME_OVER = 'GAME_OVER',
+
+    GAME_WON = 'GAME_WON',
+
     /** Dice was thrown and user can acknowledge it */
     RESOLVE_THREW_DICE = 'RESOLVE_THREW_DICE',
 }
