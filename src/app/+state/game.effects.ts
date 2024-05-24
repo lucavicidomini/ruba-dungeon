@@ -8,6 +8,7 @@ import { Character } from '../+models/character.model';
 import { Store } from '@ngrx/store';
 import { AppState } from './app.reducer';
 import { DeckState, PartialDeckState } from './game.reducer';
+import { Card } from '../+models/card.model';
 
 @Injectable()
 export class GamesEffects {
@@ -114,16 +115,54 @@ export class GamesEffects {
     })
   ));
 
-  start$ = createEffect(() => this.actions$.pipe(
+  // start$ = createEffect(() => this.actions$.pipe(
+  //   ofType(GameActions.start),
+  //   map(() => {
+  //       const dungeon = Deck.full();
+  //       const hero = new Character(dungeon.popPlayerCard(), 12);
+  //       const character = dungeon.extractCharacterDeck();
+  //       const relic = dungeon.extractRelicDeck();
+  //       dungeon.shuffle();
+  //       const decks: PartialDeckState = { dungeon, character, relic };
+  //       return GameActions.setup({ decks, hero });
+  //   })
+  // ));
+
+  startDebug$ = createEffect(() => this.actions$.pipe(
     ofType(GameActions.start),
     map(() => {
-        const dungeon = Deck.full();
-        const hero = new Character(dungeon.popPlayerCard(), 12);
-        const character = dungeon.extractCharacterDeck();
-        const relic = dungeon.extractRelicDeck();
-        dungeon.shuffle();
-        const decks: PartialDeckState = { dungeon, character, relic };
-        return GameActions.setup({ decks, hero });
+      const hero = new Character(new Card(8, 'swords'), 12);
+
+      const character = Deck.empty();
+      character.push(new Card(8, 'clubs'));
+      character.push(new Card(9, 'clubs'));
+      character.push(new Card(10, 'clubs'));
+      character.push(new Card(8, 'coins'));
+      character.push(new Card(9, 'coins'));
+      character.push(new Card(10, 'coins'));
+      character.push(new Card(8, 'cups'));
+      character.push(new Card(9, 'cups'));
+      character.push(new Card(10, 'cups'));
+      character.push(new Card(9, 'swords'));
+      character.push(new Card(10, 'swords'));
+
+      const relic = Deck.empty();
+      character.push(new Card(1, 'clubs'));
+      character.push(new Card(1, 'coins'));
+      character.push(new Card(1, 'cups'));
+      character.push(new Card(1, 'swords'));
+
+      const dungeon = Deck.empty();
+      dungeon.push(new Card(4, 'coins'));
+      dungeon.push(new Card(5, 'coins'));
+      dungeon.push(new Card(4, 'clubs'));
+      dungeon.push(new Card(5, 'clubs'));
+      dungeon.push(new Card(4, 'cups'));
+      dungeon.push(new Card(5, 'cups'));
+      dungeon.reverse();
+      
+      const decks: PartialDeckState = { dungeon, character, relic };
+      return GameActions.setup({ decks, hero });
     })
   ));
 

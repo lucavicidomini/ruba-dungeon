@@ -65,6 +65,10 @@ export class Deck {
         this.deckCards = this.deckCards.filter(inDeck => !inDeck.equals(card));
     }
 
+    reverse(): void {
+        this.deckCards.reverse();
+    }
+
     shuffle() {
         this.deckCards.sort(
             () => Math.random() - .5
