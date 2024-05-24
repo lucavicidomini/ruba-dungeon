@@ -3,7 +3,7 @@ import * as GameActions from './game.actions';
 import { Deck } from '../+models/deck.model';
 import { GameStatus } from '../+models/game.model';
 import { Character } from '../+models/character.model';
-import { state } from '@angular/animations';
+import { Card } from '../+models/card.model';
 
 export const GAME_STATE_KEY = 'game';
 
@@ -72,6 +72,21 @@ export const gameReducer = createReducer(
     status: GameStatus.CRAWL_READY,
   })),
 
+  on(GameActions.combat, (state) => ({
+    ...state,
+    status: GameStatus.COMBAT,
+  })),
+
+  // on(GameActions.combatStart, (state, { character, enemy }) => ({
+  //   ...state,
+  //   decks: {
+  //     ...state.decks,
+  //     character,
+  //   },
+  //   enemy,
+  //   status: GameStatus.COMBAT,
+  // })),
+
   on(GameActions.drawn, (state, { event, dungeon }) => ({
     ...state,
     decks: {
@@ -99,6 +114,31 @@ export const gameReducer = createReducer(
     ...state,
     hero: state.hero?.updateHp(hpDelta),
     status: GameStatus.CRAWL_READY,
+  })),
+
+  on(GameActions.resolvedCard, (state, { hpDelta }) => ({
+    ...state,
+    hero: state.hero?.updateHp(hpDelta),
+    status: GameStatus.CRAWL_READY,
+  })),
+
+  on(GameActions.resolvedCombat, (state, { aid }) => ({
+    ...state,
+    decks: {
+      ...state.decks,
+      aid,
+    },
+    status: GameStatus.CRAWL_READY,
+  })),
+
+  on(GameActions.revealed, (state, { character, enemy }) => ({
+    ...state,
+    decks: {
+      ...state.decks,
+      character,
+    },
+    enemy,
+    status: GameStatus.ENEMY_REVEALED,
   })),
 
   on(GameActions.setup, (state, { decks, hero }) => ({

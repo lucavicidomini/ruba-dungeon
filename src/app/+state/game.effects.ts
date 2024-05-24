@@ -13,6 +13,210 @@ import * as GameSelectors from './game.selectors';
 @Injectable()
 export class GamesEffects {
 
+  bribe$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.bribe),
+    withLatestFrom(
+      this.store.select(GameSelectors.selectCharacterDeck),
+    ),
+    map(([, characterIm]) => {
+      const character = characterIm.clone();
+
+      // Reveal the enemy
+      const enemyCard = character.pop();
+
+      if (!enemyCard) {
+        return GameActions.error({ error: `No enemy found` });  
+      }
+
+      // In easy mode enemies always enter Combat with 6HP
+      // TODO In difficult mode enemies will have as much HP as the value of the respective card
+      const enemyHp = 6;
+
+      const enemy = new Character(enemyCard, enemyHp);
+
+      return GameActions.revealed({ character, enemy });
+    }),
+  ));
+
+  collect$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.collect),
+    withLatestFrom(
+      this.store.select(GameSelectors.selectEventDeck),
+      this.store.select(GameSelectors.selectGoldDeck),
+    ),
+    map(([, eventIm, goldIm]) => {
+      const event = eventIm.clone();
+      const gold = goldIm.clone();
+
+      // Remove event card from event deck
+      const eventCard = event.pop();
+
+      if (!eventCard) {
+        return GameActions.error({ error: 'No event card' });
+      }
+
+      if (eventCard.suit !== 'coins') {
+        return GameActions.error({ error: `Event card is ${eventCard.suit} while coins where expected` });
+      }
+
+      // Place event card on gold deck
+      gold.push(eventCard);
+
+      return GameActions.collected({ event, gold });
+    }),
+  ));
+
+  combat$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.combat),
+    withLatestFrom(
+      this.store.select(GameSelectors.selectCharacterDeck),
+    ),
+    map(([, characterIm]) => {
+      const character = characterIm.clone();
+
+      // Reveal the enemy
+      const enemyCard = character.pop();
+
+      
+
+      return GameActions.combatStart()
+    }),
+  ));
+
+  draw$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.draw),
+    withLatestFrom(
+      this.store.select(GameSelectors.selectEventDeck),
+      this.store.select(GameSelectors.selectDungeonDeck),
+    ),
+    map(([, eventIm, dungeonIm]) => {
+      const event = eventIm.clone();
+      const dungeon = dungeonIm.clone();
+
+      // Draw a card from dungeon deck
+      const dungeonCard = dungeon.pop();
+
+      if (!dungeonCard) {
+        return GameActions.error({ error: 'Dungeon deck is empty' });
+      }
+
+      // Place card on event deck
+      event.push(dungeonCard);
+
+      return GameActions.drawn({ event, dungeon });
+    }),
+  ));
+
+  resolveCard$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.resolveCard),
+    withLatestFrom(
+      this.store.select(GameSelectors.selectEventCard),
+      this.store.select(GameSelectors.selectDice),
+    ),
+    map(([, eventCard, dice]) => {
+      // 1 always corresponts to a failure
+      if (dice === 1) {
+        return GameActions.resolveCardFailure()
+      }
+
+      // 6 always corresponts to a success
+      if (dice === 6) {
+        return GameActions.resolveCardSuccess();
+      }
+
+      const eventCardValue = eventCard?.value;
+
+      if (!dice || !eventCardValue) {
+        return GameActions.error({ error: `Invalid state for action ${GameActions.resolveCard.type}: dice=${dice}, eventCardValue=${eventCardValue}` });
+      }
+
+      // From 2 to 5 the roll is successfull if the value is equal or greather thatn the event card
+      // value
+      if (dice >= eventCardValue) {
+        return GameActions.resolveCardSuccess();
+      }
+
+      return GameActions.resolveCardFailure();
+    }),
+  ));
+
+  resolveCardFailure$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.resolveCardFailure),
+    withLatestFrom(
+      this.store.select(GameSelectors.selectEventCard),
+    ),
+    map(([, eventCard]) => {
+      const eventCardSuit = eventCard?.suit;
+      let hpDelta = 0;
+
+      // Player's health is decreased by VCE/2 (rounded down)
+      if (eventCardSuit === 'clubs' || eventCardSuit == 'cups') {
+        hpDelta = -Math.floor((eventCard?.value ?? 0) / 2);
+      }
+
+      return GameActions.resolvedCard({ hpDelta });
+    }),
+  ));
+
+  resolveCardSuccess$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.resolveCardSuccess),
+    withLatestFrom(
+      this.store.select(GameSelectors.selectEventCard),
+    ),
+    map(([, eventCard]) => {
+      const eventCardSuit = eventCard?.suit;
+      let hpDelta = 0;
+
+      // Player's health is increased by VCE
+      if (eventCardSuit === 'cups') {
+        hpDelta = eventCard?.value ?? 0;
+      }
+
+      return GameActions.resolvedCard({ hpDelta });
+    }),
+  ));
+
+  resolveCombat$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.resolveCombat),
+    withLatestFrom(
+      this.store.select(GameSelectors.selectAidDeck),
+      this.store.select(GameSelectors.selectEnemy),
+    ),
+    map(([, aidIm, enemy]) => {
+      if (!enemy) {
+        return GameActions.error({ error: `Invalid state for action ${GameActions.resolveCombat.type}: enemy=${enemy}` });
+      }
+
+      // Enemy card becomes a Help card
+      const aid = aidIm.clone();
+      aid.push(enemy.card);
+
+      return GameActions.resolvedCombat({ aid });
+    }),
+  ));
+
+  revealedOk$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.revealedOk),
+    withLatestFrom(
+      this.store.select(GameSelectors.selectEnemy),
+    ),
+    map(([, enemy]) => {
+
+      if (!enemy) {
+        return GameActions.error({ error: `No enemy preview found` });  
+      }
+
+      // If the enemy is a king, the Combat begins
+      if (enemy.card.value === 10) {
+        return GameActions.combat();
+      }
+
+      // Otherwise, the combat automatically ends in you favor
+      return GameActions.resolveCombat();
+
+    }),
+  ));
+
   spend$ = createEffect(() => this.actions$.pipe(
     ofType(GameActions.spend),
     withLatestFrom(
@@ -45,123 +249,33 @@ export class GamesEffects {
     map(({ eventCard, selectedGoldValue }) => {
       const eventCardSuit = eventCard.suit;
 
+      // Spending a total sum equal or greater than the value of the Event Card, the Resolution is
+      // automatically successfull
       if (eventCardSuit === 'clubs' || eventCardSuit === 'cups') {
         return GameActions.resolveCardSuccess();
       }
       
       const eventCardValue = eventCard.value;
 
-      if (eventCardSuit === 'swords' && eventCardValue === selectedGoldValue) {
+      // Spending an amount of gold equal to the value of the Event Card continues the Crawling
+      // phase without engaging in combat
+      if (eventCardSuit === 'swords' && selectedGoldValue === eventCardValue) {
         return GameActions.resolveCardSuccess();
       }
 
-      if (eventCardSuit === 'swords' && eventCardValue > selectedGoldValue) {
-        
+      // In easy mode, by spending an amount of gold greather than the value of the Event card, you
+      // reveal the enemy
+      if (eventCardSuit === 'swords' && selectedGoldValue > eventCardValue) {
+        return GameActions.bribe();
+      }
+
+      // TODO In hard mode, you have to spend twice the gold of the event card value
+      // This check should be done before launching spent action
+      if (eventCardSuit === 'swords' && selectedGoldValue === eventCardValue * 2) {
+
       }
 
       return GameActions.error({ error: `Invalid state for action ${GameActions.spent.type}: eventCardSuit=${eventCardSuit}, selectedGoldValue=${selectedGoldValue}` });
-    }),
-  ));
-
-  collect$ = createEffect(() => this.actions$.pipe(
-    ofType(GameActions.collect),
-    withLatestFrom(
-      this.store.select(GameSelectors.selectEventDeck),
-      this.store.select(GameSelectors.selectGoldDeck),
-    ),
-    map(([, eventIm, goldIm]) => {
-      const event = eventIm.clone();
-      const gold = goldIm.clone();
-      const eventCard = event.pop();
-      if (!eventCard) {
-        return GameActions.error({ error: 'No event card' });
-      }
-      if (eventCard.suit !== 'coins') {
-        return GameActions.error({ error: `Event card is ${eventCard.suit} while coins where expected` });
-      }
-      gold.push(eventCard);
-      return GameActions.collected({ event, gold });
-    }),
-  ));
-
-  draw$ = createEffect(() => this.actions$.pipe(
-    ofType(GameActions.draw),
-    withLatestFrom(
-      this.store.select(GameSelectors.selectEventDeck),
-      this.store.select(GameSelectors.selectDungeonDeck),
-    ),
-    map(([, eventIm, dungeonIm]) => {
-      const event = eventIm.clone();
-      const dungeon = dungeonIm.clone();
-      const dungeonCard = dungeon.pop();
-      if (!dungeonCard) {
-        return GameActions.error({ error: 'Dungeon deck is empty' });
-      }
-      event.push(dungeonCard);
-      return GameActions.drawn({ event, dungeon });
-    }),
-  ));
-
-  resolveCard$ = createEffect(() => this.actions$.pipe(
-    ofType(GameActions.resolveCard),
-    withLatestFrom(
-      this.store.select(GameSelectors.selectEventCard),
-      this.store.select(GameSelectors.selectDice),
-    ),
-    map(([, eventCard, dice]) => {
-      if (dice === 1) {
-        return GameActions.resolveCardFailure()
-      }
-
-      if (dice === 6) {
-        return GameActions.resolveCardSuccess();
-      }
-
-      const eventCardValue = eventCard?.value;
-
-      if (!dice || !eventCardValue) {
-        return GameActions.error({ error: `Invalid state for action ${GameActions.resolveCard.type}: dice=${dice}, eventCardValue=${eventCardValue}` });
-      }
-
-      if (dice >= eventCardValue) {
-        return GameActions.resolveCardSuccess();
-      }
-
-      return GameActions.resolveCardFailure();
-    }),
-  ));
-
-  resolveCardFailure$ = createEffect(() => this.actions$.pipe(
-    ofType(GameActions.resolveCardFailure),
-    withLatestFrom(
-      this.store.select(GameSelectors.selectEventCard),
-    ),
-    map(([, eventCard]) => {
-      const eventCardSuit = eventCard?.suit;
-      let hpDelta = 0;
-
-      if (eventCardSuit === 'clubs' || eventCardSuit == 'cups') {
-        hpDelta = -Math.floor((eventCard?.value ?? 0) / 2);
-      }
-
-      return GameActions.resolvedCard({ hpDelta });
-    }),
-  ));
-
-  resolveCardSuccess$ = createEffect(() => this.actions$.pipe(
-    ofType(GameActions.resolveCardSuccess),
-    withLatestFrom(
-      this.store.select(GameSelectors.selectEventCard),
-    ),
-    map(([, eventCard]) => {
-      const eventCardSuit = eventCard?.suit;
-      let hpDelta = 0;
-
-      if (eventCardSuit === 'cups') {
-        hpDelta = eventCard?.value ?? 0;
-      }
-
-      return GameActions.resolvedCard({ hpDelta });
     }),
   ));
 
@@ -205,6 +319,7 @@ export class GamesEffects {
       const dungeon = Deck.empty();
       dungeon.push(new Card(4, 'coins'));
       dungeon.push(new Card(5, 'coins'));
+      dungeon.push(new Card(4, 'swords'));
       dungeon.push(new Card(4, 'clubs'));
       dungeon.push(new Card(5, 'clubs'));
       dungeon.push(new Card(4, 'cups'));

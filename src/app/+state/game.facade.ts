@@ -37,14 +37,14 @@ export class GameFacade {
 
     status$ = this.store.select(GameSelectors.selectStatus);
 
-    /** User choose to spend coins to resolve an event card */
-    spend() {
-        this.store.dispatch(GameActions.spend());
-    }
-
     /** If the event card is coins, collect it */
     collect() {
         this.store.dispatch(GameActions.collect());
+    }
+
+    /** Reveal an enemy  */
+    combat() {
+        this.store.dispatch(GameActions.combat());
     }
 
     /** Draw a card from dungeon deck */
@@ -59,6 +59,15 @@ export class GameFacade {
 
     resolveDice() {
         this.store.dispatch(GameActions.resolveCard());
+    }
+
+    revealedOk() {
+        this.store.dispatch(GameActions.revealedOk())
+    }
+
+    /** User choose to spend coins to resolve an event card */
+    spend() {
+        this.store.dispatch(GameActions.spend());
     }
 
     /** Starts a new game */

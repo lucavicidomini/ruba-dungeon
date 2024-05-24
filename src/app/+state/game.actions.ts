@@ -4,18 +4,19 @@ import { Deck } from '../+models/deck.model';
 import { PartialDeckState } from './game.reducer';
 import { Card } from '../+models/card.model';
 
-export const spend = createAction('[Game] Spend');
+export const bribe = createAction('[Game] Bribe');
 
-export const spent = createAction(
-    '[Game] Spent',
-    props<{ eventCard: Card, event: Deck, gold: Deck, selectedGoldValue: number }>()
+export const combat = createAction('[Game] Combat');
+
+export const combatStart = createAction(
+    '[Game] Combat Start',
 );
-
-export const collect = createAction('[Game] Collect');
 
 export const collected = createAction('[Game] Collected',
     props<{ event: Deck, gold: Deck }>()
 );
+
+export const collect = createAction('[Game] Collect');
 
 export const draw = createAction('[Game] Draw');
 
@@ -44,9 +45,34 @@ export const resolveCardSuccess = createAction(
 
 export const resolveCardFailure = createAction('[Game] Resolve Failure');
 
+export const resolveCombat = createAction(
+    '[Game] Resolve Combat'
+);
+
+export const resolvedCombat = createAction(
+    '[Game] Resolved Combat',
+    props<{ aid: Deck }>()
+);
+
+export const revealed = createAction(
+    '[Game] Revealed',
+    props<{ character: Deck, enemy: Character }>()
+);
+
+export const revealedOk = createAction(
+    '[Game] Revealed Ok'
+);
+
 export const setup = createAction(
     '[Game] Setup',
     props<{ decks: PartialDeckState, hero: Character }>()
+);
+
+export const spend = createAction('[Game] Spend');
+
+export const spent = createAction(
+    '[Game] Spent',
+    props<{ eventCard: Card, event: Deck, gold: Deck, selectedGoldValue: number }>()
 );
 
 export const start = createAction('[Game] Start');

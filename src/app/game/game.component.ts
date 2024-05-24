@@ -86,6 +86,10 @@ export class GameComponent implements OnInit {
     return status === GameStatus.RESOLVE_THREW_DICE;
   }
 
+  showRevealOk(status: GameStatus): boolean {
+    return status === GameStatus.ENEMY_REVEALED;
+  }
+
   showSpend(status: GameStatus, eventCard: Card): boolean {
     return status === GameStatus.CRAWL_ACT && eventCard.suit !== 'coins';
   }
@@ -95,7 +99,7 @@ export class GameComponent implements OnInit {
   }
 
   onCombat() {
-
+    this.gameFacade.combat();
   }
 
   onDraw() {
@@ -112,6 +116,10 @@ export class GameComponent implements OnInit {
 
   onGoldSelect(goldSelected: Deck) {
     this.gameFacade.goldSelected(goldSelected);
+  }
+
+  onRevealedOk() {
+    this.gameFacade.revealedOk();
   }
 
   onSpend() {
