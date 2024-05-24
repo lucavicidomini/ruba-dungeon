@@ -365,15 +365,26 @@ export class GamesEffects {
       this.store.select(GameSelectors.selectEnemyActions),
       this.store.select(GameSelectors.selectEventDeck),
       this.store.select(GameSelectors.selectHeroAction),
+      this.store.select(GameSelectors.selectObtainedRelicDeck),
+      this.store.select(GameSelectors.selectRelicDeck),
     ),
-    map(([, aidIm, enemy, enemyAction, eventIm, heroAction]) => {
+    map(([, aidIm, enemy, enemyAction, eventIm, heroAction, obtainedRelicIm, relicIm]) => {
       if (!enemy) {
         return GameActions.error({ error: `Invalid state for action ${GameActions.resolveCombat.type}: enemy=${enemy}` });
       }
 
-      // Enemy card becomes a Help card
+      // Enemy card becomes an aid card
       const aid = aidIm.clone();
       aid.push(enemy.card);
+
+      // If enemy is a king, player obtains a relic
+      const obtainedRelic = obtainedRelicIm.clone();
+      const relic = relicIm.clone();
+      if (enemy.card.value === 10) {
+        const relicCard = new Card(1, enemy.card.suit);
+        relic.remove(relicCard);
+        obtainedRelic.push(relicCard);
+      }
 
       // Remaining enemy actions are moved to event
       const event = eventIm.clone();
@@ -381,7 +392,7 @@ export class GamesEffects {
       event.pushAll(heroAction);
       console.log('Putting remaining hero actions to event (should modify this)');
 
-      return GameActions.resolvedCombat({ aid, event });
+      return GameActions.resolvedCombat({ aid, event, obtainedRelic, relic });
     }),
   ));
 
@@ -488,17 +499,17 @@ export class GamesEffects {
       const hero = new Character(new Card(8, 'swords'), 12, 12);
 
       const character = Deck.empty();
+      character.push(new Card(10, 'clubs'));
+      character.push(new Card(10, 'coins'));
+      character.push(new Card(10, 'cups'));
+      character.push(new Card(10, 'swords'));
       character.push(new Card(8, 'clubs'));
       character.push(new Card(9, 'clubs'));
-      character.push(new Card(10, 'clubs'));
       character.push(new Card(8, 'coins'));
       character.push(new Card(9, 'coins'));
-      character.push(new Card(10, 'coins'));
       character.push(new Card(8, 'cups'));
       character.push(new Card(9, 'cups'));
-      character.push(new Card(10, 'cups'));
       character.push(new Card(9, 'swords'));
-      character.push(new Card(10, 'swords'));
 
       const relic = Deck.empty();
       relic.push(new Card(1, 'clubs'));
@@ -508,21 +519,16 @@ export class GamesEffects {
       character.reverse();
 
       const dungeon = Deck.empty();
-      dungeon.push(new Card(4, 'coins'));  // Allow user two collect a couple of golds
-      dungeon.push(new Card(5, 'coins'));
-      dungeon.push(new Card(4, 'swords')); // Allow to start a combat
-      dungeon.push(new Card(4, 'clubs'));  // Hero action cards
-      dungeon.push(new Card(5, 'clubs'));
-      dungeon.push(new Card(4, 'cups'));
-      dungeon.push(new Card(5, 'cups'));   // Enemy action cards
-      dungeon.push(new Card(6, 'cups'));
-      dungeon.push(new Card(2, 'cups'));
-      dungeon.push(new Card(1, 'swords')); 
-      dungeon.push(new Card(2, 'swords'));
-      dungeon.push(new Card(3, 'swords'));
-      dungeon.push(new Card(5, 'swords'));
-      dungeon.push(new Card(6, 'swords'));
-      dungeon.push(new Card(7, 'swords'));
+      for (let i = 0; i < 4; i++) {
+        dungeon.push(new Card(4, 'swords'));
+        dungeon.push(new Card(7, 'swords'));
+        dungeon.push(new Card(6, 'swords'));
+        dungeon.push(new Card(5, 'swords'));
+        dungeon.push(new Card(3, 'swords'));
+        dungeon.push(new Card(2, 'swords'));
+        dungeon.push(new Card(1, 'swords'));
+      }
+      
       dungeon.reverse();
       
       const decks: PartialDeckState = { dungeon, character, relic };

@@ -175,13 +175,15 @@ export const gameReducer = createReducer(
     status: GameStatus.CRAWL_READY,
   })),
 
-  on(GameActions.resolvedCombat, (state, { aid, event }) => ({
+  on(GameActions.resolvedCombat, (state, { aid, event, obtainedRelic, relic }) => ({
     ...state,
     combat: initialCombatState,
     decks: {
       ...state.decks,
       aid,
       event,
+      obtainedRelic,
+      relic,
     },
     enemy: undefined,
     status: GameStatus.CRAWL_READY,

@@ -18,6 +18,11 @@ export const gameOver = createAction(
     '[Game] Game Over'
 );
 
+/** Player won the game */
+export const gameWon = createAction(
+    '[Game] Game Won'
+);
+
 /** Starts a new game */
 export const start = createAction(
     '[Game] Start'
