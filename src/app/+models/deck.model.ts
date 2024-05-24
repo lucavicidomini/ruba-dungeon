@@ -61,6 +61,10 @@ export class Deck {
         this.deckCards.push(card);
     }
 
+    pushAll(other: Deck): void {
+        other.cards.forEach(otherCard => this.push(otherCard));
+    }
+
     remove(card: Card): void {
         this.deckCards = this.deckCards.filter(inDeck => !inDeck.equals(card));
     }

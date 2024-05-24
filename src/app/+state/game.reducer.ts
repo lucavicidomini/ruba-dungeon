@@ -37,13 +37,15 @@ export interface GameState {
   status: GameStatus;
 }
 
+export const initialCombatState = {
+  action: 0,
+  heroAction: Deck.empty(),
+  heroActionSelected: Deck.empty(),
+  enemyAction: Deck.empty(),
+}
+
 export const initialState: GameState = {
-  combat: {
-    action: 0,
-    heroAction: Deck.empty(),
-    heroActionSelected: Deck.empty(),
-    enemyAction: Deck.empty(),
-  },
+  combat: initialCombatState,
   decks: {
     aid: Deck.empty(),
     catacomb: Deck.empty(),
@@ -64,15 +66,12 @@ export const initialState: GameState = {
 export const gameReducer = createReducer(
   initialState,
 
-  on(GameActions.spent, (state, { event, gold }) => ({
+  on(GameActions.actionStarted, (state, { action }) => ({
     ...state,
-    decks: {
-      ...state.decks,
-      event,
-      gold,
-      goldSelected: Deck.empty(),
-    },
-    status: GameStatus.CRAWL_READY,
+    combat: {
+      ...state.combat,
+      action,
+    }
   })),
 
   on(GameActions.challenged, (state, { character, enemy }) => ({
@@ -94,23 +93,23 @@ export const gameReducer = createReducer(
     status: GameStatus.CRAWL_READY,
   })),
 
-  on(GameActions.combat, (state) => ({
+  on(GameActions.combatStart, (state) => ({
     ...state,
     status: GameStatus.COMBAT,
   })),
 
-  on(GameActions.combatAction, (state, { }) => ({
+  on(GameActions.actionStart, (state, { }) => ({
     ...state,
     status: GameStatus.COMBAT,
   })),
 
-  on(GameActions.combatStarted, (state, { heroAction, enemyAction }) => ({
+  on(GameActions.combatStarted, (state) => ({
     ...state,
     combat: {
       action: 0,
-      heroAction,
+      heroAction: Deck.empty(),
       heroActionSelected: Deck.empty(),
-      enemyAction,
+      enemyAction: Deck.empty(),
     },
     decks: {
       ...state.decks,
@@ -132,13 +131,17 @@ export const gameReducer = createReducer(
     error,
   })),
 
-  on(GameActions.fighted, (state, { enemy, enemyAction, hero, heroAction }) => ({
+  on(GameActions.fighted, (state, { enemy, enemyAction, event, hero, heroAction }) => ({
     ...state,
     combat: {
       ...state.combat,
       enemyAction,
       heroAction,
       heroActionSelected: Deck.empty(),
+    },
+    decks: {
+      ...state.decks,
+      event,
     },
     enemy,
     hero,
@@ -172,11 +175,13 @@ export const gameReducer = createReducer(
     status: GameStatus.CRAWL_READY,
   })),
 
-  on(GameActions.resolvedCombat, (state, { aid }) => ({
+  on(GameActions.resolvedCombat, (state, { aid, event }) => ({
     ...state,
+    combat: initialCombatState,
     decks: {
       ...state.decks,
       aid,
+      event,
     },
     enemy: undefined,
     status: GameStatus.CRAWL_READY,
@@ -207,17 +212,35 @@ export const gameReducer = createReducer(
     status: GameStatus.CRAWL_READY,
   })),
 
+  on(GameActions.spent, (state, { event, gold }) => ({
+    ...state,
+    decks: {
+      ...state.decks,
+      event,
+      gold,
+      goldSelected: Deck.empty(),
+    },
+    status: GameStatus.CRAWL_READY,
+  })),
+
   on(GameActions.threwDice, (state, { dice }) => ({
     ...state,
     dice,
     status: GameStatus.RESOLVE_THREW_DICE,
   })),
 
-  on(GameActions.turnStart, (state, { action }) => ({
+  on(GameActions.turnStarted, (state, { dungeon, event, heroAction, enemyAction }) => ({
     ...state,
     combat: {
       ...state.combat,
-      action,
+      action: 0,
+      heroAction,
+      enemyAction,
+    },
+    decks: {
+      ...state.decks,
+      dungeon,
+      event,
     }
   })),
 

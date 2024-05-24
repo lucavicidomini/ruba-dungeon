@@ -13,6 +13,36 @@ import * as GameSelectors from './game.selectors';
 @Injectable()
 export class GamesEffects {
 
+  /*
+   * If dungeon deck is empty, reshuffle using event deck
+   */
+  reshuffle(currentDungeon: Deck, currentEvent: Deck) {
+    if (currentDungeon.length) {
+      return { dungeon: currentDungeon, event: currentEvent };
+    }
+
+    const dungeon = currentEvent.clone();
+    dungeon.shuffle();
+    const event = Deck.empty();
+    return  { dungeon, event };
+  }
+
+  actionStart$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.actionStart),
+    withLatestFrom(
+      this.store.select(GameSelectors.selectCombatAction),
+    ),
+    map(([, lastAction]) => {
+      if (lastAction === undefined) {
+        return GameActions.error({ error: `Invalid state for action ${GameActions.actionStart.type}: lastAction=${lastAction}` });
+      }
+
+      const action = lastAction + 1;
+
+      return GameActions.actionStarted({ action });
+    }),
+  ));
+
   bribe$ = createEffect(() => this.actions$.pipe(
     ofType(GameActions.bribe),
     withLatestFrom(
@@ -67,7 +97,7 @@ export class GamesEffects {
   challenged$ = createEffect(() => this.actions$.pipe(
     ofType(GameActions.challenged),
     map(() =>
-      GameActions.combat()
+      GameActions.combatStart()
     ),
   ));
 
@@ -100,51 +130,16 @@ export class GamesEffects {
   ));
 
   combat$ = createEffect(() => this.actions$.pipe(
-    ofType(GameActions.combat),
-    withLatestFrom(
-      this.store.select(GameSelectors.selectDungeonDeck),
-    ),
-    map(([, dungeonIm]) => {
-      const dungeon = dungeonIm.clone();
-
-      // Pick three action card for player
-      // TODO Remove cast
-      const heroAction = Deck.empty();
-      for (let i = 0; i < 3; i++) {
-        heroAction.push(dungeon.pop() as Card);
-      }
-
-      // Pick three action card for enemy
-      // TODO Remove cast
-      const enemyAction = Deck.empty();
-      for (let i = 0; i < 3; i++) {
-        enemyAction.push(dungeon.pop() as Card);
-      }
-
-      return GameActions.combatStarted({ heroAction, enemyAction });
-    }),
-  ));
-
-  combatAction = createEffect(() => this.actions$.pipe(
-    ofType(GameActions.combatAction),
-    withLatestFrom(
-      this.store.select(GameSelectors.selectCombatAction),
-    ),
-    map(([, lastAction]) => {
-      if (lastAction === undefined) {
-        return GameActions.error({ error: `Invalid state for action ${GameActions.combatAction.type}: lastAction=${lastAction}` });
-      }
-
-      const action = lastAction + 1;
-
-      return GameActions.turnStart({ action });
+    ofType(GameActions.combatStart),
+    map(() => {
+      return GameActions.combatStarted();
     }),
   ));
 
   combatStarted$ = createEffect(() => this.actions$.pipe(
     ofType(GameActions.combatStarted),
     map(() =>
-      GameActions.combatAction()
+      GameActions.turnStart()
     ),
   ));
 
@@ -155,10 +150,11 @@ export class GamesEffects {
       this.store.select(GameSelectors.selectDungeonDeck),
     ),
     map(([, eventIm, dungeonIm]) => {
-      const event = eventIm.clone();
-      const dungeon = dungeonIm.clone();
+      let event = eventIm.clone();
+      let dungeon = dungeonIm.clone();
 
       // Draw a card from dungeon deck
+      ({ dungeon, event } = this.reshuffle(dungeon, event))
       const dungeonCard = dungeon.pop();
 
       if (!dungeonCard) {
@@ -177,29 +173,27 @@ export class GamesEffects {
     withLatestFrom(
       this.store.select(GameSelectors.selectEnemy),
       this.store.select(GameSelectors.selectEnemyActions),
-      this.store.select(GameSelectors.selectEnemyNextAction),
+      this.store.select(GameSelectors.selectEnemyActionSelected),
+      this.store.select(GameSelectors.selectEventDeck),
       this.store.select(GameSelectors.selectHero),
       this.store.select(GameSelectors.selectHeroAction),
       this.store.select(GameSelectors.selectHeroActionSelected),
     ),
-    map(([, enemy, enemyActionDeckIm, enemyAction, hero, heroActionIm, heroActions]) => {
-      const heroSuit = heroActions.peek()?.suit;
-      const heroValue = heroActions.value;
+    map(([, enemy, enemyActionDeckIm, enemyActionSelected, eventIm, hero, heroActionIm, heroActionSelected]) => {
+      // If the hero has no action, heroValue=0 and heroSuit is irrelevant
+      const heroSuit = heroActionSelected.peek()?.suit ?? 'clubs';
+      const heroValue = heroActionSelected.value;
 
-      if (!enemyAction) {
-        return GameActions.error({ error: `Invalid state for action ${GameActions.fight.type}: enemyAction=${enemyAction}` });
-      }
-
-      if (!heroSuit) {
-        return GameActions.error({ error: `Invalid state for action ${GameActions.fight.type}: actionSuit=${heroSuit}` });
+      if (!enemyActionSelected) {
+        return GameActions.error({ error: `Invalid state for action ${GameActions.fight.type}: enemyAction=${enemyActionSelected}` });
       }
 
       if (!hero || !enemy) {
         return GameActions.error({ error: `Invalid state for action ${GameActions.fight.type}: hero=${hero}, enemy=${enemy}` });
       }
 
-      const enemySuit = enemyAction.suit;
-      const enemyValue = enemyAction.value;
+      const enemySuit = enemyActionSelected.suit;
+      const enemyValue = enemyActionSelected.value;
 
       // Calculate damage made by clubs
       const heroClubs = heroSuit === 'clubs' ? heroValue : 0;
@@ -254,20 +248,45 @@ export class GamesEffects {
 
       // Update hero action cards
       const heroAction = heroActionIm.clone();
-      heroAction.removeAll(heroActions);
+      heroAction.removeAll(heroActionSelected);
 
-      return GameActions.fighted({ enemy, enemyAction: enemyActionDeck, hero, heroAction });
+      // Resolved action cards should be placed on Event Cards
+      const event = eventIm.clone();
+      event.push(enemyActionSelected);
+      event.pushAll(heroActionSelected);
+
+      return GameActions.fighted({ enemy, enemyAction: enemyActionDeck, event, hero, heroAction });
     }),
   ));
 
   fighted$ = createEffect(() => this.actions$.pipe(
     ofType(GameActions.fighted),
     withLatestFrom(
-      this.store.select(GameSelectors.selectCombatAction)
+      this.store.select(GameSelectors.selectCombatAction),
+      this.store.select(GameSelectors.selectEnemy),
+      this.store.select(GameSelectors.selectEnemyActionSelected),
+      this.store.select(GameSelectors.selectHero),
     ),
-    map(([, action]) =>
-      GameActions.turnStart({ action: action + 1 })
-    ),
+    map(([, action, enemy, enemyActionSelected, hero]) => {
+      if (!hero || !enemy) {
+        return GameActions.error({ error: `Invalid state for action ${GameActions.fighted.type}: hero=${hero}, enemy=${enemy}` });
+      }
+
+      if (!hero.hp) {
+        return GameActions.gameOver();
+      }
+
+      if (!enemy.hp) {
+        return GameActions.resolveCombat();
+      }
+
+      // No more enemy action cards, start a new turn
+      if (!enemyActionSelected) {
+        return GameActions.turnStart();
+      }
+
+      return GameActions.actionStart();
+    }),
   ));
 
   resolveCard$ = createEffect(() => this.actions$.pipe(
@@ -344,8 +363,11 @@ export class GamesEffects {
     withLatestFrom(
       this.store.select(GameSelectors.selectAidDeck),
       this.store.select(GameSelectors.selectEnemy),
+      this.store.select(GameSelectors.selectEnemyActions),
+      this.store.select(GameSelectors.selectEventDeck),
+      this.store.select(GameSelectors.selectHeroAction),
     ),
-    map(([, aidIm, enemy]) => {
+    map(([, aidIm, enemy, enemyAction, eventIm, heroAction]) => {
       if (!enemy) {
         return GameActions.error({ error: `Invalid state for action ${GameActions.resolveCombat.type}: enemy=${enemy}` });
       }
@@ -354,7 +376,13 @@ export class GamesEffects {
       const aid = aidIm.clone();
       aid.push(enemy.card);
 
-      return GameActions.resolvedCombat({ aid });
+      // Remaining enemy actions are moved to event
+      const event = eventIm.clone();
+      event.pushAll(enemyAction);
+      event.pushAll(heroAction);
+      console.log('Putting remaining hero actions to event (should modify this)');
+
+      return GameActions.resolvedCombat({ aid, event });
     }),
   ));
 
@@ -371,7 +399,7 @@ export class GamesEffects {
 
       // If the enemy is a king, the Combat begins
       if (enemy.card.value === 10) {
-        return GameActions.combat();
+        return GameActions.combatStart();
       }
 
       // Otherwise, the combat automatically ends in you favor
@@ -474,21 +502,27 @@ export class GamesEffects {
       character.push(new Card(10, 'swords'));
 
       const relic = Deck.empty();
-      character.push(new Card(1, 'clubs'));
-      character.push(new Card(1, 'coins'));
-      character.push(new Card(1, 'cups'));
-      character.push(new Card(1, 'swords'));
+      relic.push(new Card(1, 'clubs'));
+      relic.push(new Card(1, 'coins'));
+      relic.push(new Card(1, 'cups'));
+      relic.push(new Card(1, 'swords'));
 
       const dungeon = Deck.empty();
-      dungeon.push(new Card(4, 'coins'));
+      dungeon.push(new Card(4, 'coins'));  // Allow user two collect a couple of golds
       dungeon.push(new Card(5, 'coins'));
-      dungeon.push(new Card(4, 'swords'));
-      dungeon.push(new Card(4, 'clubs'));
+      dungeon.push(new Card(4, 'swords')); // Allow to start a combat
+      dungeon.push(new Card(4, 'clubs'));  // Hero action cards
       dungeon.push(new Card(5, 'clubs'));
       dungeon.push(new Card(4, 'cups'));
-      dungeon.push(new Card(5, 'cups'));
+      dungeon.push(new Card(5, 'cups'));   // Enemy action cards
       dungeon.push(new Card(6, 'cups'));
       dungeon.push(new Card(2, 'cups'));
+      dungeon.push(new Card(1, 'swords')); 
+      dungeon.push(new Card(2, 'swords'));
+      dungeon.push(new Card(3, 'swords'));
+      dungeon.push(new Card(5, 'swords'));
+      dungeon.push(new Card(6, 'swords'));
+      dungeon.push(new Card(7, 'swords'));
 
       dungeon.reverse();
       
@@ -502,6 +536,43 @@ export class GamesEffects {
     map(() => {
       const dice = Math.floor(Math.random() * 6 + 1);
       return GameActions.threwDice({ dice });
+    }),
+  ));
+
+  turnStart$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.turnStart),
+    withLatestFrom(
+      this.store.select(GameSelectors.selectDungeonDeck),
+      this.store.select(GameSelectors.selectEventDeck),
+    ),
+    map(([, dungeonIm, eventIm]) => {
+      let dungeon = dungeonIm.clone();
+      let event = eventIm.clone();
+   
+      // Pick three action card for player
+      // TODO Remove cast
+      const heroAction = Deck.empty();
+      for (let i = 0; i < 3; i++) {
+        ({ dungeon, event } = this.reshuffle(dungeon, event))
+        heroAction.push(dungeon.pop() as Card);
+      }
+
+      // Pick three action card for enemy
+      // TODO Remove cast
+      const enemyAction = Deck.empty();
+      for (let i = 0; i < 3; i++) {
+        ({ dungeon, event } = this.reshuffle(dungeon, event))
+        enemyAction.push(dungeon.pop() as Card);
+      }
+
+      return GameActions.turnStarted({ dungeon, event, enemyAction, heroAction });
+    }),
+  ));
+
+  turnStarted$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.turnStarted),
+    map(() => {
+      return GameActions.actionStart();
     }),
   ));
 

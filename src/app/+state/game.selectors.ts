@@ -44,7 +44,7 @@ export const selectEnemyActions = createSelector(
   (state: GameState) => state.combat?.enemyAction
 );
 
-export const selectEnemyNextAction = createSelector(
+export const selectEnemyActionSelected = createSelector(
   selectFeature,
   (state: GameState) => state.combat?.enemyAction.peek()
 );

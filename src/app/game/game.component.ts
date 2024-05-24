@@ -35,6 +35,8 @@ export class GameComponent implements OnInit {
   characterDeck$ = this.gameFacade.characterDeck$;
 
   dice$ = this.gameFacade.dice$;
+
+  dungeonDeck$ = this.gameFacade.dungeonDeck$;
   
   enemy$ = this.gameFacade.enemy$;
 
@@ -42,9 +44,9 @@ export class GameComponent implements OnInit {
 
   error$ = this.gameFacade.error$;
 
-  eventCard$ = this.gameFacade.eventCard$;
+  eventDeck$ = this.gameFacade.eventDeck$;
 
-  dungeonDeck$ = this.gameFacade.dungeonDeck$;
+  eventCard$ = this.gameFacade.eventCard$;
 
   goldDeck$ = this.gameFacade.goldDeck$;
 

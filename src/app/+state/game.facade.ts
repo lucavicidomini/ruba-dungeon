@@ -20,22 +20,24 @@ export class GameFacade {
     dice$ = this.store.select(GameSelectors.selectDice);
 
     dungeonDeck$ = this.store.select(GameSelectors.selectDungeonDeck);
-    
-    hero$ = this.store.select(GameSelectors.selectHero);
-
-    heroAction$ = this.store.select(GameSelectors.selectHeroAction);
-
-    heroActionSelectedDeck$ = this.store.select(GameSelectors.selectHeroActionSelected);
 
     enemy$ = this.store.select(GameSelectors.selectEnemy);
 
     enemyAction$ = this.store.select(GameSelectors.selectEnemyActions);
 
     eventCard$ = this.store.select(GameSelectors.selectEventCard);
+    
+    eventDeck$ = this.store.select(GameSelectors.selectEventDeck);
 
     error$ = this.store.select(GameSelectors.selectError);
 
     goldDeck$ = this.store.select(GameSelectors.selectGoldDeck);
+
+    hero$ = this.store.select(GameSelectors.selectHero);
+
+    heroAction$ = this.store.select(GameSelectors.selectHeroAction);
+
+    heroActionSelectedDeck$ = this.store.select(GameSelectors.selectHeroActionSelected);
 
     selectGoldSelectedDeck$ = this.store.select(GameSelectors.selectGoldSelectedDeck);
 
@@ -57,7 +59,7 @@ export class GameFacade {
 
     /** Reveal an enemy  */
     combat() {
-        this.store.dispatch(GameActions.combat());
+        this.store.dispatch(GameActions.combatStart());
     }
 
     /** Draw a card from dungeon deck */

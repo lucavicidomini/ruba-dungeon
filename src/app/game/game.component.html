@@ -123,3 +123,7 @@
 
 </ng-container> <!-- goldSelected -->
 </ng-container> <!-- status -->
+
+<ol *ngIf="eventDeck$ | async as deck">
+    <li *ngFor="let card of deck.cards"><app-card  [card]="card"></app-card></li>
+</ol>

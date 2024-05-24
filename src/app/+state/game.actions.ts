@@ -4,16 +4,17 @@ import { Deck } from '../+models/deck.model';
 import { PartialDeckState } from './game.reducer';
 import { Card } from '../+models/card.model';
 
+export const actionStart = createAction(
+    '[Game] Action Start'
+);
+
+export const actionStarted = createAction(
+    '[Game] Action Started',
+    props<{ action: number }>()
+);
+
 export const bribe = createAction(
     '[Game] Bribe'
-);
-
-export const combat = createAction(
-    '[Game] Combat'
-);
-
-export const combatAction = createAction(
-    '[Game] Combat Action'
 );
 
 export const challenge = createAction(
@@ -25,9 +26,12 @@ export const challenged = createAction(
     props<{ character: Deck, enemy: Character }>()
 );
 
+export const combatStart = createAction(
+    '[Game] Combat Start'
+);
+
 export const combatStarted = createAction(
     '[Game] Combat Started',
-    props<{ heroAction: Deck, enemyAction: Deck }>()
 );
 
 export const collected = createAction(
@@ -45,7 +49,7 @@ export const draw = createAction(
 
 export const drawn = createAction(
     '[Game] Uncover',
-    props<{ event: Deck, dungeon: Deck }>()
+    props<{ dungeon: Deck, event: Deck }>()
 );
 
 export const error = createAction(
@@ -59,7 +63,11 @@ export const fight = createAction(
 
 export const fighted = createAction(
     '[Game] Fighted',
-    props<{ enemy: Character, enemyAction: Deck, hero: Character, heroAction: Deck }>()
+    props<{ enemy: Character, enemyAction: Deck, event: Deck, hero: Character, heroAction: Deck }>()
+);
+
+export const gameOver = createAction(
+    '[Game] Game Over'
 );
 
 export const goldSelected = createAction(
@@ -95,7 +103,7 @@ export const resolveCombat = createAction(
 
 export const resolvedCombat = createAction(
     '[Game] Resolved Combat',
-    props<{ aid: Deck }>()
+    props<{ aid: Deck, event: Deck }>()
 );
 
 export const revealed = createAction(
@@ -135,7 +143,11 @@ export const threwDice = createAction(
 );
 
 export const turnStart = createAction(
-    '[Game] Turn Start',
-    props<{ action: number }>()
+    '[Game] Turn Start'
+);
+
+export const turnStarted = createAction(
+    '[Game] Turn Started',
+    props<{ dungeon: Deck, event: Deck, heroAction: Deck, enemyAction: Deck }>()
 );
 

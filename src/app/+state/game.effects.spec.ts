@@ -41,7 +41,7 @@ describe('ProductEffects', () => {
         provideMockStore({
           selectors: [
             { selector: GameSelectors.selectEnemy, value: initialEnemy },
-            { selector: GameSelectors.selectEnemyNextAction, value: enemyAction },
+            { selector: GameSelectors.selectEnemyActionSelected, value: enemyAction },
             { selector: GameSelectors.selectHero, value: initialHero },
             { selector: GameSelectors.selectHeroActionSelected, value: heroActionSelected },
           ]
