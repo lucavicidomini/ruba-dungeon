@@ -24,6 +24,8 @@ export class GameFacade {
 
     goldDeck$ = this.store.select(GameSelectors.selectGoldDeck);
 
+    selectGoldSelectedDeck$ = this.store.select(GameSelectors.selectGoldSelectedDeck);
+
     hero$ = this.store.select(GameSelectors.selectHero);
 
     obtainedRelicDeck$ = this.store.select(GameSelectors.selectObtainedRelicDeck);

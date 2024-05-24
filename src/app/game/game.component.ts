@@ -41,6 +41,8 @@ export class GameComponent implements OnInit {
 
   goldDeck$ = this.gameFacade.goldDeck$;
 
+  selectGoldSelectedDeck$ = this.gameFacade.selectGoldSelectedDeck$;
+
   hero$ = this.gameFacade.hero$;
 
   relicDeck$ = this.gameFacade.relicDeck$;

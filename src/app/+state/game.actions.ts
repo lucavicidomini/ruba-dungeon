@@ -1,6 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 import { Deck } from '../+models/deck.model';
 import { Character } from '../+models/character.model';
+import { DeckState } from './game.reducer';
 
 export const collect = createAction('[Game] Collect');
 
@@ -31,17 +32,7 @@ export const resolveCardFailure = createAction('[Game] Resolve Failure');
 
 export const setup = createAction(
     '[Game] Setup',
-    props<{
-        aid: Deck,
-        catacomb: Deck,
-        character: Deck,
-        dungeon: Deck,
-        event: Deck,
-        gold: Deck,
-        relic: Deck,
-        obtainedRelic: Deck,
-        hero: Character,
-    }>()
+    props<{ decks: DeckState, hero: Character }>()
 );
 
 export const start = createAction('[Game] Start');

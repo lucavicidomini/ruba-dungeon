@@ -39,6 +39,11 @@ export const selectGoldDeck = createSelector(
   (state: GameState) => state.decks.gold
 );
 
+export const selectGoldSelectedDeck = createSelector(
+  selectFeature,
+  (state: GameState) => state.decks.goldSelected
+);
+
 export const selectEventCard = createSelector(
   selectFeature,
   (state: GameState) => state.decks.event.peek()

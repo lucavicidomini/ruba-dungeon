@@ -6,17 +6,20 @@ import { Character } from '../+models/character.model';
 
 export const GAME_STATE_KEY = 'game';
 
+export interface DeckState {
+  aid: Deck;
+  catacomb: Deck;
+  character: Deck;
+  dungeon: Deck;
+  event: Deck;
+  gold: Deck;
+  goldSelected: Deck;
+  obtainedRelic: Deck;
+  relic: Deck;
+}
+
 export interface GameState {
-  decks: {
-    aid: Deck;
-    catacomb: Deck;
-    character: Deck;
-    dungeon: Deck;
-    event: Deck;
-    gold: Deck;
-    obtainedRelic: Deck;
-    relic: Deck;
-  };
+  decks: DeckState;
   dice?: number,
   enemy?: Character,
   hero?: Character,
@@ -31,6 +34,7 @@ export const initialState: GameState = {
     dungeon: Deck.empty(),
     event: Deck.empty(),
     gold: Deck.empty(),
+    goldSelected: Deck.empty(),
     obtainedRelic: Deck.empty(),
     relic: Deck.empty(),
   },
@@ -68,18 +72,9 @@ export const gameReducer = createReducer(
     status: GameStatus.CRAWL_READY,
   })),
 
-  on(GameActions.setup, (state, { aid, catacomb, character, dungeon, event, gold, relic, obtainedRelic, hero }) => ({
+  on(GameActions.setup, (state, { decks, hero }) => ({
     ...state,
-    decks: {
-      aid,
-      catacomb,
-      character,
-      dungeon,
-      event,
-      gold,
-      relic,
-      obtainedRelic,
-    },
+    decks,
     hero,
     status: GameStatus.CRAWL_READY,
   })),

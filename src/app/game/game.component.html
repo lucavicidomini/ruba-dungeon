@@ -97,7 +97,7 @@
         <tr>
             <td>
                 <!-- 8 - Gold (Cards are arranged horizontally) -->
-                <app-selectable-deck *ngIf="goldDeck$ | async as deck" [deck]="deck"></app-selectable-deck>
+                <app-selectable-deck *ngIf="goldDeck$ | async as deck" [deck]="deck" [selectedDeck]="selectGoldSelectedDeck$ | async"></app-selectable-deck>
             </td>
 
             <td>
