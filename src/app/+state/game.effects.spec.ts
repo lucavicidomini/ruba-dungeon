@@ -52,11 +52,11 @@ describe('ProductEffects', () => {
   };
 
   const expectHp = (enemyHp: number, heroHp: number) => {
-    actions$ = hot('a', { a: GameActions.fight() });
+    actions$ = hot('a', { a: GameActions.actionPlay() });
     
     const enemy = new Character(ENEMY_CARD, enemyHp, 6);
     const hero = new Character(HERO_CARD, heroHp, 12);
-    const expected = hot('a', { a: GameActions.fighted({ enemy, hero }) });
+    const expected = hot('a', { a: GameActions.actionPlayed({ enemy, hero }) });
 
     expect(effects.fight$).toBeObservable(expected);
   }

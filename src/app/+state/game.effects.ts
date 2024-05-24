@@ -44,7 +44,7 @@ export class GamesEffects {
   ));
 
   bribe$ = createEffect(() => this.actions$.pipe(
-    ofType(GameActions.bribe),
+    ofType(GameActions.reveal),
     withLatestFrom(
       this.store.select(GameSelectors.selectCharacterDeck),
     ),
@@ -168,8 +168,8 @@ export class GamesEffects {
     }),
   ));
 
-  fight$ = createEffect(() => this.actions$.pipe(
-    ofType(GameActions.fight),
+  actionPlay$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.actionPlay),
     withLatestFrom(
       this.store.select(GameSelectors.selectEnemy),
       this.store.select(GameSelectors.selectEnemyActions),
@@ -185,11 +185,11 @@ export class GamesEffects {
       const heroValue = heroActionSelected.value;
 
       if (!enemyActionSelected) {
-        return GameActions.error({ error: `Invalid state for action ${GameActions.fight.type}: enemyAction=${enemyActionSelected}` });
+        return GameActions.error({ error: `Invalid state for action ${GameActions.actionPlay.type}: enemyAction=${enemyActionSelected}` });
       }
 
       if (!hero || !enemy) {
-        return GameActions.error({ error: `Invalid state for action ${GameActions.fight.type}: hero=${hero}, enemy=${enemy}` });
+        return GameActions.error({ error: `Invalid state for action ${GameActions.actionPlay.type}: hero=${hero}, enemy=${enemy}` });
       }
 
       const enemySuit = enemyActionSelected.suit;
@@ -255,21 +255,20 @@ export class GamesEffects {
       event.push(enemyActionSelected);
       event.pushAll(heroActionSelected);
 
-      return GameActions.fighted({ enemy, enemyAction: enemyActionDeck, event, hero, heroAction });
+      return GameActions.actionPlayed({ enemy, enemyAction: enemyActionDeck, event, hero, heroAction });
     }),
   ));
 
-  fighted$ = createEffect(() => this.actions$.pipe(
-    ofType(GameActions.fighted),
+  actionPlayed$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.actionPlayed),
     withLatestFrom(
-      this.store.select(GameSelectors.selectCombatAction),
       this.store.select(GameSelectors.selectEnemy),
       this.store.select(GameSelectors.selectEnemyActionSelected),
       this.store.select(GameSelectors.selectHero),
     ),
-    map(([, action, enemy, enemyActionSelected, hero]) => {
+    map(([, enemy, enemyActionSelected, hero]) => {
       if (!hero || !enemy) {
-        return GameActions.error({ error: `Invalid state for action ${GameActions.fighted.type}: hero=${hero}, enemy=${enemy}` });
+        return GameActions.error({ error: `Invalid state for action ${GameActions.actionPlayed.type}: hero=${hero}, enemy=${enemy}` });
       }
 
       if (!hero.hp) {
@@ -290,7 +289,7 @@ export class GamesEffects {
   ));
 
   resolveCard$ = createEffect(() => this.actions$.pipe(
-    ofType(GameActions.resolveCard),
+    ofType(GameActions.resolveCardByDice),
     withLatestFrom(
       this.store.select(GameSelectors.selectEventCard),
       this.store.select(GameSelectors.selectDice),
@@ -309,7 +308,7 @@ export class GamesEffects {
       const eventCardValue = eventCard?.value;
 
       if (!dice || !eventCardValue) {
-        return GameActions.error({ error: `Invalid state for action ${GameActions.resolveCard.type}: dice=${dice}, eventCardValue=${eventCardValue}` });
+        return GameActions.error({ error: `Invalid state for action ${GameActions.resolveCardByDice.type}: dice=${dice}, eventCardValue=${eventCardValue}` });
       }
 
       // From 2 to 5 the roll is successfull if the value is equal or greather thatn the event card
@@ -457,7 +456,7 @@ export class GamesEffects {
       // In easy mode, by spending an amount of gold greather than the value of the Event card, you
       // reveal the enemy
       if (eventCardSuit === 'swords' && selectedGoldValue > eventCardValue) {
-        return GameActions.bribe();
+        return GameActions.reveal();
       }
 
       // TODO In hard mode, you have to spend twice the gold of the event card value
@@ -500,7 +499,6 @@ export class GamesEffects {
       character.push(new Card(10, 'cups'));
       character.push(new Card(9, 'swords'));
       character.push(new Card(10, 'swords'));
-      character.reverse();
 
       const relic = Deck.empty();
       relic.push(new Card(1, 'clubs'));
@@ -528,7 +526,7 @@ export class GamesEffects {
       dungeon.reverse();
       
       const decks: PartialDeckState = { dungeon, character, relic };
-      return GameActions.setup({ decks, hero });
+      return GameActions.started({ decks, hero });
     }),
   ));
 

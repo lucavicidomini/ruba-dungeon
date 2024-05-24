@@ -131,7 +131,7 @@ export const gameReducer = createReducer(
     error,
   })),
 
-  on(GameActions.fighted, (state, { enemy, enemyAction, event, hero, heroAction }) => ({
+  on(GameActions.actionPlayed, (state, { enemy, enemyAction, event, hero, heroAction }) => ({
     ...state,
     combat: {
       ...state.combat,
@@ -197,7 +197,7 @@ export const gameReducer = createReducer(
     status: GameStatus.ENEMY_REVEALED,
   })),
 
-  on(GameActions.setup, (state, { decks, hero }) => ({
+  on(GameActions.started, (state, { decks, hero }) => ({
     ...state,
     decks: {
       aid: Deck.empty(),

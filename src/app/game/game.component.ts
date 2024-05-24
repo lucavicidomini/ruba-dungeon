@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Card } from '../+models/card.model';
+import { Deck } from '../+models/deck.model';
 import { GameStatus } from '../+models/game.model';
 import { GameFacade } from '../+state/game.facade';
 import { CardComponent } from '../card/card.component';
 import { CharacterComponent } from '../character/character.component';
 import { DeckComponent } from '../deck/deck.component';
 import { SelectableDeckComponent } from '../selectable-deck/selectable-deck.component';
-import { Deck } from '../+models/deck.model';
 
 @Component({
   selector: 'app-game',
@@ -72,7 +72,7 @@ export class GameComponent implements OnInit {
     this.gameFacade.start(); 
   }
 
-  disableFight(heroActions: Deck, heroActionSelected: Deck) {
+  disablePlay(heroActions: Deck, heroActionSelected: Deck) {
     return heroActions.length && !heroActionSelected.length;
   }
 
@@ -100,7 +100,7 @@ export class GameComponent implements OnInit {
     return status === GameStatus.RESOLVE_THREW_DICE;
   }
 
-  showFight(status: GameStatus): boolean {
+  showPlay(status: GameStatus): boolean {
     return status === GameStatus.COMBAT;
   }
 
@@ -129,10 +129,10 @@ export class GameComponent implements OnInit {
   }
 
   onDiceOk() {
-    this.gameFacade.resolveDice();
+    this.gameFacade.resolveCardByDice();
   }
 
-  onFight() {
+  onPlay() {
     this.gameFacade.fight();
   }
 

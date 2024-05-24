@@ -58,7 +58,7 @@ export class GameFacade {
     }
 
     /** Reveal an enemy  */
-    combat() {
+    combatStart() {
         this.store.dispatch(GameActions.combatStart());
     }
 
@@ -69,7 +69,7 @@ export class GameFacade {
 
     /** User selected one ot more card to combat */
     fight() {
-        this.store.dispatch(GameActions.fight());
+        this.store.dispatch(GameActions.actionPlay());
     }
 
     /** User selected/deselected a gold card */
@@ -82,8 +82,8 @@ export class GameFacade {
         this.store.dispatch(GameActions.heroActionSelected({ heroActionSelected }));
     }
 
-    resolveDice() {
-        this.store.dispatch(GameActions.resolveCard());
+    resolveCardByDice() {
+        this.store.dispatch(GameActions.resolveCardByDice());
     }
 
     revealedOk() {
