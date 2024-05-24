@@ -64,5 +64,5 @@ export const resolveCombat = createAction(
 /** Updated state after `resolveCombat` */
 export const resolvedCombat = createAction(
     '[Game/Combat] Resolved Combat',
-    props<{ aid: Deck, event: Deck, obtainedRelic: Deck, relic: Deck }>()
+    props<{ aid: Deck, event: Deck, heroAction: Deck, obtainedRelic: Deck, relic: Deck }>()
 );

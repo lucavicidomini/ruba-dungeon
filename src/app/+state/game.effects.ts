@@ -154,7 +154,7 @@ export class GamesEffects {
       let dungeon = dungeonIm.clone();
 
       // Draw a card from dungeon deck
-      ({ dungeon, event } = this.reshuffle(dungeon, event))
+      ({ dungeon, event } = this.reshuffle(dungeon, event));
       const dungeonCard = dungeon.pop();
 
       if (!dungeonCard) {
@@ -389,10 +389,14 @@ export class GamesEffects {
       // Remaining enemy actions are moved to event
       const event = eventIm.clone();
       event.pushAll(enemyAction);
-      event.pushAll(heroAction);
-      console.log('Putting remaining hero actions to event (should modify this)');
 
-      return GameActions.resolvedCombat({ aid, event, obtainedRelic, relic });
+      // TODO Ask player what cards to keep or discard
+      if (false) {
+        event.pushAll(heroAction);
+        heroAction = Deck.empty();
+      }
+
+      return GameActions.resolvedCombat({ aid, event, heroAction, obtainedRelic, relic });
     }),
   ));
 
@@ -556,16 +560,18 @@ export class GamesEffects {
     withLatestFrom(
       this.store.select(GameSelectors.selectDungeonDeck),
       this.store.select(GameSelectors.selectEventDeck),
+      this.store.select(GameSelectors.selectHeroAction),
     ),
-    map(([, dungeonIm, eventIm]) => {
+    map(([, dungeonIm, eventIm, heroActionIm]) => {
       let dungeon = dungeonIm.clone();
       let event = eventIm.clone();
    
       // Pick three action card for player
       // TODO Remove cast
-      const heroAction = Deck.empty();
-      for (let i = 0; i < 3; i++) {
-        ({ dungeon, event } = this.reshuffle(dungeon, event))
+      const heroAction = heroActionIm.clone();
+      const missingCount = 3 - heroAction.length;
+      for (let i = 0; i < missingCount; i++) {
+        ({ dungeon, event } = this.reshuffle(dungeon, event));
         heroAction.push(dungeon.pop() as Card);
       }
 
@@ -573,7 +579,7 @@ export class GamesEffects {
       // TODO Remove cast
       const enemyAction = Deck.empty();
       for (let i = 0; i < 3; i++) {
-        ({ dungeon, event } = this.reshuffle(dungeon, event))
+        ({ dungeon, event } = this.reshuffle(dungeon, event));
         enemyAction.push(dungeon.pop() as Card);
       }
 

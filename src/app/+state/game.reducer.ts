@@ -106,10 +106,8 @@ export const gameReducer = createReducer(
   on(GameActions.combatStarted, (state) => ({
     ...state,
     combat: {
+      ...state.combat,
       action: 0,
-      heroAction: Deck.empty(),
-      heroActionSelected: Deck.empty(),
-      enemyAction: Deck.empty(),
     },
     decks: {
       ...state.decks,
@@ -185,9 +183,14 @@ export const gameReducer = createReducer(
     status: GameStatus.CRAWL_READY,
   })),
 
-  on(GameActions.resolvedCombat, (state, { aid, event, obtainedRelic, relic }) => ({
+  on(GameActions.resolvedCombat, (state, { aid, event, heroAction, obtainedRelic, relic }) => ({
     ...state,
-    combat: initialCombatState,
+    combat: {
+      ...state.combat,
+      enemyAction: Deck.empty(),
+      heroAction,
+      heroActionSelected: Deck.empty(),
+    },
     decks: {
       ...state.decks,
       aid,
