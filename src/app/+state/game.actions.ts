@@ -1,7 +1,15 @@
 import { createAction, props } from '@ngrx/store';
-import { Deck } from '../+models/deck.model';
 import { Character } from '../+models/character.model';
-import { DeckState, PartialDeckState } from './game.reducer';
+import { Deck } from '../+models/deck.model';
+import { PartialDeckState } from './game.reducer';
+import { Card } from '../+models/card.model';
+
+export const bribe = createAction('[Game] Bribe');
+
+export const bribed = createAction(
+    '[Game] Bribed',
+    props<{ eventCard: Card, event: Deck, gold: Deck, selectedGoldValue: number }>()
+);
 
 export const collect = createAction('[Game] Collect');
 
@@ -30,7 +38,9 @@ export const resolvedCard = createAction(
     props<{ hpDelta: number }>()
 );
 
-export const resolveCardSuccess = createAction('[Game] Resolve Success');
+export const resolveCardSuccess = createAction(
+    '[Game] Resolve Success'
+);
 
 export const resolveCardFailure = createAction('[Game] Resolve Failure');
 

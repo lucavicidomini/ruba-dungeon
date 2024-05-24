@@ -13,6 +13,59 @@ import { Card } from '../+models/card.model';
 @Injectable()
 export class GamesEffects {
 
+  bribe$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.bribe),
+    withLatestFrom(
+      this.store.select(GameSelectors.selectEventCard),
+      this.store.select(GameSelectors.selectEventDeck),
+      this.store.select(GameSelectors.selectGoldDeck),
+      this.store.select(GameSelectors.selectGoldSelectedDeck),
+    ),
+    map(([, eventCard, eventIm, goldIm, selectedGold]) => {
+      if (!eventCard) {
+        return GameActions.error({ error: `Invalid state for action ${GameActions.bribe.type}: eventCard=${eventCard}` });
+      }
+
+      const selectedGoldValue = selectedGold.value;
+
+      // Gold cards are placed on top of event card
+      const event = eventIm.clone();
+      const gold = goldIm.clone();
+      selectedGold.cards.forEach(card => {
+        gold.remove(card);
+        event.push(card);
+      });
+
+      return GameActions.bribed({ eventCard, event, gold, selectedGoldValue });
+    }),
+  ));
+
+  bribed$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.bribed),
+    // withLatestFrom(
+    //   this.store.select(GameSelectors.selectEventCard),
+    // ),
+    map(({ eventCard, event: eventIm, gold: goldIm, selectedGoldValue }) => {
+      const eventCardSuit = eventCard.suit;
+
+      if (eventCardSuit === 'clubs' || eventCardSuit === 'cups') {
+        return GameActions.resolveCardSuccess();
+      }
+      
+      const eventCardValue = eventCard.value;
+
+      if (eventCardSuit === 'swords' && eventCardValue !== undefined && eventCardValue === selectedGoldValue) {
+        return GameActions.resolveCardSuccess();
+      }
+
+      if (eventCardSuit === 'swords' && eventCardValue !== undefined && eventCardValue > selectedGoldValue) {
+        
+      }
+
+      return GameActions.error({ error: `Invalid state for action ${GameActions.bribe.type}: eventCardSuit=${eventCardSuit}, selectedGoldValue=${selectedGoldValue}` });
+    }),
+  ));
+
   collect$ = createEffect(() => this.actions$.pipe(
     ofType(GameActions.collect),
     withLatestFrom(
@@ -31,7 +84,7 @@ export class GamesEffects {
       }
       gold.push(eventCard);
       return GameActions.collected({ event, gold });
-    })
+    }),
   ));
 
   draw$ = createEffect(() => this.actions$.pipe(
@@ -49,7 +102,7 @@ export class GamesEffects {
       }
       event.push(dungeonCard);
       return GameActions.drawn({ event, dungeon });
-    })
+    }),
   ));
 
   resolveCard$ = createEffect(() => this.actions$.pipe(
@@ -95,7 +148,7 @@ export class GamesEffects {
       }
 
       return GameActions.resolvedCard({ hpDelta });
-    })
+    }),
   ));
 
   resolveCardSuccess$ = createEffect(() => this.actions$.pipe(
@@ -112,7 +165,7 @@ export class GamesEffects {
       }
 
       return GameActions.resolvedCard({ hpDelta });
-    })
+    }),
   ));
 
   // start$ = createEffect(() => this.actions$.pipe(
@@ -125,7 +178,7 @@ export class GamesEffects {
   //       dungeon.shuffle();
   //       const decks: PartialDeckState = { dungeon, character, relic };
   //       return GameActions.setup({ decks, hero });
-  //   })
+  //   }),
   // ));
 
   startDebug$ = createEffect(() => this.actions$.pipe(
@@ -163,7 +216,7 @@ export class GamesEffects {
       
       const decks: PartialDeckState = { dungeon, character, relic };
       return GameActions.setup({ decks, hero });
-    })
+    }),
   ));
 
   throwDice$ = createEffect(() => this.actions$.pipe(
@@ -171,7 +224,7 @@ export class GamesEffects {
     map(() => {
       const dice = Math.floor(Math.random() * 6 + 1);
       return GameActions.threwDice({ dice });
-    })
+    }),
   ));
 
   constructor(

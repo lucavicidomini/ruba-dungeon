@@ -89,7 +89,7 @@ export class GameComponent implements OnInit {
   }
 
   onBribe() {
-    
+    this.gameFacade.bribe();
   }
 
   onCollect() {
