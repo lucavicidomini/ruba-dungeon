@@ -26,6 +26,10 @@ export class Deck {
         return new Deck([...this.deckCards]);
     }
 
+    includes(card: Card) {
+        return !!this.cards.find(inDeck => inDeck.equals(card));
+    }
+
     extractCharacterDeck(): Deck {
         const characters = new Deck(this.deckCards.filter(card => card.value >= 8));
         this.deckCards = this.deckCards.filter(card => card.value < 8);
@@ -55,6 +59,10 @@ export class Deck {
 
     push(card: Card): void {
         this.deckCards.push(card);
+    }
+
+    remove(card: Card): void {
+        this.deckCards = this.deckCards.filter(inDeck => !inDeck.equals(card));
     }
 
     shuffle() {

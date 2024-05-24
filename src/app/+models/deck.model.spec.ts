@@ -1,4 +1,4 @@
-import { Card } from "./card.model";
+import { Card, Suits } from "./card.model";
 import { Deck } from "./deck.model";
 
 describe ('Deck', () => {
@@ -50,6 +50,17 @@ describe ('Deck', () => {
 
     describe('When deck is not empty', () => {
 
+        it('Should find only included cards', () => {
+            const deck = Deck.empty();
+            deck.push(new Card(1, 'clubs'));
+            deck.push(new Card(2, 'coins'));
+            deck.push(new Card(3, 'cups'));
+            expect(deck.includes(new Card(1, 'clubs'))).toBeTrue();
+            expect(deck.includes(new Card(2, 'coins'))).toBeTrue();
+            expect(deck.includes(new Card(3, 'cups'))).toBeTrue();
+            expect(deck.includes(new Card(4, 'swords'))).toBeFalse();
+        });
+
         it('Should pop the last pushed card', () => {
             const deck = Deck.empty();
             const expectedCard = new Card(5, 'coins');
@@ -57,6 +68,29 @@ describe ('Deck', () => {
             deck.push(expectedCard);
             const actualCard = deck.pop();
             expect(actualCard).toEqual(expectedCard);
+        });
+
+        it('Should remove a card if included', () => {
+            const deck = Deck.empty();
+            deck.push(new Card(1, 'clubs'));
+            deck.push(new Card(2, 'coins'));
+            deck.push(new Card(3, 'cups'));
+            deck.remove(new Card(2, 'coins'));
+            expect(deck.includes(new Card(1, 'clubs'))).toBeTrue();
+            expect(deck.includes(new Card(2, 'coins'))).toBeFalse();
+            expect(deck.includes(new Card(3, 'cups'))).toBeTrue();
+        });
+
+        it('Should not change deck if removing a card not included', () => {
+            const deck = Deck.empty();
+            deck.push(new Card(1, 'clubs'));
+            deck.push(new Card(2, 'coins'));
+            deck.push(new Card(3, 'cups'));
+            deck.remove(new Card(4, 'swords'));
+            expect(deck.includes(new Card(1, 'clubs'))).toBeTrue();
+            expect(deck.includes(new Card(2, 'coins'))).toBeTrue();
+            expect(deck.includes(new Card(3, 'cups'))).toBeTrue();
+            expect(deck.length).toEqual(3);
         });
 
         it('Should peek the last pushed card', () => {
