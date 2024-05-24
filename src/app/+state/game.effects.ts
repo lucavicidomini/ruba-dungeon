@@ -109,15 +109,45 @@ export class GamesEffects {
 
       // Pick three action card for player
       // TODO Remove cast
-      const heroActions = Array.from({ length: 3 }, () => dungeon.pop()) as Card[];
+      const heroAction = Deck.empty();
+      for (let i = 0; i < 3; i++) {
+        heroAction.push(dungeon.pop() as Card);
+      }
 
       // Pick three action card for enemy
       // TODO Remove cast
-      const enemyActions = Array.from({ length: 3 }, () => dungeon.pop()) as Card[];
+      const enemyAction = Deck.empty();
+      for (let i = 0; i < 3; i++) {
+        enemyAction.push(dungeon.pop() as Card);
+      }
 
-      return GameActions.combatStarted({ heroActions, enemyActions });
+      return GameActions.combatStarted({ heroAction, enemyAction });
     }),
   ));
+
+  combatAction = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.combatAction),
+    withLatestFrom(
+      this.store.select(GameSelectors.selectCombatAction),
+    ),
+    map(([, lastAction]) => {
+      if (lastAction === undefined) {
+        return GameActions.error({ error: `Invalid state for action ${GameActions.combatAction.type}: lastAction=${lastAction}` });
+      }
+
+      const action = lastAction + 1;
+
+      return { type: 'NONE' }
+    }),
+  ));
+
+  combatStarted$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.combatStarted),
+    map(() =>
+      GameActions.combatAction()
+    ),
+  ));
+
 
   draw$ = createEffect(() => this.actions$.pipe(
     ofType(GameActions.draw),

@@ -41,7 +41,7 @@ export const selectEnemy = createSelector(
 
 export const selectEnemyActions = createSelector(
   selectFeature,
-  (state: GameState) => state.combat?.enemyActions
+  (state: GameState) => state.combat?.enemyAction
 );
 
 export const selectError = createSelector(
@@ -74,9 +74,14 @@ export const selectHero = createSelector(
   (state: GameState) => state.hero
 );
 
-export const selectHeroActions = createSelector(
+export const selectHeroAction = createSelector(
   selectFeature,
-  (state: GameState) => state.combat?.heroActions
+  (state: GameState) => state.combat?.heroAction
+);
+
+export const selectHeroActionSelected = createSelector(
+  selectFeature,
+  (state: GameState) => state.combat?.heroActionSelected
 );
 
 export const selectRelicDeck = createSelector(

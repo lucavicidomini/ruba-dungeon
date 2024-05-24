@@ -2,6 +2,7 @@
 
 <ng-container *ngIf="status$ | async as status">
 <ng-container *ngIf="goldSelectedDeck$ | async as goldSelectedDeck">
+<ng-container *ngIf="heroActionSelectedDeck$ | async as heroActionSelected">
 
     {{ status }}
 
@@ -60,20 +61,9 @@
                 <button *ngIf="showRevealOk(status)" type="button" (click)="onRevealedOk()">Ok</button>
             </td>
 
-            <td>
+            <td colspan="3">
                 <!-- EAC - Enemy Action Card -->
-                <app-card *ngIf="(enemyActions$ | async)?.[0] as card" [card]="card" [cover]="(combatAction$ | async) !== 3"></app-card>
-            </td>
-
-            <td>
-                <!-- EAC - Enemy Action Card -->
-                <app-card *ngIf="(enemyActions$ | async)?.[1] as card" [card]="card" [cover]="(combatAction$ | async) !== 2"></app-card>
-
-            </td>
-
-            <td>
-                <!-- EAC - Enemy Action Card -->
-                <app-card *ngIf="(enemyActions$ | async)?.[2] as card" [card]="card"></app-card>
+                <app-deck *ngIf="(enemyActions$ | async) as deck" [deck]="deck"></app-deck>
             </td>
         </tr>
 
@@ -90,19 +80,9 @@
                 <app-character *ngIf="hero$ | async as character" [character]="character"></app-character>
             </td>
 
-            <td>
+            <td colspan="3">
                 <!-- HAC - Hero Action Card -->
-                <app-card *ngIf="(heroActions$ | async)?.[0] as card" [card]="card"></app-card>
-            </td>
-
-            <td>
-                <!-- HAC - Hero Action Card -->
-                <app-card *ngIf="(heroActions$ | async)?.[1] as card" [card]="card"></app-card>
-            </td>
-
-            <td>
-                <!-- HAC - Hero Action Card -->
-                <app-card *ngIf="(heroActions$ | async)?.[2] as card" [card]="card"></app-card>
+                <app-selectable-deck *ngIf="heroActions$ | async as deck" [deck]="deck" [selectedDeck]="heroActionSelected" (selectCards)="onHeroActionSelect($event)"></app-selectable-deck>
             </td>
         </tr>
 

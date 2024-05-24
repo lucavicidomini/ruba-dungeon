@@ -38,7 +38,7 @@ export class GameComponent implements OnInit {
   
   enemy$ = this.gameFacade.enemy$;
 
-  enemyActions$ = this.gameFacade.enemyActions$;
+  enemyActions$ = this.gameFacade.enemyAction$;
 
   error$ = this.gameFacade.error$;
 
@@ -52,7 +52,9 @@ export class GameComponent implements OnInit {
 
   hero$ = this.gameFacade.hero$;
 
-  heroActions$ = this.gameFacade.heroActions$;
+  heroActions$ = this.gameFacade.heroAction$;
+  
+  heroActionSelectedDeck$ = this.gameFacade.heroActionSelectedDeck$;
 
   relicDeck$ = this.gameFacade.relicDeck$;
 
@@ -122,6 +124,10 @@ export class GameComponent implements OnInit {
 
   onGoldSelect(goldSelected: Deck) {
     this.gameFacade.goldSelected(goldSelected);
+  }
+
+  onHeroActionSelect(heroActionSelected: Deck) {
+    this.gameFacade.heroActionSelected(heroActionSelected);
   }
 
   onRevealedOk() {

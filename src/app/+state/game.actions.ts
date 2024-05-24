@@ -8,6 +8,8 @@ export const bribe = createAction('[Game] Bribe');
 
 export const combat = createAction('[Game] Combat');
 
+export const combatAction = createAction('[Game] Combat Action');
+
 export const challenge = createAction('[Game] Challenge');
 
 export const challenged = createAction(
@@ -17,7 +19,7 @@ export const challenged = createAction(
 
 export const combatStarted = createAction(
     '[Game] Combat Started',
-    props<{ heroActions: Card[], enemyActions: Card[] }>()
+    props<{ heroAction: Deck, enemyAction: Deck }>()
 );
 
 export const collected = createAction('[Game] Collected',
@@ -32,12 +34,19 @@ export const drawn = createAction('[Game] Uncover',
     props<{ event: Deck, dungeon: Deck }>()
 );
 
-export const error = createAction('[Game] Error',
+export const error = createAction(
+    '[Game] Error',
     props<{ error: any }>()
 );
 
-export const goldSelected = createAction('[Game] Gold Selected',
+export const goldSelected = createAction(
+    '[Game] Gold Selected',
     props<{ goldSelected: Deck }>()
+);
+
+export const heroActionSelected = createAction(
+    '[Game] Hero Action Selected',
+    props<{ heroActionSelected: Deck }>()
 );
 
 export const resolveCard = createAction('[Game] Resolve Card');

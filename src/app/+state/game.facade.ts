@@ -23,11 +23,13 @@ export class GameFacade {
     
     hero$ = this.store.select(GameSelectors.selectHero);
 
-    heroActions$ = this.store.select(GameSelectors.selectHeroActions);
+    heroAction$ = this.store.select(GameSelectors.selectHeroAction);
+
+    heroActionSelectedDeck$ = this.store.select(GameSelectors.selectHeroActionSelected);
 
     enemy$ = this.store.select(GameSelectors.selectEnemy);
 
-    enemyActions$ = this.store.select(GameSelectors.selectEnemyActions);
+    enemyAction$ = this.store.select(GameSelectors.selectEnemyActions);
 
     eventCard$ = this.store.select(GameSelectors.selectEventCard);
 
@@ -66,6 +68,11 @@ export class GameFacade {
     /** User selected/deselected a gold card */
     goldSelected(goldSelected: Deck) {
         this.store.dispatch(GameActions.goldSelected({ goldSelected }));
+    }
+
+    /** User selected/deselected an action card */
+    heroActionSelected(heroActionSelected: Deck) {
+        this.store.dispatch(GameActions.heroActionSelected({ heroActionSelected }));
     }
 
     resolveDice() {

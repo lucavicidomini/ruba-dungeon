@@ -1,16 +1,16 @@
 import { createReducer, on } from '@ngrx/store';
-import * as GameActions from './game.actions';
+import { Character } from '../+models/character.model';
 import { Deck } from '../+models/deck.model';
 import { GameStatus } from '../+models/game.model';
-import { Character } from '../+models/character.model';
-import { Card } from '../+models/card.model';
+import * as GameActions from './game.actions';
 
 export const GAME_STATE_KEY = 'game';
 
 interface CombatState {
   action: number;
-  heroActions: Card[],
-  enemyActions: Card[],
+  heroAction: Deck,
+  heroActionSelected: Deck,
+  enemyAction: Deck,
 }
 
 export interface PartialDeckState {
@@ -28,7 +28,7 @@ export interface PartialDeckState {
 export interface DeckState extends Required<PartialDeckState> {}
 
 export interface GameState {
-  combat?: CombatState,
+  combat: CombatState,
   decks: DeckState,
   dice?: number,
   enemy?: Character,
@@ -38,7 +38,12 @@ export interface GameState {
 }
 
 export const initialState: GameState = {
-  combat: undefined,
+  combat: {
+    action: 0,
+    heroAction: Deck.empty(),
+    heroActionSelected: Deck.empty(),
+    enemyAction: Deck.empty(),
+  },
   decks: {
     aid: Deck.empty(),
     catacomb: Deck.empty(),
@@ -94,12 +99,18 @@ export const gameReducer = createReducer(
     status: GameStatus.COMBAT,
   })),
 
-  on(GameActions.combatStarted, (state, { heroActions, enemyActions }) => ({
+  on(GameActions.combatAction, (state, { }) => ({
+    ...state,
+    status: GameStatus.COMBAT,
+  })),
+
+  on(GameActions.combatStarted, (state, { heroAction, enemyAction }) => ({
     ...state,
     combat: {
-      action: 1,
-      heroActions,
-      enemyActions,
+      action: 0,
+      heroAction,
+      heroActionSelected: Deck.empty(),
+      enemyAction,
     },
     decks: {
       ...state.decks,
@@ -126,6 +137,14 @@ export const gameReducer = createReducer(
     decks: {
       ...state.decks,
       goldSelected,
+    },
+  })),
+
+  on(GameActions.heroActionSelected, (state, { heroActionSelected }) => ({
+    ...state,
+    combat: {
+      ...state.combat,
+      heroActionSelected,
     },
   })),
 
