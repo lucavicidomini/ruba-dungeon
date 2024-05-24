@@ -21,7 +21,7 @@
                     <button type="button" *ngIf="showCollect(status, card)" (click)="onCollect()">Collect</button>
                     <button type="button" *ngIf="showDice(status, card)" (click)="onDice()">Dice</button>
                     <button type="button" *ngIf="showDiceOk(status)" (click)="onDiceOk()">Ok</button>
-                    <button type="button" *ngIf="showBribe(status, card)" [disabled]="disableBribe(card, goldSelectedDeck)" (click)="onBribe()">Bribe</button>
+                    <button type="button" *ngIf="showSpend(status, card)" [disabled]="disableSpend(card, goldSelectedDeck)" (click)="onSpend()">Bribe</button>
                     <button type="button" *ngIf="showCombat(status, card)" (click)="onCombat()">Combat</button>
                 </ng-container>
             </td>

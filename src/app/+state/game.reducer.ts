@@ -48,7 +48,7 @@ export const initialState: GameState = {
 export const gameReducer = createReducer(
   initialState,
 
-  on(GameActions.bribed, (state, { event, gold }) => ({
+  on(GameActions.spent, (state, { event, gold }) => ({
     ...state,
     decks: {
       ...state.decks,

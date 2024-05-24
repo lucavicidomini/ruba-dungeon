@@ -4,10 +4,10 @@ import { Deck } from '../+models/deck.model';
 import { PartialDeckState } from './game.reducer';
 import { Card } from '../+models/card.model';
 
-export const bribe = createAction('[Game] Bribe');
+export const spend = createAction('[Game] Spend');
 
-export const bribed = createAction(
-    '[Game] Bribed',
+export const spent = createAction(
+    '[Game] Spent',
     props<{ eventCard: Card, event: Deck, gold: Deck, selectedGoldValue: number }>()
 );
 

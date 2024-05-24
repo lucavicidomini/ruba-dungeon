@@ -13,8 +13,8 @@ import { Card } from '../+models/card.model';
 @Injectable()
 export class GamesEffects {
 
-  bribe$ = createEffect(() => this.actions$.pipe(
-    ofType(GameActions.bribe),
+  spend$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.spend),
     withLatestFrom(
       this.store.select(GameSelectors.selectEventCard),
       this.store.select(GameSelectors.selectEventDeck),
@@ -23,7 +23,7 @@ export class GamesEffects {
     ),
     map(([, eventCard, eventIm, goldIm, selectedGold]) => {
       if (!eventCard) {
-        return GameActions.error({ error: `Invalid state for action ${GameActions.bribe.type}: eventCard=${eventCard}` });
+        return GameActions.error({ error: `Invalid state for action ${GameActions.spend.type}: eventCard=${eventCard}` });
       }
 
       const selectedGoldValue = selectedGold.value;
@@ -36,12 +36,12 @@ export class GamesEffects {
         event.push(card);
       });
 
-      return GameActions.bribed({ eventCard, event, gold, selectedGoldValue });
+      return GameActions.spent({ eventCard, event, gold, selectedGoldValue });
     }),
   ));
 
-  bribed$ = createEffect(() => this.actions$.pipe(
-    ofType(GameActions.bribed),
+  spent$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.spent),
     // withLatestFrom(
     //   this.store.select(GameSelectors.selectEventCard),
     // ),
@@ -62,7 +62,7 @@ export class GamesEffects {
         
       }
 
-      return GameActions.error({ error: `Invalid state for action ${GameActions.bribe.type}: eventCardSuit=${eventCardSuit}, selectedGoldValue=${selectedGoldValue}` });
+      return GameActions.error({ error: `Invalid state for action ${GameActions.spent.type}: eventCardSuit=${eventCardSuit}, selectedGoldValue=${selectedGoldValue}` });
     }),
   ));
 

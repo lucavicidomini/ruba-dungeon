@@ -60,12 +60,8 @@ export class GameComponent implements OnInit {
     this.gameFacade.start(); 
   }
 
-  disableBribe(eventCard: Card, goldSelected: Deck) {
+  disableSpend(eventCard: Card, goldSelected: Deck) {
     return goldSelected.value < eventCard.value;
-  }
-
-  showBribe(status: GameStatus, eventCard: Card): boolean {
-    return status === GameStatus.CRAWL_ACT && eventCard.suit !== 'coins';
   }
 
   showCollect(status: GameStatus, eventCard: Card): boolean {
@@ -88,8 +84,8 @@ export class GameComponent implements OnInit {
     return status === GameStatus.RESOLVE_THREW_DICE;
   }
 
-  onBribe() {
-    this.gameFacade.bribe();
+  showSpend(status: GameStatus, eventCard: Card): boolean {
+    return status === GameStatus.CRAWL_ACT && eventCard.suit !== 'coins';
   }
 
   onCollect() {
@@ -114,6 +110,10 @@ export class GameComponent implements OnInit {
 
   onGoldSelect(goldSelected: Deck) {
     this.gameFacade.goldSelected(goldSelected);
+  }
+
+  onSpend() {
+    this.gameFacade.spend();
   }
 
 }

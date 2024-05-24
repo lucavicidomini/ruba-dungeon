@@ -36,8 +36,8 @@ export class GameFacade {
     status$ = this.store.select(GameSelectors.selectStatus);
 
     /** User choose to spend coins to resolve an event card */
-    bribe() {
-        this.store.dispatch(GameActions.bribe());
+    spend() {
+        this.store.dispatch(GameActions.spend());
     }
 
     /** If the event card is coins, collect it */
