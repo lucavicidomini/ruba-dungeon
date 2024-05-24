@@ -23,6 +23,8 @@ export class GameFacade {
 
     eventCard$ = this.store.select(GameSelectors.selectEventCard);
 
+    error$ = this.store.select(GameSelectors.selectError);
+
     goldDeck$ = this.store.select(GameSelectors.selectGoldDeck);
 
     selectGoldSelectedDeck$ = this.store.select(GameSelectors.selectGoldSelectedDeck);

@@ -3,6 +3,7 @@ import * as GameActions from './game.actions';
 import { Deck } from '../+models/deck.model';
 import { GameStatus } from '../+models/game.model';
 import { Character } from '../+models/character.model';
+import { state } from '@angular/animations';
 
 export const GAME_STATE_KEY = 'game';
 
@@ -24,6 +25,7 @@ export interface GameState {
   decks: DeckState;
   dice?: number,
   enemy?: Character,
+  error: any;
   hero?: Character,
   status: GameStatus;
 }
@@ -41,6 +43,7 @@ export const initialState: GameState = {
     relic: Deck.empty(),
   },
   enemy: undefined,
+  error: undefined,
   hero: undefined,
   status: GameStatus.GAME_INIT,
 };
@@ -77,6 +80,11 @@ export const gameReducer = createReducer(
       dungeon,
     },
     status: GameStatus.CRAWL_ACT,
+  })),
+
+  on(GameActions.error, (state, { error }) => ({
+    ...state,
+    error,
   })),
 
   on(GameActions.goldSelected, (state, { goldSelected }) => ({

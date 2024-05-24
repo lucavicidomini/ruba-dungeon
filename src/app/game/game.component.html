@@ -1,3 +1,5 @@
+<div *ngIf="error$ | async as error">Error: <samp>{{ error | json }}</samp></div>
+
 <ng-container *ngIf="status$ | async as status">
 <ng-container *ngIf="goldSelectedDeck$ | async as goldSelectedDeck">
 

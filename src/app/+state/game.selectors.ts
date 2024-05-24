@@ -34,6 +34,11 @@ export const selectEnemy = createSelector(
   (state: GameState) => state.enemy
 );
 
+export const selectError = createSelector(
+  selectFeature,
+  (state: GameState) => state.error
+);
+
 export const selectGoldDeck = createSelector(
   selectFeature,
   (state: GameState) => state.decks.gold
