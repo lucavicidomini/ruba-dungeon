@@ -59,7 +59,7 @@ export const fight = createAction(
 
 export const fighted = createAction(
     '[Game] Fighted',
-    props<{ enemy: Character, hero: Character }>()
+    props<{ enemy: Character, enemyAction: Deck, hero: Character, heroAction: Deck }>()
 );
 
 export const goldSelected = createAction(

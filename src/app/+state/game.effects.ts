@@ -176,11 +176,13 @@ export class GamesEffects {
     ofType(GameActions.fight),
     withLatestFrom(
       this.store.select(GameSelectors.selectEnemy),
+      this.store.select(GameSelectors.selectEnemyActions),
       this.store.select(GameSelectors.selectEnemyNextAction),
       this.store.select(GameSelectors.selectHero),
+      this.store.select(GameSelectors.selectHeroAction),
       this.store.select(GameSelectors.selectHeroActionSelected),
     ),
-    map(([, enemy, enemyAction, hero, heroActions]) => {
+    map(([, enemy, enemyActionDeckIm, enemyAction, hero, heroActionIm, heroActions]) => {
       const heroSuit = heroActions.peek()?.suit;
       const heroValue = heroActions.value;
 
@@ -246,8 +248,26 @@ export class GamesEffects {
       hero = hero.updateHp(heroDelta);
       enemy = enemy?.updateHp(enemyDelta);
 
-      return GameActions.fighted({ enemy, hero });
+      // Update enemy action cards
+      const enemyActionDeck = enemyActionDeckIm.clone();
+      enemyActionDeck.pop();
+
+      // Update hero action cards
+      const heroAction = heroActionIm.clone();
+      heroAction.removeAll(heroActions);
+
+      return GameActions.fighted({ enemy, enemyAction: enemyActionDeck, hero, heroAction });
     }),
+  ));
+
+  fighted$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.fighted),
+    withLatestFrom(
+      this.store.select(GameSelectors.selectCombatAction)
+    ),
+    map(([, action]) =>
+      GameActions.turnStart({ action: action + 1 })
+    ),
   ));
 
   resolveCard$ = createEffect(() => this.actions$.pipe(

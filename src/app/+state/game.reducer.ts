@@ -132,6 +132,18 @@ export const gameReducer = createReducer(
     error,
   })),
 
+  on(GameActions.fighted, (state, { enemy, enemyAction, hero, heroAction }) => ({
+    ...state,
+    combat: {
+      ...state.combat,
+      enemyAction,
+      heroAction,
+      heroActionSelected: Deck.empty(),
+    },
+    enemy,
+    hero,
+  })),
+
   on(GameActions.goldSelected, (state, { goldSelected }) => ({
     ...state,
     decks: {

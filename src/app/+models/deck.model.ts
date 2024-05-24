@@ -65,6 +65,10 @@ export class Deck {
         this.deckCards = this.deckCards.filter(inDeck => !inDeck.equals(card));
     }
 
+    removeAll(other: Deck): void {
+        other.cards.forEach(otherCard => this.remove(otherCard));
+    }
+
     reverse(): void {
         this.deckCards.reverse();
     }
