@@ -32,7 +32,7 @@ export class GamesEffects {
       // TODO In difficult mode enemies will have as much HP as the value of the respective card
       const enemyHp = 6;
 
-      const enemy = new Character(enemyCard, enemyHp);
+      const enemy = new Character(enemyCard, enemyHp, enemyHp);
 
       return GameActions.revealed({ character, enemy });
     }),
@@ -58,7 +58,7 @@ export class GamesEffects {
       // TODO In difficult mode enemies will have as much HP as the value of the respective card
       const enemyHp = 6;
 
-      const enemy = new Character(enemyCard, enemyHp);
+      const enemy = new Character(enemyCard, enemyHp, enemyHp);
 
       return GameActions.challenged({ character, enemy });
     }),
@@ -137,7 +137,7 @@ export class GamesEffects {
 
       const action = lastAction + 1;
 
-      return { type: 'NONE' }
+      return GameActions.turnStart({ action });
     }),
   ));
 
@@ -147,7 +147,6 @@ export class GamesEffects {
       GameActions.combatAction()
     ),
   ));
-
 
   draw$ = createEffect(() => this.actions$.pipe(
     ofType(GameActions.draw),
@@ -170,6 +169,84 @@ export class GamesEffects {
       event.push(dungeonCard);
 
       return GameActions.drawn({ event, dungeon });
+    }),
+  ));
+
+  fight$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.fight),
+    withLatestFrom(
+      this.store.select(GameSelectors.selectEnemy),
+      this.store.select(GameSelectors.selectEnemyNextAction),
+      this.store.select(GameSelectors.selectHero),
+      this.store.select(GameSelectors.selectHeroActionSelected),
+    ),
+    map(([, enemy, enemyAction, hero, heroActions]) => {
+      const heroSuit = heroActions.peek()?.suit;
+      const heroValue = heroActions.value;
+
+      if (!enemyAction) {
+        return GameActions.error({ error: `Invalid state for action ${GameActions.fight.type}: enemyAction=${enemyAction}` });
+      }
+
+      if (!heroSuit) {
+        return GameActions.error({ error: `Invalid state for action ${GameActions.fight.type}: actionSuit=${heroSuit}` });
+      }
+
+      if (!hero || !enemy) {
+        return GameActions.error({ error: `Invalid state for action ${GameActions.fight.type}: hero=${hero}, enemy=${enemy}` });
+      }
+
+      const enemySuit = enemyAction.suit;
+      const enemyValue = enemyAction.value;
+
+      // Calculate damage made by clubs
+      const heroClubs = heroSuit === 'clubs' ? heroValue : 0;
+      const enemyClubs = enemySuit === 'clubs' ? enemyValue : 0;
+      const parries = Math.min(heroClubs, enemyClubs);
+      const heroClubAttack = heroClubs - parries;
+      const enemyClubAttack = enemyClubs - parries;
+
+      // Calculate damage made by swords
+      const heroSwordAttack = heroSuit === 'swords' ? heroValue : 0;
+      const enemySwordAttack = enemySuit === 'swords' ? enemyValue : 0;
+      
+      // Calculate total attack
+      const heroTotalAttack = heroClubAttack + heroSwordAttack;
+      const enemyTotalAttack = enemyClubAttack + enemySwordAttack;
+
+      // Calculate shield granted by coins
+      const heroShield = heroSuit === 'coins' ? heroValue : 0;
+      const enemyShield = enemySuit === 'coins' ? enemyValue : 0;
+
+      // Calculate total attack after shielding
+      const heroShieldedAttack = Math.max(0, heroTotalAttack - enemyShield);
+      const enemyShieldedAttack = Math.max(0, enemyTotalAttack - heroShield);
+
+      // Calculate healing granted by cups
+      const heroHealing = heroSuit === 'cups' ? heroValue : 0;
+      const enemyHealing = enemySuit === 'cups' ? enemyValue : 0;
+
+      // Final results
+      const heroDelta = heroHealing - enemyShieldedAttack;
+      const enemyDelta = enemyHealing - heroShieldedAttack;
+
+      // console.log({
+      //   enemySuit, heroClubs, enemyClubs, parries, heroClubAttack, enemyClubAttack,
+      //   heroSwordAttack, enemySwordAttack,
+      //   heroTotalAttack, enemyTotalAttack,
+      //   heroShield,
+      //   enemyShield,
+      //   heroShieldedAttack,
+      //   enemyShieldedAttack,
+      //   heroHealing, enemyHealing,
+      //   heroDelta, enemyDelta
+      // })
+
+      // Update characters
+      hero = hero.updateHp(heroDelta);
+      enemy = enemy?.updateHp(enemyDelta);
+
+      return GameActions.fighted({ enemy, hero });
     }),
   ));
 
@@ -361,7 +438,7 @@ export class GamesEffects {
   startDebug$ = createEffect(() => this.actions$.pipe(
     ofType(GameActions.start),
     map(() => {
-      const hero = new Character(new Card(8, 'swords'), 12);
+      const hero = new Character(new Card(8, 'swords'), 12, 12);
 
       const character = Deck.empty();
       character.push(new Card(8, 'clubs'));

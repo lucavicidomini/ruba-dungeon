@@ -44,6 +44,11 @@ export const selectEnemyActions = createSelector(
   (state: GameState) => state.combat?.enemyAction
 );
 
+export const selectEnemyNextAction = createSelector(
+  selectFeature,
+  (state: GameState) => state.combat?.enemyAction.peek()
+);
+
 export const selectError = createSelector(
   selectFeature,
   (state: GameState) => state.error

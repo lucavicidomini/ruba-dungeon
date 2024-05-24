@@ -201,4 +201,12 @@ export const gameReducer = createReducer(
     status: GameStatus.RESOLVE_THREW_DICE,
   })),
 
+  on(GameActions.turnStart, (state, { action }) => ({
+    ...state,
+    combat: {
+      ...state.combat,
+      action,
+    }
+  })),
+
 );

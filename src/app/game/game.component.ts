@@ -70,6 +70,10 @@ export class GameComponent implements OnInit {
     this.gameFacade.start(); 
   }
 
+  disableFight(heroActions: Deck, heroActionSelected: Deck) {
+    return heroActions.length && !heroActionSelected.length;
+  }
+
   disableSpend(eventCard: Card, goldSelected: Deck) {
     return goldSelected.value < eventCard.value;
   }
@@ -92,6 +96,10 @@ export class GameComponent implements OnInit {
 
   showDiceOk(status: GameStatus): boolean {
     return status === GameStatus.RESOLVE_THREW_DICE;
+  }
+
+  showFight(status: GameStatus): boolean {
+    return status === GameStatus.COMBAT;
   }
 
   showRevealOk(status: GameStatus): boolean {
@@ -120,6 +128,10 @@ export class GameComponent implements OnInit {
 
   onDiceOk() {
     this.gameFacade.resolveDice();
+  }
+
+  onFight() {
+    this.gameFacade.fight();
   }
 
   onGoldSelect(goldSelected: Deck) {

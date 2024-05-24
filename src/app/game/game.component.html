@@ -82,7 +82,10 @@
 
             <td colspan="3">
                 <!-- HAC - Hero Action Card -->
-                <app-selectable-deck *ngIf="heroActions$ | async as deck" [deck]="deck" [selectedDeck]="heroActionSelected" (selectCards)="onHeroActionSelect($event)"></app-selectable-deck>
+                <ng-container *ngIf="heroActions$ | async as deck">
+                    <app-selectable-deck [deck]="deck" [selectedDeck]="heroActionSelected" (selectCards)="onHeroActionSelect($event)"></app-selectable-deck>
+                    <button *ngIf="showFight(status)" [disabled]="disableFight(deck, heroActionSelected)" type="button" (click)="onFight()">Fight</button>
+                </ng-container>
             </td>
         </tr>
 

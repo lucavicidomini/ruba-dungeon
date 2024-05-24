@@ -65,6 +65,11 @@ export class GameFacade {
         this.store.dispatch(GameActions.draw());
     }
 
+    /** User selected one ot more card to combat */
+    fight() {
+        this.store.dispatch(GameActions.fight());
+    }
+
     /** User selected/deselected a gold card */
     goldSelected(goldSelected: Deck) {
         this.store.dispatch(GameActions.goldSelected({ goldSelected }));
