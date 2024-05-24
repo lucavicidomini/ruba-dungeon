@@ -42,7 +42,7 @@ export class GameComponent implements OnInit {
 
   goldDeck$ = this.gameFacade.goldDeck$;
 
-  selectGoldSelectedDeck$ = this.gameFacade.selectGoldSelectedDeck$;
+  goldSelectedDeck$ = this.gameFacade.selectGoldSelectedDeck$;
 
   hero$ = this.gameFacade.hero$;
 
@@ -60,27 +60,31 @@ export class GameComponent implements OnInit {
     this.gameFacade.start(); 
   }
 
-  enableBribe(status: GameStatus, eventCard: Card): boolean {
+  disableBribe(eventCard: Card, goldSelected: Deck) {
+    return goldSelected.value < eventCard.value;
+  }
+
+  showBribe(status: GameStatus, eventCard: Card): boolean {
     return status === GameStatus.CRAWL_ACT && eventCard.suit !== 'coins';
   }
 
-  enableCollect(status: GameStatus, eventCard: Card): boolean {
+  showCollect(status: GameStatus, eventCard: Card): boolean {
     return status === GameStatus.CRAWL_ACT && eventCard.suit === 'coins';
   }
 
-  enableCombat(status: GameStatus, eventCard: Card): boolean {
+  showCombat(status: GameStatus, eventCard: Card): boolean {
     return status === GameStatus.CRAWL_ACT && eventCard.suit === 'swords';
   }
 
-  enableDraw(status: GameStatus): boolean {
+  showDraw(status: GameStatus): boolean {
     return status === GameStatus.CRAWL_READY;
   }
 
-  enableDice(status: GameStatus, eventCard: Card): boolean {
+  showDice(status: GameStatus, eventCard: Card): boolean {
     return status === GameStatus.CRAWL_ACT && (eventCard.suit === 'clubs' || eventCard.suit === 'cups');
   }
 
-  enableDiceOk(status: GameStatus): boolean {
+  showDiceOk(status: GameStatus): boolean {
     return status === GameStatus.RESOLVE_THREW_DICE;
   }
 

@@ -15,16 +15,16 @@ export class SelectableDeckComponent {
 
   @Input() deck = Deck.empty();
 
-  @Input() selectedDeck: Deck | null = null;
+  @Input() selectedDeck = Deck.empty();
 
   @Output() selectCards = new EventEmitter<Deck>();
 
   isSelected(card: Card): boolean {
-    return this.selectedDeck?.includes(card) ?? false;
+    return this.selectedDeck.includes(card);
   }
 
   onToggle(card: Card): void {
-    const newSelectedDeck = this.selectedDeck?.clone() ?? Deck.empty();
+    const newSelectedDeck = this.selectedDeck.clone();
 
     if (this.isSelected(card)) {
       newSelectedDeck.remove(card);
