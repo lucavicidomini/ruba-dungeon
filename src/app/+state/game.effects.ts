@@ -500,12 +500,14 @@ export class GamesEffects {
       character.push(new Card(10, 'cups'));
       character.push(new Card(9, 'swords'));
       character.push(new Card(10, 'swords'));
+      character.reverse();
 
       const relic = Deck.empty();
       relic.push(new Card(1, 'clubs'));
       relic.push(new Card(1, 'coins'));
       relic.push(new Card(1, 'cups'));
       relic.push(new Card(1, 'swords'));
+      character.reverse();
 
       const dungeon = Deck.empty();
       dungeon.push(new Card(4, 'coins'));  // Allow user two collect a couple of golds
@@ -523,7 +525,6 @@ export class GamesEffects {
       dungeon.push(new Card(5, 'swords'));
       dungeon.push(new Card(6, 'swords'));
       dungeon.push(new Card(7, 'swords'));
-
       dungeon.reverse();
       
       const decks: PartialDeckState = { dungeon, character, relic };
