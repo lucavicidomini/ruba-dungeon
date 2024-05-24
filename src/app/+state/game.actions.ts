@@ -1,7 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 import { Deck } from '../+models/deck.model';
 import { Character } from '../+models/character.model';
-import { DeckState } from './game.reducer';
+import { DeckState, PartialDeckState } from './game.reducer';
 
 export const collect = createAction('[Game] Collect');
 
@@ -36,7 +36,7 @@ export const resolveCardFailure = createAction('[Game] Resolve Failure');
 
 export const setup = createAction(
     '[Game] Setup',
-    props<{ decks: DeckState, hero: Character }>()
+    props<{ decks: PartialDeckState, hero: Character }>()
 );
 
 export const start = createAction('[Game] Start');

@@ -7,7 +7,7 @@ import { Deck } from '../+models/deck.model';
 import { Character } from '../+models/character.model';
 import { Store } from '@ngrx/store';
 import { AppState } from './app.reducer';
-import { DeckState } from './game.reducer';
+import { DeckState, PartialDeckState } from './game.reducer';
 
 @Injectable()
 export class GamesEffects {
@@ -121,14 +121,8 @@ export class GamesEffects {
         const hero = new Character(dungeon.popPlayerCard(), 12);
         const character = dungeon.extractCharacterDeck();
         const relic = dungeon.extractRelicDeck();
-        const aid = Deck.empty();
-        const catacomb = Deck.empty();
-        const event = Deck.empty();
-        const gold = Deck.empty();
-        const goldSelected = Deck.empty();
-        const obtainedRelic = Deck.empty();
         dungeon.shuffle();
-        const decks: DeckState = { aid, catacomb, dungeon, character, event, gold, goldSelected, relic, obtainedRelic }
+        const decks: PartialDeckState = { dungeon, character, relic };
         return GameActions.setup({ decks, hero });
     })
   ));

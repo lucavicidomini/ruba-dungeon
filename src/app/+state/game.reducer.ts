@@ -6,17 +6,19 @@ import { Character } from '../+models/character.model';
 
 export const GAME_STATE_KEY = 'game';
 
-export interface DeckState {
-  aid: Deck;
-  catacomb: Deck;
+export interface PartialDeckState {
+  aid?: Deck;
+  catacomb?: Deck;
   character: Deck;
   dungeon: Deck;
-  event: Deck;
-  gold: Deck;
-  goldSelected: Deck;
-  obtainedRelic: Deck;
+  event?: Deck;
+  gold?: Deck;
+  goldSelected?: Deck;
+  obtainedRelic?: Deck;
   relic: Deck;
 }
+
+export interface DeckState extends Required<PartialDeckState> {}
 
 export interface GameState {
   decks: DeckState;
@@ -47,9 +49,9 @@ export const gameReducer = createReducer(
   initialState,
 
   on(GameActions.collected, (state, { event, gold }) => ({
-    ... state,
+    ...state,
     decks: {
-      ... state.decks,
+      ...state.decks,
       event,
       gold,
     },
@@ -57,9 +59,9 @@ export const gameReducer = createReducer(
   })),
 
   on(GameActions.drawn, (state, { event, dungeon }) => ({
-    ... state,
+    ...state,
     decks: {
-      ... state.decks,
+      ...state.decks,
       event,
       dungeon,
     },
@@ -67,9 +69,9 @@ export const gameReducer = createReducer(
   })),
 
   on(GameActions.goldSelected, (state, { goldSelected }) => ({
-    ... state,
+    ...state,
     decks: {
-      ... state.decks,
+      ...state.decks,
       goldSelected,
     },
   })),
@@ -82,7 +84,15 @@ export const gameReducer = createReducer(
 
   on(GameActions.setup, (state, { decks, hero }) => ({
     ...state,
-    decks,
+    decks: {
+      aid: Deck.empty(),
+      catacomb: Deck.empty(),
+      event: Deck.empty(),
+      gold: Deck.empty(),
+      goldSelected: Deck.empty(),
+      obtainedRelic: Deck.empty(),
+      ...decks,
+    },
     hero,
     status: GameStatus.CRAWL_READY,
   })),
