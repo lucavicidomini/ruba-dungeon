@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { map, withLatestFrom } from 'rxjs/operators';
-import * as GameActions from './game.actions';
-import * as GameSelectors from './game.selectors';
-import { Deck } from '../+models/deck.model';
-import { Character } from '../+models/character.model';
 import { Store } from '@ngrx/store';
-import { AppState } from './app.reducer';
-import { DeckState, PartialDeckState } from './game.reducer';
+import { map, withLatestFrom } from 'rxjs/operators';
 import { Card } from '../+models/card.model';
+import { Character } from '../+models/character.model';
+import { Deck } from '../+models/deck.model';
+import { AppState } from './app.reducer';
+import * as GameActions from './game.actions';
+import { PartialDeckState } from './game.reducer';
+import * as GameSelectors from './game.selectors';
 
 @Injectable()
 export class GamesEffects {
@@ -42,10 +42,7 @@ export class GamesEffects {
 
   spent$ = createEffect(() => this.actions$.pipe(
     ofType(GameActions.spent),
-    // withLatestFrom(
-    //   this.store.select(GameSelectors.selectEventCard),
-    // ),
-    map(({ eventCard, event: eventIm, gold: goldIm, selectedGoldValue }) => {
+    map(({ eventCard, selectedGoldValue }) => {
       const eventCardSuit = eventCard.suit;
 
       if (eventCardSuit === 'clubs' || eventCardSuit === 'cups') {
@@ -54,11 +51,11 @@ export class GamesEffects {
       
       const eventCardValue = eventCard.value;
 
-      if (eventCardSuit === 'swords' && eventCardValue !== undefined && eventCardValue === selectedGoldValue) {
+      if (eventCardSuit === 'swords' && eventCardValue === selectedGoldValue) {
         return GameActions.resolveCardSuccess();
       }
 
-      if (eventCardSuit === 'swords' && eventCardValue !== undefined && eventCardValue > selectedGoldValue) {
+      if (eventCardSuit === 'swords' && eventCardValue > selectedGoldValue) {
         
       }
 
