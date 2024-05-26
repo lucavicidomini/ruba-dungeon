@@ -13,6 +13,8 @@ import * as GameSelectors from './game.selectors';
 @Injectable()
 export class GamesEffects {
 
+  DEBUG = true;
+
   /*
    * If dungeon deck is empty, reshuffle using event deck
    */
@@ -530,21 +532,23 @@ export class GamesEffects {
     }),
   ));
 
-  // start$ = createEffect(() => this.actions$.pipe(
-  //   ofType(GameActions.start),
-  //   map(() => {
-  //       const dungeon = Deck.full();
-  //       const hero = new Character(dungeon.popPlayerCard(), 12);
-  //       const character = dungeon.extractCharacterDeck();
-  //       const relic = dungeon.extractRelicDeck();
-  //       dungeon.shuffle();
-  //       const decks: PartialDeckState = { dungeon, character, relic };
-  //       return GameActions.setup({ decks, hero });
-  //   }),
-  // ));
+  start$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.start),
+    filter(() => !this.DEBUG),
+    map(() => {
+        const dungeon = Deck.full();
+        const hero = new Character(dungeon.popPlayerCard(), 12, 12);
+        const character = dungeon.extractCharacterDeck();
+        const relic = dungeon.extractRelicDeck();
+        dungeon.shuffle();
+        const decks: PartialDeckState = { dungeon, character, relic };
+        return GameActions.started({ decks, hero });
+    }),
+  ));
 
   startDebug$ = createEffect(() => this.actions$.pipe(
     ofType(GameActions.start),
+    filter(() => this.DEBUG),
     map(() => {
       const hero = new Character(new Card(8, 'swords'), 12, 12);
 

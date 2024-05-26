@@ -1,1 +1,3 @@
-<app-card *ngFor="let card of deck.cards" [card]="card" [selected]="isSelected(card)" (click)="onToggle(card)"></app-card>
+<div class="deck">
+    <app-card *ngFor="let card of deck.cards" [card]="card" [selected]="isSelected(card)" (click)="onToggle(card)"></app-card>
+</div>

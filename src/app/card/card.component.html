@@ -1,5 +1,7 @@
 <ng-container *ngIf="cover; else uncovered">[hidden]</ng-container>
 
 <ng-template #uncovered>
-    {{ card.value }}{{ suit }}{{ selected ? '*' : '' }}
+    <div [ngClass]="css" [class.selected]="selected">
+        <span>{{ card.value }} {{ suit }}{{ selected ? ' (selected)' : '' }}</span>
+    </div>
 </ng-template>

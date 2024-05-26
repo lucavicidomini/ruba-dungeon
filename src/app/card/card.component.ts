@@ -19,6 +19,10 @@ export class CardComponent {
 
   @Input() cover = false;
 
+  get css() {
+    return `card c${this.card.value} c${this.card.suit} ${this.selected}`;
+  }
+
   get suit() {
     return this.SuitLabels[this.card.suit];
   }

@@ -5,10 +5,6 @@
 <ng-container *ngIf="heroActionSelectedDeck$ | async as heroActionSelected">
 <ng-container *ngIf="aidSelectedDeck$ | async as aidSelectedDeck">
 
-    {{ status }}
-
-    <div *ngIf="dice$ | async as dice">Dice: {{ dice }}</div>
-
     <table>
 
         <tr>
@@ -30,6 +26,7 @@
                     <button type="button" *ngIf="showSpend(status, card)" [disabled]="disableSpend(card, goldSelectedDeck)" (click)="onSpend()">Bribe</button>
                     <button type="button" *ngIf="showCombat(status, card)" (click)="onCombat()">Combat</button>
                 </ng-container>
+                <div *ngIf="dice$ | async as dice">Dice: {{ dice }}</div>
             </td>
 
             <td>
@@ -130,7 +127,3 @@
 </ng-container> <!-- heroActionSelected -->
 </ng-container> <!-- goldSelected -->
 </ng-container> <!-- status -->
-
-<ol *ngIf="eventDeck$ | async as deck">
-    <li *ngFor="let card of deck.cards"><app-card  [card]="card"></app-card></li>
-</ol>
