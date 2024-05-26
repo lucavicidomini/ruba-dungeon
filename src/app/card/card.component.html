@@ -1,4 +1,6 @@
-<ng-container *ngIf="cover; else uncovered">[hidden]</ng-container>
+<div *ngIf="cover; else uncovered" class="card covered">
+    <span>(hidden)</span>
+</div>
 
 <ng-template #uncovered>
     <div [ngClass]="css" [class.selected]="selected">

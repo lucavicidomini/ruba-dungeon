@@ -19,6 +19,11 @@
         display: none;
     }
 
+    &.covered {
+        background-image: url('/assets/backs/neapolitan.jpg');
+        background-size: 100%;
+    }
+
     &.selected {
         border-color: #aaaa00;
         box-shadow: #aaaa00 0 0 .4em;
