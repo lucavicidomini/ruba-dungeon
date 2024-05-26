@@ -8,6 +8,7 @@ import { CardComponent } from '../card/card.component';
 import { CharacterComponent } from '../character/character.component';
 import { DeckComponent } from '../deck/deck.component';
 import { SelectableDeckComponent } from '../selectable-deck/selectable-deck.component';
+import { HeroActionDeckComponent, PlayAction } from '../hero-action-deck/hero-action-deck.component';
 
 @Component({
   selector: 'app-game',
@@ -16,6 +17,7 @@ import { SelectableDeckComponent } from '../selectable-deck/selectable-deck.comp
     CommonModule,
     CardComponent,
     CharacterComponent,
+    HeroActionDeckComponent,
     DeckComponent,
     SelectableDeckComponent,
   ],
@@ -132,8 +134,9 @@ export class GameComponent implements OnInit {
     this.gameFacade.resolveCardByDice();
   }
 
-  onPlay() {
-    this.gameFacade.fight();
+  onPlay(action: PlayAction) {
+    console.log({ action })
+    // this.gameFacade.fight();
   }
 
   onGoldSelect(goldSelected: Deck) {

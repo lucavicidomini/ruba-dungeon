@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Card } from '../+models/card.model';
+import { Card, SuitLabels } from '../+models/card.model';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -11,6 +11,8 @@ import { CommonModule } from '@angular/common';
 })
 export class CardComponent {
 
+  SuitLabels = SuitLabels;
+
   @Input() card!: Card;
 
   @Input() selected = false;
@@ -18,13 +20,7 @@ export class CardComponent {
   @Input() cover = false;
 
   get suit() {
-    switch (this.card.suit) {
-      case 'clubs': return 'Clubs';
-      case 'coins': return 'Coins';
-      case 'cups': return 'Cups';
-      case 'swords': return 'Sword';
-      default: return '';
-    }
+    return this.SuitLabels[this.card.suit];
   }
 
 }

@@ -1,5 +1,12 @@
 export type Suits = 'clubs' | 'cups' | 'coins' | 'swords';
 
+export const SuitLabels: Record<Suits, string> = {
+    'clubs': 'Clubs',
+    'coins': 'Coins',
+    'cups': 'Cups',
+    'swords' : 'Swords',
+}
+
 export class Card {
 
     constructor(

@@ -533,7 +533,7 @@ export class GamesEffects {
       for (let i = 0; i < 4; i++) {
         dungeon.push(new Card(4, 'swords'));
         dungeon.push(new Card(7, 'swords'));
-        dungeon.push(new Card(6, 'swords'));
+        dungeon.push(new Card(7, 'cups'));
         dungeon.push(new Card(5, 'swords'));
         dungeon.push(new Card(3, 'swords'));
         dungeon.push(new Card(2, 'swords'));

@@ -1,0 +1,12 @@
+Hero action deck:
+<app-selectable-deck
+    [deck]="deck"
+    [selectedDeck]="selectedDeck"
+    (selectCards)="onSelect($event)"
+></app-selectable-deck>
+<button
+    *ngFor="let suit of selectedCardSuits"
+    [disabled]="disabledPlay"
+    type="button"
+    (click)="onPlay(suit)"
+>{{ getButton(suit) }}</button>
