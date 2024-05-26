@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Card } from '../+models/card.model';
+import { Card, Suits } from '../+models/card.model';
 import { Deck } from '../+models/deck.model';
 import { GameStatus } from '../+models/game.model';
 import { GameFacade } from '../+state/game.facade';
@@ -8,7 +8,7 @@ import { CardComponent } from '../card/card.component';
 import { CharacterComponent } from '../character/character.component';
 import { DeckComponent } from '../deck/deck.component';
 import { SelectableDeckComponent } from '../selectable-deck/selectable-deck.component';
-import { HeroActionDeckComponent, PlayAction } from '../hero-action-deck/hero-action-deck.component';
+import { HeroActionDeckComponent } from '../hero-action-deck/hero-action-deck.component';
 
 @Component({
   selector: 'app-game',
@@ -58,6 +58,8 @@ export class GameComponent implements OnInit {
 
   heroActions$ = this.gameFacade.heroAction$;
   
+  heroActionSelectedDeck$ = this.gameFacade.heroActionSelectedDeck$;
+
   relicDeck$ = this.gameFacade.relicDeck$;
 
   obtainedRelicDeck$ = this.gameFacade.obtainedRelicDeck$;
@@ -132,14 +134,18 @@ export class GameComponent implements OnInit {
     this.gameFacade.resolveCardByDice();
   }
 
-  onPlay(action: PlayAction) {
-    this.gameFacade.fight(action.action, action.suit);
+  onPlay(suit: Suits) {
+    this.gameFacade.fight(suit);
   }
 
   onGoldSelect(goldSelected: Deck) {
     this.gameFacade.goldSelected(goldSelected);
   }
 
+  onHeroActionSelect(heroActionSelected: Deck) {
+    this.gameFacade.heroActionSelected(heroActionSelected);
+  }
+  
   onRevealedOk() {
     this.gameFacade.revealedOk();
   }

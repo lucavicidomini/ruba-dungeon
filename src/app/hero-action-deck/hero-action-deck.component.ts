@@ -5,11 +5,6 @@ import { SuitLabels, Suits } from '../+models/card.model';
 import { CommonModule } from '@angular/common';
 import { GameFacade } from '../+state/game.facade';
 
-export interface PlayAction {
-  suit?: Suits,
-  action: Deck,
-}
-
 @Component({
   selector: 'app-hero-action-deck',
   standalone: true,
@@ -26,18 +21,14 @@ export class HeroActionDeckComponent {
 
   @Input() deck: Deck = Deck.empty();
 
-  @Output() play = new EventEmitter<PlayAction>();
+  @Input() selected: Deck = Deck.empty();
 
-  selectedDeck: Deck = Deck.empty();
+  @Output() play = new EventEmitter<Suits>();
 
-  status$ = this.gameFacade.status$;
-
-  constructor(
-    private gameFacade: GameFacade,
-  ) {}
+  @Output() selectCards = new EventEmitter<Deck>();
 
   onSelect(newSelection: Deck) {
-    const oldValue = this.selectedDeck.peek()?.value;
+    const oldValue = this.selected.peek()?.value;
 
     if (oldValue) {
       const differentCard = newSelection.cards.find(card => card.value !== oldValue);
@@ -47,12 +38,11 @@ export class HeroActionDeckComponent {
       }
     }
 
-    this.selectedDeck = newSelection;
+    this.selectCards.emit(newSelection);
   }
 
   onPlay(suit?: Suits) {
-    this.play.emit({ suit, action: this.selectedDeck });
-    this.selectedDeck = Deck.empty();
+    this.play.emit(suit);
   }
 
   getButton(suit?: Suits) {
@@ -60,11 +50,11 @@ export class HeroActionDeckComponent {
   }
 
   get selectedCardSuits() {
-    return Array.from(new Set(this.selectedDeck.cards.map(card => card.suit)).values()).sort();
+    return Array.from(new Set(this.selected.cards.map(card => card.suit)).values()).sort();
   }
 
   get disabledPlay() {
-    return this.deck.length && !this.selectedDeck.length;
+    return this.deck.length && !this.selected.length;
   }
 
 }

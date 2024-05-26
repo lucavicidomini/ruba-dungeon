@@ -84,6 +84,11 @@ export const selectHeroAction = createSelector(
   (state: GameState) => state.combat?.heroAction
 );
 
+export const selectHeroActionSelected = createSelector(
+  selectFeature,
+  (state: GameState) => state.combat?.heroActionSelected
+);
+
 export const selectRelicDeck = createSelector(
   selectFeature,
   (state: GameState) => state.decks.relic

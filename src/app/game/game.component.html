@@ -2,6 +2,7 @@
 
 <ng-container *ngIf="status$ | async as status">
 <ng-container *ngIf="goldSelectedDeck$ | async as goldSelectedDeck">
+<ng-container *ngIf="heroActionSelectedDeck$ | async as heroActionSelected">
 
     {{ status }}
 
@@ -81,7 +82,9 @@
 
             <td colspan="3">
                 <!-- HAC - Hero Action Card -->
-                <app-hero-action-deck *ngIf="heroActions$ | async as deck" [deck]="deck" (play)="onPlay($event)"></app-hero-action-deck>
+                <ng-container *ngIf="showPlay(status)">
+                    <app-hero-action-deck *ngIf="heroActions$ | async as deck" [deck]="deck" [selected]="heroActionSelected" (play)="onPlay($event)" (selectCards)="onHeroActionSelect($event)"></app-hero-action-deck>
+                </ng-container>
             </td>
         </tr>
 
@@ -117,6 +120,7 @@
 
     </table>
 
+</ng-container> <!-- heroActionSelected -->
 </ng-container> <!-- goldSelected -->
 </ng-container> <!-- status -->
 

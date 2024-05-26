@@ -38,6 +38,8 @@ export class GameFacade {
 
     heroAction$ = this.store.select(GameSelectors.selectHeroAction);
 
+    heroActionSelectedDeck$ = this.store.select(GameSelectors.selectHeroActionSelected);
+
     selectGoldSelectedDeck$ = this.store.select(GameSelectors.selectGoldSelectedDeck);
 
     obtainedRelicDeck$ = this.store.select(GameSelectors.selectObtainedRelicDeck);
@@ -67,13 +69,18 @@ export class GameFacade {
     }
 
     /** User selected one ot more card to combat */
-    fight(action: Deck, suit?: Suits) {
-        this.store.dispatch(GameActions.actionPlay({ action, suit }));
+    fight(suit?: Suits) {
+        this.store.dispatch(GameActions.actionPlay({ suit }));
     }
 
     /** User selected/deselected a gold card */
     goldSelected(goldSelected: Deck) {
         this.store.dispatch(GameActions.goldSelected({ goldSelected }));
+    }
+
+    /** User selected/deselected an action card */
+    heroActionSelected(heroActionSelected: Deck) {
+        this.store.dispatch(GameActions.heroActionSelected({ heroActionSelected }));
     }
 
     resolveCardByDice() {

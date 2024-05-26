@@ -177,13 +177,14 @@ export class GamesEffects {
       this.store.select(GameSelectors.selectEventDeck),
       this.store.select(GameSelectors.selectHero),
       this.store.select(GameSelectors.selectHeroAction),
+      this.store.select(GameSelectors.selectHeroActionSelected),
       this.store.select(GameSelectors.selectObtainedRelicDeck),
     ),
-    map(([{ action, suit }, enemy, enemyActionDeckIm, enemyActionSelected, eventIm, hero, heroActionIm, obtainedRelic]) => {
+    map(([{ suit }, enemy, enemyActionDeckIm, enemyActionSelected, eventIm, hero, heroActionIm, heroActionSelected, obtainedRelic]) => {
       // If the hero has no action, heroValue=0 and heroSuit is irrelevant
       const heroRelic = suit && obtainedRelic.includes(new Card(1, suit)) ? 1 : 0;
       const heroSuit = suit ?? 'clubs';
-      const heroValue = action.value + heroRelic;
+      const heroValue = heroActionSelected.value + heroRelic;
 
       if (!enemyActionSelected) {
         return GameActions.error({ error: `Invalid state for action ${GameActions.actionPlay.type}: enemyAction=${enemyActionSelected}` });
@@ -250,12 +251,12 @@ export class GamesEffects {
 
       // Update hero action cards
       const heroAction = heroActionIm.clone();
-      heroAction.removeAll(action);
+      heroAction.removeAll(heroActionSelected);
 
       // Resolved action cards should be placed on Event Cards
       const event = eventIm.clone();
       event.push(enemyActionSelected);
-      event.pushAll(action);
+      event.pushAll(heroActionSelected);
 
       return GameActions.actionPlayed({ enemy, enemyAction: enemyActionDeck, event, hero, heroAction });
     }),

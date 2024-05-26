@@ -9,6 +9,7 @@ export const GAME_STATE_KEY = 'game';
 interface CombatState {
   action: number;
   heroAction: Deck,
+  heroActionSelected: Deck,
   enemyAction: Deck,
 }
 
@@ -39,6 +40,7 @@ export interface GameState {
 export const initialCombatState = {
   action: 0,
   heroAction: Deck.empty(),
+  heroActionSelected: Deck.empty(),
   enemyAction: Deck.empty(),
 }
 
@@ -133,6 +135,7 @@ export const gameReducer = createReducer(
       ...state.combat,
       enemyAction,
       heroAction,
+      heroActionSelected: Deck.empty(),
     },
     decks: {
       ...state.decks,
@@ -160,6 +163,14 @@ export const gameReducer = createReducer(
     },
   })),
 
+  on(GameActions.heroActionSelected, (state, { heroActionSelected }) => ({
+    ...state,
+    combat: {
+      ...state.combat,
+      heroActionSelected,
+    },
+  })),
+
   on(GameActions.resolvedCard, (state, { hpDelta }) => ({
     ...state,
     hero: state.hero?.updateHp(hpDelta),
@@ -178,6 +189,7 @@ export const gameReducer = createReducer(
       ...state.combat,
       enemyAction: Deck.empty(),
       heroAction,
+      heroActionSelected: Deck.empty(),
     },
     decks: {
       ...state.decks,
