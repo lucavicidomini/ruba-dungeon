@@ -1,4 +1,6 @@
 Hero action deck:
+<ng-container *ngIf="(status$ | async )=== 'COMBAT'">
+
 <app-selectable-deck
     [deck]="deck"
     [selectedDeck]="selectedDeck"
@@ -10,3 +12,11 @@ Hero action deck:
     type="button"
     (click)="onPlay(suit)"
 >{{ getButton(suit) }}</button>
+<button
+    *ngIf="!deck.length"
+    [disabled]="disabledPlay"
+    type="button"
+    (click)="onPlay()"
+>{{ getButton() }}</button>
+
+</ng-container>

@@ -177,12 +177,11 @@ export class GamesEffects {
       this.store.select(GameSelectors.selectEventDeck),
       this.store.select(GameSelectors.selectHero),
       this.store.select(GameSelectors.selectHeroAction),
-      this.store.select(GameSelectors.selectHeroActionSelected),
     ),
-    map(([, enemy, enemyActionDeckIm, enemyActionSelected, eventIm, hero, heroActionIm, heroActionSelected]) => {
+    map(([{ action, suit }, enemy, enemyActionDeckIm, enemyActionSelected, eventIm, hero, heroActionIm]) => {
       // If the hero has no action, heroValue=0 and heroSuit is irrelevant
-      const heroSuit = heroActionSelected.peek()?.suit ?? 'clubs';
-      const heroValue = heroActionSelected.value;
+      const heroSuit = suit ?? 'clubs';
+      const heroValue = action.value;
 
       if (!enemyActionSelected) {
         return GameActions.error({ error: `Invalid state for action ${GameActions.actionPlay.type}: enemyAction=${enemyActionSelected}` });
@@ -248,12 +247,12 @@ export class GamesEffects {
 
       // Update hero action cards
       const heroAction = heroActionIm.clone();
-      heroAction.removeAll(heroActionSelected);
+      heroAction.removeAll(action);
 
       // Resolved action cards should be placed on Event Cards
       const event = eventIm.clone();
       event.push(enemyActionSelected);
-      event.pushAll(heroActionSelected);
+      event.pushAll(action);
 
       return GameActions.actionPlayed({ enemy, enemyAction: enemyActionDeck, event, hero, heroAction });
     }),

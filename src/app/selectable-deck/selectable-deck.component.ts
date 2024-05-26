@@ -32,7 +32,6 @@ export class SelectableDeckComponent {
       newSelectedDeck.push(card);
     }
 
-    console.log(newSelectedDeck);
     this.selectCards.emit(newSelectedDeck);
   }
 

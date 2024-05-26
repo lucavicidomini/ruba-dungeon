@@ -58,8 +58,6 @@ export class GameComponent implements OnInit {
 
   heroActions$ = this.gameFacade.heroAction$;
   
-  heroActionSelectedDeck$ = this.gameFacade.heroActionSelectedDeck$;
-
   relicDeck$ = this.gameFacade.relicDeck$;
 
   obtainedRelicDeck$ = this.gameFacade.obtainedRelicDeck$;
@@ -135,16 +133,11 @@ export class GameComponent implements OnInit {
   }
 
   onPlay(action: PlayAction) {
-    console.log({ action })
-    // this.gameFacade.fight();
+    this.gameFacade.fight(action.action, action.suit);
   }
 
   onGoldSelect(goldSelected: Deck) {
     this.gameFacade.goldSelected(goldSelected);
-  }
-
-  onHeroActionSelect(heroActionSelected: Deck) {
-    this.gameFacade.heroActionSelected(heroActionSelected);
   }
 
   onRevealedOk() {

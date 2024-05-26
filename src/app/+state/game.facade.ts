@@ -3,6 +3,7 @@ import { Store } from "@ngrx/store";
 import * as GameActions from './game.actions';
 import * as GameSelectors from './game.selectors';
 import { Deck } from "../+models/deck.model";
+import { Suits } from "../+models/card.model";
 
 @Injectable()
 export class GameFacade {
@@ -37,8 +38,6 @@ export class GameFacade {
 
     heroAction$ = this.store.select(GameSelectors.selectHeroAction);
 
-    heroActionSelectedDeck$ = this.store.select(GameSelectors.selectHeroActionSelected);
-
     selectGoldSelectedDeck$ = this.store.select(GameSelectors.selectGoldSelectedDeck);
 
     obtainedRelicDeck$ = this.store.select(GameSelectors.selectObtainedRelicDeck);
@@ -68,18 +67,13 @@ export class GameFacade {
     }
 
     /** User selected one ot more card to combat */
-    fight() {
-        this.store.dispatch(GameActions.actionPlay());
+    fight(action: Deck, suit?: Suits) {
+        this.store.dispatch(GameActions.actionPlay({ action, suit }));
     }
 
     /** User selected/deselected a gold card */
     goldSelected(goldSelected: Deck) {
         this.store.dispatch(GameActions.goldSelected({ goldSelected }));
-    }
-
-    /** User selected/deselected an action card */
-    heroActionSelected(heroActionSelected: Deck) {
-        this.store.dispatch(GameActions.heroActionSelected({ heroActionSelected }));
     }
 
     resolveCardByDice() {

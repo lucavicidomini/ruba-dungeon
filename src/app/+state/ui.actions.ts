@@ -1,9 +1,11 @@
 import { createAction, props } from '@ngrx/store';
 import { Deck } from '../+models/deck.model';
+import { Suits } from '../+models/card.model';
 
 /** Player has selected one or more action cards (if available) and clicks the Play button */
 export const actionPlay = createAction(
-    '[Game/UI] Action Play'
+    '[Game/UI] Action Play',
+    props<{ suit?: Suits, action: Deck }>()
 );
 
 /** Event card is Swords and player clicks the Combat button */
@@ -35,12 +37,6 @@ export const resolveCardByDice = createAction(
 export const goldSelected = createAction(
     '[Game/UI] Gold Selected',
     props<{ goldSelected: Deck }>()
-);
-
-/** Player selected a card from the action deck (during combat) */
-export const heroActionSelected = createAction(
-    '[Game/UI] Hero Action Selected',
-    props<{ heroActionSelected: Deck }>()
 );
 
 /** Bribe was successfull and player acknowledges the bribed enemy by clicking Ok */
