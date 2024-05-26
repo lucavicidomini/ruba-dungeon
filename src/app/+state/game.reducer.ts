@@ -142,16 +142,19 @@ export const gameReducer = createReducer(
     error,
   })),
 
-  on(GameActions.actionPlayed, (state, { enemy, enemyAction, event, hero, heroAction }) => ({
+  on(GameActions.actionPlayed, (state, { aid, catacomb, enemy, enemyAction, event, hero, heroAction }) => ({
     ...state,
     combat: {
       ...state.combat,
+      aidSelected: Deck.empty(),
       enemyAction,
       heroAction,
       heroActionSelected: Deck.empty(),
     },
     decks: {
       ...state.decks,
+      aid,
+      catacomb,
       event,
     },
     enemy,

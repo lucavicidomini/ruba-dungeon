@@ -8,7 +8,7 @@ import { Deck } from '../+models/deck.model';
  * */
 export const actionPlayed = createAction(
     '[Game/Combat] Action Played',
-    props<{ enemy: Character, enemyAction: Deck, event: Deck, hero: Character, heroAction: Deck }>()
+    props<{ aid: Deck, catacomb: Deck, enemy: Character, enemyAction: Deck, event: Deck, hero: Character, heroAction: Deck }>()
 );
 
 /** Starts a new action phase of a combat turn */

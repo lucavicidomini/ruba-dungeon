@@ -42,6 +42,10 @@ export class Deck {
         return relics;
     }
 
+    filterBySuit(suit: Suits): Deck {
+        return new Deck(this.cards.filter(card => card.suit === suit));
+    }
+
     peek(): Card | undefined {
         return this.deckCards[this.deckCards.length - 1];
     }

@@ -171,6 +171,9 @@ export class GamesEffects {
   actionPlay$ = createEffect(() => this.actions$.pipe(
     ofType(GameActions.actionPlay),
     withLatestFrom(
+      this.store.select(GameSelectors.selectAidDeck),
+      this.store.select(GameSelectors.selectAidSelectedDeck),
+      this.store.select(GameSelectors.selectCatacombDeck),
       this.store.select(GameSelectors.selectEnemy),
       this.store.select(GameSelectors.selectEnemyActions),
       this.store.select(GameSelectors.selectEnemyActionSelected),
@@ -180,11 +183,14 @@ export class GamesEffects {
       this.store.select(GameSelectors.selectHeroActionSelected),
       this.store.select(GameSelectors.selectObtainedRelicDeck),
     ),
-    map(([{ suit }, enemy, enemyActionDeckIm, enemyActionSelected, eventIm, hero, heroActionIm, heroActionSelected, obtainedRelic]) => {
+    map(([{ suit }, aidIm, aidSelected, catacombIm, enemy, enemyActionDeckIm, enemyActionSelected, eventIm, hero, heroActionIm, heroActionSelected, obtainedRelic]) => {
       // If the hero has no action, heroValue=0 and heroSuit is irrelevant
-      const heroRelic = suit && obtainedRelic.includes(new Card(1, suit)) ? 1 : 0;
+      const heroRelic = suit ? obtainedRelic.filterBySuit(suit).value : 0;
+      const heroAid = suit ? aidSelected.filterBySuit(suit).length : 0;
       const heroSuit = suit ?? 'clubs';
-      const heroValue = heroActionSelected.value + heroRelic;
+      const heroValue = heroActionSelected.value + heroRelic + heroAid;
+
+      console.log({ action: heroActionSelected.value, heroRelic, heroAid, heroSuit, heroValue })
 
       if (!enemyActionSelected) {
         return GameActions.error({ error: `Invalid state for action ${GameActions.actionPlay.type}: enemyAction=${enemyActionSelected}` });
@@ -258,7 +264,13 @@ export class GamesEffects {
       event.push(enemyActionSelected);
       event.pushAll(heroActionSelected);
 
-      return GameActions.actionPlayed({ enemy, enemyAction: enemyActionDeck, event, hero, heroAction });
+      // On easy mode, played help cards are sent to Catacomb
+      const aid = aidIm.clone();
+      aid.removeAll(aidSelected);
+      const catacomb = catacombIm.clone();
+      catacomb.pushAll(aidSelected);
+
+      return GameActions.actionPlayed({ aid, catacomb, enemy, enemyAction: enemyActionDeck, event, hero, heroAction });
     }),
   ));
 
@@ -513,10 +525,10 @@ export class GamesEffects {
       const hero = new Character(new Card(8, 'swords'), 12, 12);
 
       const character = Deck.empty();
+      character.push(new Card(10, 'swords'));
       character.push(new Card(10, 'clubs'));
       character.push(new Card(10, 'coins'));
       character.push(new Card(10, 'cups'));
-      character.push(new Card(10, 'swords'));
       character.push(new Card(8, 'clubs'));
       character.push(new Card(9, 'clubs'));
       character.push(new Card(8, 'coins'));
