@@ -11,6 +11,9 @@ export enum GameStatus {
     /** Player draw a card */
     CRAWL_ACT = 'CRAWL_ACT',
 
+    /** After a combat is resolved, player can select which action cards to keep or discard */
+    DISCARD_ACTION = 'DISCARD_ACTION',
+
     /** After a bribe, the enemy card is revealed */
     ENEMY_REVEALED = 'ENEMY_REVEALED',
 

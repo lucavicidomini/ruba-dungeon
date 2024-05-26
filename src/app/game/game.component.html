@@ -86,6 +86,11 @@
                 <ng-container *ngIf="showPlay(status)">
                     <app-hero-action-deck *ngIf="heroActions$ | async as deck" [deck]="deck" [selected]="heroActionSelected" (play)="onPlay($event)" (selectCards)="onHeroActionSelect($event)"></app-hero-action-deck>
                 </ng-container>
+                <ng-container *ngIf="showDiscard(status)">
+                    Select actions to keep, then click continue
+                    <app-selectable-deck *ngIf="heroActions$ | async as deck" [deck]="deck" [selectedDeck]="heroActionSelected" (selectCards)="onHeroActionSelect($event)"></app-selectable-deck>
+                    <button type="button" (click)="onKeep()">Continue</button>
+                </ng-container>
             </td>
         </tr>
 

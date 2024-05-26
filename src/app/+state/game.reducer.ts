@@ -127,6 +127,11 @@ export const gameReducer = createReducer(
     },
   })),
 
+  on(GameActions.discardAction, (state) => ({
+    ...state,
+    status: GameStatus.DISCARD_ACTION,
+  })),
+
   on(GameActions.drawn, (state, { event, dungeon }) => ({
     ...state,
     decks: {
@@ -185,6 +190,20 @@ export const gameReducer = createReducer(
       ...state.combat,
       heroActionSelected,
     },
+  })),
+
+  on(GameActions.keptSelectedAction, (state, { action, event }) => ({
+    ...state,
+    combat: {
+      ...state.combat,
+      heroActionSelected: Deck.empty(),
+    },
+    decks: {
+      ...state.decks,
+      action,
+      event,
+    },
+    status: GameStatus.CRAWL_READY,
   })),
 
   on(GameActions.resolvedCard, (state, { hpDelta }) => ({

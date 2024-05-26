@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { filter, map, withLatestFrom } from 'rxjs/operators';
+import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { Card } from '../+models/card.model';
 import { Character } from '../+models/character.model';
 import { Deck } from '../+models/deck.model';
@@ -165,6 +165,27 @@ export class GamesEffects {
       event.push(dungeonCard);
 
       return GameActions.drawn({ event, dungeon });
+    }),
+  ));
+
+  keepSelectedAction$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.keepSelectedAction),
+    withLatestFrom(
+      this.store.select(GameSelectors.selectEventDeck),
+      this.store.select(GameSelectors.selectHeroActionSelected),
+      this.store.select(GameSelectors.selectHeroAction),
+    ),
+    map(([, eventIm, actionSelected, actionIm]) => {
+      const unselectedAction = actionIm.clone();
+      unselectedAction.removeAll(actionSelected);
+
+      const action = actionIm.clone();
+      action.removeAll(unselectedAction);
+
+      const event = eventIm.clone();
+      event.pushAll(unselectedAction);
+
+      return GameActions.keptSelectedAction({ action, event });
     }),
   ));
 
@@ -405,17 +426,20 @@ export class GamesEffects {
       const event = eventIm.clone();
       event.pushAll(enemyAction);
 
-      // TODO Ask player what cards to keep or discard
-      if (false) {
-        event.pushAll(heroAction);
-        heroAction = Deck.empty();
-      }
-
       return GameActions.resolvedCombat({ aid, event, heroAction, obtainedRelic, relic });
     }),
   ));
 
-  resolvedCombat$ = createEffect(() => this.actions$.pipe(
+  resolvedCombatDiscardAction$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.resolvedCombat),
+    withLatestFrom(
+      this.store.select(GameSelectors.selectHeroAction),
+    ),
+    filter(([, heroAction]) => heroAction.length > 0),
+    map(() => GameActions.discardAction()),
+  ));
+
+  resolvedCombatGameWon$ = createEffect(() => this.actions$.pipe(
     ofType(GameActions.resolvedCombat),
     withLatestFrom(
       this.store.select(GameSelectors.selectObtainedRelicDeck),

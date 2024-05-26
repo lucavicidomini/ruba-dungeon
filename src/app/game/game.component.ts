@@ -92,6 +92,10 @@ export class GameComponent implements OnInit {
     return status === GameStatus.CRAWL_ACT && eventCard.suit === 'swords';
   }
 
+  showDiscard(status: GameStatus): boolean {
+    return status === GameStatus.DISCARD_ACTION;
+  }
+
   showDraw(status: GameStatus): boolean {
     return status === GameStatus.CRAWL_READY;
   }
@@ -138,6 +142,10 @@ export class GameComponent implements OnInit {
 
   onDiceOk() {
     this.gameFacade.resolveCardByDice();
+  }
+
+  onKeep() {
+    this.gameFacade.keepSelectedAction();
   }
 
   onPlay(suit: Suits) {

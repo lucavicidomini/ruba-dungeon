@@ -89,6 +89,11 @@ export class GameFacade {
         this.store.dispatch(GameActions.heroActionSelected({ heroActionSelected }));
     }
 
+    /** User choose which action to keep */
+    keepSelectedAction() {
+        this.store.dispatch(GameActions.keepSelectedAction());
+    }
+
     resolveCardByDice() {
         this.store.dispatch(GameActions.resolveCardByDice());
     }
