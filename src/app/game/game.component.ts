@@ -30,6 +30,8 @@ export class GameComponent implements OnInit {
 
   aidDeck$ = this.gameFacade.aidDeck$;
 
+  aidSelectedDeck$ = this.gameFacade.aidSelectedDeck$;
+
   catacombDeck$ = this.gameFacade.catacombDeck$;
 
   combatAction$ = this.gameFacade.combatAction$;
@@ -112,6 +114,10 @@ export class GameComponent implements OnInit {
 
   showSpend(status: GameStatus, eventCard: Card): boolean {
     return status === GameStatus.CRAWL_ACT && eventCard.suit !== 'coins';
+  }
+
+  onAidSelect(aidSelected: Deck) {
+    this.gameFacade.aidSelected(aidSelected);
   }
 
   onCollect() {

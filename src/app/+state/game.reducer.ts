@@ -8,6 +8,7 @@ export const GAME_STATE_KEY = 'game';
 
 interface CombatState {
   action: number;
+  aidSelected: Deck,
   heroAction: Deck,
   heroActionSelected: Deck,
   enemyAction: Deck,
@@ -39,6 +40,7 @@ export interface GameState {
 
 export const initialCombatState = {
   action: 0,
+  aidSelected: Deck.empty(),
   heroAction: Deck.empty(),
   heroActionSelected: Deck.empty(),
   enemyAction: Deck.empty(),
@@ -65,6 +67,17 @@ export const initialState: GameState = {
 
 export const gameReducer = createReducer(
   initialState,
+
+  on(GameActions.aidSelected, (state, { aidSelected }) => ({
+    ...state,
+    combat: {
+      ...state.combat,
+      aidSelected,
+    },
+    decks: {
+      ...state.decks,
+    },
+  })),
 
   on(GameActions.actionStarted, (state, { action }) => ({
     ...state,

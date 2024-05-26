@@ -9,6 +9,11 @@ export const selectAidDeck = createSelector(
   (state: GameState) => state.decks.aid
 );
 
+export const selectAidSelectedDeck = createSelector(
+  selectFeature,
+  (state: GameState) => state.combat?.aidSelected
+);
+
 export const selectCatacombDeck = createSelector(
   selectFeature,
   (state: GameState) => state.decks.catacomb

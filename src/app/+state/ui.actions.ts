@@ -2,6 +2,12 @@ import { createAction, props } from '@ngrx/store';
 import { Deck } from '../+models/deck.model';
 import { Suits } from '../+models/card.model';
 
+/** Player selected a card from the aid deck */
+export const aidSelected = createAction(
+    '[Game/UI] Aid Selected',
+    props<{ aidSelected: Deck }>()
+);
+
 /** Player has selected one or more action cards (if available) and clicks the Play button */
 export const actionPlay = createAction(
     '[Game/UI] Action Play',

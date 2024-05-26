@@ -11,7 +11,9 @@ export class GameFacade {
     private store = inject(Store);
 
     aidDeck$ = this.store.select(GameSelectors.selectAidDeck);
-
+    
+    aidSelectedDeck$ = this.store.select(GameSelectors.selectAidSelectedDeck);
+    
     catacombDeck$ = this.store.select(GameSelectors.selectCatacombDeck);
 
     characterDeck$ = this.store.select(GameSelectors.selectCharacterDeck);
@@ -47,6 +49,10 @@ export class GameFacade {
     relicDeck$ = this.store.select(GameSelectors.selectRelicDeck);
 
     status$ = this.store.select(GameSelectors.selectStatus);
+
+    aidSelected(aidSelected: Deck) {
+        this.store.dispatch(GameActions.aidSelected({ aidSelected }));
+    }
 
     /** Event card was swords and player choose to combat */
     challenge() {
