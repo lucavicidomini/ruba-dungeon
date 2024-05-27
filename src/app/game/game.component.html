@@ -32,7 +32,7 @@
             <div class="footer" *ngIf="eventCard$ | async as event">
                 <button type="button" *ngIf="showCollect(status, event)" (click)="onCollect()">Collect</button>
                 <button type="button" *ngIf="showDice(status, event)" (click)="onDice()">Dice</button>
-                <button type="button" *ngIf="showDiceOk(status)" (click)="onDiceOk()">Ok</button>
+                <button type="button" *ngIf="showDiceOk(status)" (click)="onDiceOk()">Got a {{ dice$ | async }}</button>
                 <button type="button" *ngIf="showSpend(status, event)" [disabled]="disableSpend(event, goldSelectedDeck)" (click)="onSpend()">Bribe</button>
                 <button type="button" *ngIf="showCombat(status, event)" (click)="onCombat()">Combat</button>
             </div>
