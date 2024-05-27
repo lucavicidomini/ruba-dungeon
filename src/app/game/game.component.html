@@ -5,124 +5,164 @@
 <ng-container *ngIf="heroActionSelectedDeck$ | async as heroActionSelected">
 <ng-container *ngIf="aidSelectedDeck$ | async as aidSelectedDeck">
 
-    <table>
+    <div class="board">
 
-        <tr>
-            <td>
-                <!-- 1 - Dungeon Deck -->
+        <!-- 1 - Dungeon Deck -->
+        <div class="dungeon slot" *ngIf="dungeonDeck$ | async as dungeon">
+            <div class="heading">
                 <div>Dungeon deck</div>
-                <app-deck *ngIf="dungeonDeck$ | async as deck" [deck]="deck" [cover]="true"></app-deck>
+                <div>{{ dungeon.length }}</div>
+            </div>
+            <div class="body">
+                <app-deck [deck]="dungeon" [cover]="true"></app-deck>
+            </div>
+            <div class="footer">
                 <button type="button" [disabled]="!showDraw(status)" (click)="onDraw()">Draw</button>
-            </td>
+            </div>
+        </div>
 
-            <td>
-                <!-- 2 - Event Card -->
+        <!-- 2 - Event Card -->
+        <div class="event slot">
+            <div class="heading">
                 <div>Event card</div>
-                <ng-container *ngIf="eventCard$ | async as card">
-                    <app-card [card]="card"></app-card>
-                    <div>
-                        <button type="button" *ngIf="showCollect(status, card)" (click)="onCollect()">Collect</button>
-                        <button type="button" *ngIf="showDice(status, card)" (click)="onDice()">Dice</button>
-                        <button type="button" *ngIf="showDiceOk(status)" (click)="onDiceOk()">Ok</button>
-                        <button type="button" *ngIf="showSpend(status, card)" [disabled]="disableSpend(card, goldSelectedDeck)" (click)="onSpend()">Bribe</button>
-                        <button type="button" *ngIf="showCombat(status, card)" (click)="onCombat()">Combat</button>
-                    </div>
-                </ng-container>
-                <div *ngIf="dice$ | async as dice">Dice: {{ dice }}</div>
-            </td>
+            </div>
+            <div class="body" *ngIf="eventCard$ | async as event">
+                <app-card [card]="event"></app-card>
+            </div>
+            <div class="footer" *ngIf="eventCard$ | async as event">
+                <button type="button" *ngIf="showCollect(status, event)" (click)="onCollect()">Collect</button>
+                <button type="button" *ngIf="showDice(status, event)" (click)="onDice()">Dice</button>
+                <button type="button" *ngIf="showDiceOk(status)" (click)="onDiceOk()">Ok</button>
+                <button type="button" *ngIf="showSpend(status, event)" [disabled]="disableSpend(event, goldSelectedDeck)" (click)="onSpend()">Bribe</button>
+                <button type="button" *ngIf="showCombat(status, event)" (click)="onCombat()">Combat</button>
+            </div>
+        </div>
 
-            <td>
-                <!-- 3 - Character Deck -->
+        <div class="slot"></div>
+
+        <!-- 3 - Character Deck -->
+        <div class="character slot" *ngIf="characterDeck$ | async as character">
+            <div class="heading">
                 <div>Character deck</div>
-                <app-deck *ngIf="characterDeck$ | async as deck" [deck]="deck" [cover]="true"></app-deck>
-            </td>
+                <div>{{ character.length }}</div>
+            </div>
+            <div class="body">
+                <app-deck [deck]="character" [cover]="true"></app-deck>
+            </div>
+        </div>
 
-            <td>
-                <!-- Empty -->
-            </td>
-
-            <td>
-                <!-- 4 - Catacomb -->
+        <!-- 4 - Catacomb -->
+        <div class="catacomb slot" *ngIf="catacombDeck$ | async as catacomb">
+            <div class="heading">
                 <div>Catacomb</div>
-                <app-deck *ngIf="catacombDeck$ | async as deck" [deck]="deck"></app-deck>
-            </td>
-        </tr>
+                <div>{{ catacomb.length }}</div>
+            </div>
+            <div class="body">
+                <app-deck [deck]="catacomb" [cover]="true"></app-deck>
+            </div>
+        </div>
 
-        <tr>
-            <td>
-                <!-- Empty -->
-                &nbsp;
-            </td>
-
-            <td>
-                <!-- 5 - Enemy -->
+        <div class="slot"></div>
+        
+        <!-- 5 - Enemy -->
+        <div class="enemy slot">
+            <div class="heading">
                 <div>Enemy</div>
-                <app-character *ngIf="enemy$ | async as character" [character]="character"></app-character>
+            </div>
+            <div class="body" *ngIf="enemy$ | async as enemy">
+                <app-character [character]="enemy"></app-character>
                 <button *ngIf="showRevealOk(status)" type="button" (click)="onRevealedOk()">Ok</button>
-            </td>
+            </div>
+        </div>
 
-            <td colspan="3">
-                <!-- EAC - Enemy Action Card -->
-                <app-deck *ngIf="(enemyActions$ | async) as deck" [deck]="deck"></app-deck>
-            </td>
-        </tr>
+        <!-- EAC - Enemy Action Card -->
+        <div class="enemy-action slot" *ngIf="enemyActions$ | async as enemyAction">
+            <div class="heading">
+                <div>Enemy action cards</div>
+            </div>
+            <div class="body">
+                <app-deck [deck]="enemyAction"></app-deck>
+            </div>
+        </div>
 
-        <tr>
-            <td>
-                <!-- 6 - Relics Obtained (Cards are arranged horizontally) -->
+        <div class="slot"></div>
+        <div class="slot"></div>
+
+        <!-- 6 - Relics Obtained (Cards are arranged horizontally) -->
+        <div class="obtained-relic slot" *ngIf="obtainedRelicDeck$ | async as obtainedRelic">
+            <div class="heading">
                 <div>Your relics</div>
-                <app-deck *ngIf="obtainedRelicDeck$ | async as deck" [deck]="deck"></app-deck>
-            </td>
+                <div>{{ obtainedRelic.length }}</div>
+            </div>
+            <div class="body">
+                <app-deck [deck]="obtainedRelic"></app-deck>
+            </div>
+        </div>
 
-            <td>
-                <!-- 7 - Hero -->
-                <div>Hero</div>
-                <app-character *ngIf="hero$ | async as character" [character]="character"></app-character>
-            </td>
+        <!-- 7 - Hero -->
+        <div class="hero slot" *ngIf="hero$ | async as hero">
+            <div class="heading">
+                <div>The hero</div>
+            </div>
+            <div class="body">
+                <app-character [character]="hero"></app-character>
+            </div>
+        </div>
 
-            <td colspan="3">
-                <!-- HAC - Hero Action Card -->
-                <ng-container *ngIf="showPlay(status)">
-                    <app-hero-action-deck *ngIf="heroActions$ | async as deck" [deck]="deck" [selectedDeck]="heroActionSelected" (play)="onPlay($event)" (selectCards)="onHeroActionSelect($event)"></app-hero-action-deck>
-                </ng-container>
-                <ng-container *ngIf="showDiscard(status)">
-                    Select actions to keep, then click continue
-                    <app-selectable-deck *ngIf="heroActions$ | async as deck" [deck]="deck" [selectedDeck]="heroActionSelected" (selectCards)="onHeroActionSelect($event)"></app-selectable-deck>
-                    <button type="button" (click)="onKeep()">Continue</button>
-                </ng-container>
-            </td>
-        </tr>
+        <!-- HAC - Hero Action Card -->
+        <div class="hero-action slot" *ngIf="heroActions$ | async as heroAction">
+            <div class="heading">
+                <div>Your actions</div>
+            </div>
+            <div class="body">
+                <app-hero-action-deck *ngIf="showPlay(status)" [deck]="heroAction" [selectedDeck]="heroActionSelected" (play)="onPlay($event)" (selectCards)="onHeroActionSelect($event)"></app-hero-action-deck>
+            </div>
+            <div class="footer" *ngIf="showDiscard(status)">
+                Select actions to keep, then click continue
+                <app-selectable-deck [deck]="heroAction" [selectedDeck]="heroActionSelected" (selectCards)="onHeroActionSelect($event)"></app-selectable-deck>
+                <button type="button" (click)="onKeep()">Continue</button>
+            </div>
+        </div>
 
-        <tr>
-            <td>
-                <!-- 8 - Gold (Cards are arranged horizontally) -->
+        <div class="slot"></div>
+        <div class="slot"></div>
+
+        <!-- 8 - Gold (Cards are arranged horizontally) -->
+        <div class="gold slot" *ngIf="goldDeck$ | async as gold">
+            <div class="heading">
                 <div>Gold</div>
-                <app-selectable-deck *ngIf="goldDeck$ | async as deck" [deck]="deck" [selectedDeck]="goldSelectedDeck" (selectCards)="onGoldSelect($event)"></app-selectable-deck>
-            </td>
+                <div>{{ gold.length }}</div>
+            </div>
+            <div class="body">
+                <app-selectable-deck [deck]="gold" [selectedDeck]="goldSelectedDeck" (selectCards)="onGoldSelect($event)"></app-selectable-deck>
+            </div>
+        </div>
 
-            <td>
-                <!-- 9 - Aid (Cards are arranged vertically) -->
-                <app-aid-deck *ngIf="aidDeck$ | async as deck" [deck]="deck" [selectedDeck]="aidSelectedDeck" (selectCards)="onAidSelect($event)"></app-aid-deck>
-            </td>
+        <!-- 9 - Aid (Cards are arranged vertically) -->
+        <div class="aid slot" *ngIf="aidDeck$ | async as aid">
+            <div class="heading">
+                <div>Aid</div>
+                <div>{{ aid.length }}</div>
+            </div>
+            <div class="body">
+                <app-aid-deck [deck]="aid" [selectedDeck]="aidSelectedDeck" (selectCards)="onAidSelect($event)"></app-aid-deck>
+            </div>
+        </div>
 
-            <td>
-                <!-- Empty -->
+        <div class="slot"></div>
+        <div class="slot"></div>
 
-            </td>
-
-            <td>
-                <!-- Empty -->
-
-            </td>
-
-            <td>
-                <!-- 10 - Relic Deck (Cards are arranged vertically) -->
+        <!-- 10 - Relic Deck (Cards are arranged vertically) -->
+        <div class="relic slot" *ngIf="relicDeck$ | async as relic">
+            <div class="heading">
                 <div>Relics</div>
-                <app-deck *ngIf="relicDeck$ | async as deck" [deck]="deck"></app-deck>
-            </td>
-        </tr>
-
-    </table>
+                <div>{{ relic.length }}</div>
+            </div>
+            <div class="body">
+                <app-deck [deck]="relic"></app-deck>
+            </div>
+        </div>
+    </div>
 
 </ng-container> <!-- aidSelectedDeck -->
 </ng-container> <!-- heroActionSelected -->
