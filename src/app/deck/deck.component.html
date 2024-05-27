@@ -1,1 +1,6 @@
-<app-card *ngIf="deck.peek() as card" [card]="card" [cover]="cover"></app-card>
+<div class="deck" *ngIf="spread; else stack">
+    <app-card *ngFor="let card of deck.cards; index as i" [card]="card" [cover]="isCovered(i)"></app-card>
+</div>
+<ng-template #stack>
+    <app-card *ngIf="deck.peek() as card" [card]="card" [cover]="cover"></app-card>
+</ng-template>

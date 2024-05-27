@@ -81,7 +81,7 @@
                 <div>Enemy action cards</div>
             </div>
             <div class="body">
-                <app-deck [deck]="enemyAction"></app-deck>
+                <app-deck [deck]="enemyAction" [cover]="true" [spread]="true"></app-deck>
             </div>
         </div>
 
@@ -95,7 +95,7 @@
                 <div>{{ obtainedRelic.length }}</div>
             </div>
             <div class="body">
-                <app-deck [deck]="obtainedRelic"></app-deck>
+                <app-deck [deck]="obtainedRelic" [spread]="true"></app-deck>
             </div>
         </div>
 
@@ -167,7 +167,7 @@
                 <div>{{ relic.length }}</div>
             </div>
             <div class="body">
-                <app-deck [deck]="relic"></app-deck>
+                <app-deck [deck]="relic" [spread]="true"></app-deck>
             </div>
         </div>
     </div>

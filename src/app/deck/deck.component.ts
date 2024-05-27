@@ -16,4 +16,15 @@ export class DeckComponent {
 
   @Input() cover = false;
 
+  @Input() spread = false;
+
+  /**
+   * If a card **in a spreaded deck** is covered
+   * @param index index of the card inside the deck
+   * @returns `true` if card `index` is covered
+   */
+  isCovered(index: number): boolean {
+    return this.cover && index < this.deck.length - 1;
+  }
+
 }
