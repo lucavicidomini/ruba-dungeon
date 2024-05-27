@@ -21,14 +21,14 @@ export class HeroActionDeckComponent {
 
   @Input() deck: Deck = Deck.empty();
 
-  @Input() selected: Deck = Deck.empty();
+  @Input() selectedDeck: Deck = Deck.empty();
 
   @Output() play = new EventEmitter<Suits>();
 
   @Output() selectCards = new EventEmitter<Deck>();
 
   onSelect(newSelection: Deck) {
-    const oldValue = this.selected.peek()?.value;
+    const oldValue = this.selectedDeck.peek()?.value;
 
     if (oldValue) {
       const differentCard = newSelection.cards.find(card => card.value !== oldValue);
@@ -50,11 +50,11 @@ export class HeroActionDeckComponent {
   }
 
   get selectedCardSuits() {
-    return Array.from(new Set(this.selected.cards.map(card => card.suit)).values()).sort();
+    return Array.from(new Set(this.selectedDeck.cards.map(card => card.suit)).values()).sort();
   }
 
   get disabledPlay() {
-    return this.deck.length && !this.selected.length;
+    return this.deck.length && !this.selectedDeck.length;
   }
 
 }

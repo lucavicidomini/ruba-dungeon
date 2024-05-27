@@ -20,11 +20,13 @@
                 <div>Event card</div>
                 <ng-container *ngIf="eventCard$ | async as card">
                     <app-card [card]="card"></app-card>
-                    <button type="button" *ngIf="showCollect(status, card)" (click)="onCollect()">Collect</button>
-                    <button type="button" *ngIf="showDice(status, card)" (click)="onDice()">Dice</button>
-                    <button type="button" *ngIf="showDiceOk(status)" (click)="onDiceOk()">Ok</button>
-                    <button type="button" *ngIf="showSpend(status, card)" [disabled]="disableSpend(card, goldSelectedDeck)" (click)="onSpend()">Bribe</button>
-                    <button type="button" *ngIf="showCombat(status, card)" (click)="onCombat()">Combat</button>
+                    <div>
+                        <button type="button" *ngIf="showCollect(status, card)" (click)="onCollect()">Collect</button>
+                        <button type="button" *ngIf="showDice(status, card)" (click)="onDice()">Dice</button>
+                        <button type="button" *ngIf="showDiceOk(status)" (click)="onDiceOk()">Ok</button>
+                        <button type="button" *ngIf="showSpend(status, card)" [disabled]="disableSpend(card, goldSelectedDeck)" (click)="onSpend()">Bribe</button>
+                        <button type="button" *ngIf="showCombat(status, card)" (click)="onCombat()">Combat</button>
+                    </div>
                 </ng-container>
                 <div *ngIf="dice$ | async as dice">Dice: {{ dice }}</div>
             </td>
@@ -81,7 +83,7 @@
             <td colspan="3">
                 <!-- HAC - Hero Action Card -->
                 <ng-container *ngIf="showPlay(status)">
-                    <app-hero-action-deck *ngIf="heroActions$ | async as deck" [deck]="deck" [selected]="heroActionSelected" (play)="onPlay($event)" (selectCards)="onHeroActionSelect($event)"></app-hero-action-deck>
+                    <app-hero-action-deck *ngIf="heroActions$ | async as deck" [deck]="deck" [selectedDeck]="heroActionSelected" (play)="onPlay($event)" (selectCards)="onHeroActionSelect($event)"></app-hero-action-deck>
                 </ng-container>
                 <ng-container *ngIf="showDiscard(status)">
                     Select actions to keep, then click continue
@@ -100,8 +102,7 @@
 
             <td>
                 <!-- 9 - Aid (Cards are arranged vertically) -->
-                <div>Aids</div>
-                <app-selectable-deck *ngIf="aidDeck$ | async as deck" [deck]="deck" [selectedDeck]="aidSelectedDeck" (selectCards)="onAidSelect($event)"></app-selectable-deck>
+                <app-aid-deck *ngIf="aidDeck$ | async as deck" [deck]="deck" [selectedDeck]="aidSelectedDeck" (selectCards)="onAidSelect($event)"></app-aid-deck>
             </td>
 
             <td>

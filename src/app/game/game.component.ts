@@ -9,12 +9,14 @@ import { CharacterComponent } from '../character/character.component';
 import { DeckComponent } from '../deck/deck.component';
 import { SelectableDeckComponent } from '../selectable-deck/selectable-deck.component';
 import { HeroActionDeckComponent } from '../hero-action-deck/hero-action-deck.component';
+import { AidDeckComponent } from '../aid-deck/aid-deck.component';
 
 @Component({
   selector: 'app-game',
   standalone: true,
   imports: [
     CommonModule,
+    AidDeckComponent,
     CardComponent,
     CharacterComponent,
     HeroActionDeckComponent,
