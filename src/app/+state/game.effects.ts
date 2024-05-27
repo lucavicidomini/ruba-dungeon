@@ -177,17 +177,17 @@ export class GamesEffects {
       this.store.select(GameSelectors.selectHeroActionSelected),
       this.store.select(GameSelectors.selectHeroAction),
     ),
-    map(([, eventIm, actionSelected, actionIm]) => {
-      const unselectedAction = actionIm.clone();
+    map(([, eventIm, actionSelected, heroActionIm]) => {
+      const unselectedAction = heroActionIm.clone();
       unselectedAction.removeAll(actionSelected);
 
-      const action = actionIm.clone();
-      action.removeAll(unselectedAction);
+      const heroAction = heroActionIm.clone();
+      heroAction.removeAll(unselectedAction);
 
       const event = eventIm.clone();
       event.pushAll(unselectedAction);
 
-      return GameActions.keptSelectedAction({ action, event });
+      return GameActions.keptSelectedAction({ heroAction, event });
     }),
   ));
 

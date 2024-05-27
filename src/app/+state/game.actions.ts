@@ -24,7 +24,7 @@ export const keepSelectedAction = createAction(
 
 export const keptSelectedAction = createAction(
     '[Game] Kept Selected Action',
-    props<{ action: Deck, event: Deck }>()
+    props<{ heroAction: Deck, event: Deck }>()
 )
 
 /** Hero lost all of his HP */

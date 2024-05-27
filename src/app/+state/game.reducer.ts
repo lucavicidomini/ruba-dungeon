@@ -192,15 +192,15 @@ export const gameReducer = createReducer(
     },
   })),
 
-  on(GameActions.keptSelectedAction, (state, { action, event }) => ({
+  on(GameActions.keptSelectedAction, (state, { heroAction, event }) => ({
     ...state,
     combat: {
       ...state.combat,
+      heroAction,
       heroActionSelected: Deck.empty(),
     },
     decks: {
       ...state.decks,
-      action,
       event,
     },
     status: GameStatus.CRAWL_READY,
