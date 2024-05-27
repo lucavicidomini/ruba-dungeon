@@ -58,11 +58,12 @@ export const turnStarted = createAction(
  * . `actionPlayed` if enemy was defeated and hero lived
  */
 export const resolveCombat = createAction(
-    '[Game/Combat] Resolve Combat'
+    '[Game/Combat] Resolve Combat',
+    props<{ bribed: boolean }>()
 );
 
 /** Updated state after `resolveCombat` */
 export const resolvedCombat = createAction(
     '[Game/Combat] Resolved Combat',
-    props<{ aid: Deck, event: Deck, heroAction: Deck, obtainedRelic: Deck, relic: Deck }>()
+    props<{ aid: Deck, bribed: boolean, event: Deck, heroAction: Deck, obtainedRelic: Deck, relic: Deck }>()
 );

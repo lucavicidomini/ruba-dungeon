@@ -312,7 +312,7 @@ export class GamesEffects {
       }
 
       if (!enemy.hp) {
-        return GameActions.resolveCombat();
+        return GameActions.resolveCombat({ bribed: false });
       }
 
       // No more enemy action cards, start a new turn
@@ -413,7 +413,7 @@ export class GamesEffects {
       this.store.select(GameSelectors.selectObtainedRelicDeck),
       this.store.select(GameSelectors.selectRelicDeck),
     ),
-    map(([, aidIm, enemy, enemyAction, eventIm, heroAction, obtainedRelicIm, relicIm]) => {
+    map(([{ bribed }, aidIm, enemy, enemyAction, eventIm, heroAction, obtainedRelicIm, relicIm]) => {
       if (!enemy) {
         return GameActions.error({ error: `Invalid state for action ${GameActions.resolveCombat.type}: enemy=${enemy}` });
       }
@@ -435,7 +435,7 @@ export class GamesEffects {
       const event = eventIm.clone();
       event.pushAll(enemyAction);
 
-      return GameActions.resolvedCombat({ aid, event, heroAction, obtainedRelic, relic });
+      return GameActions.resolvedCombat({ aid, bribed, event, heroAction, obtainedRelic, relic });
     }),
   ));
 
@@ -444,7 +444,7 @@ export class GamesEffects {
     withLatestFrom(
       this.store.select(GameSelectors.selectHeroAction),
     ),
-    filter(([, heroAction]) => heroAction.length > 0),
+    filter(([{ bribed }, heroAction]) => !bribed && heroAction.length > 0),
     map(() => GameActions.discardAction()),
   ));
 
@@ -473,7 +473,7 @@ export class GamesEffects {
       }
 
       // Otherwise, the combat automatically ends in you favor
-      return GameActions.resolveCombat();
+      return GameActions.resolveCombat({ bribed: true });
     }),
   ));
 
@@ -544,10 +544,10 @@ export class GamesEffects {
     filter(() => !this.DEBUG),
     map(() => {
         const dungeon = Deck.full();
+        dungeon.shuffle();
         const hero = new Character(dungeon.popPlayerCard(), 12, 12);
         const character = dungeon.extractCharacterDeck();
         const relic = dungeon.extractRelicDeck();
-        dungeon.shuffle();
         const decks: PartialDeckState = { dungeon, character, relic };
         return GameActions.started({ decks, hero });
     }),
