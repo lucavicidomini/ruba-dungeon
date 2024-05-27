@@ -253,6 +253,7 @@ export const gameReducer = createReducer(
       obtainedRelic: Deck.empty(),
       ...decks,
     },
+    enemy: undefined,
     hero,
     status: GameStatus.CRAWL_READY,
   })),
