@@ -212,12 +212,6 @@ export const gameReducer = createReducer(
     status: GameStatus.CRAWL_READY,
   })),
 
-  on(GameActions.resolvedCard, (state, { hpDelta }) => ({
-    ...state,
-    hero: state.hero?.updateHp(hpDelta),
-    status: GameStatus.CRAWL_READY,
-  })),
-
   on(GameActions.resolvedCombat, (state, { aid, event, heroAction, obtainedRelic, relic }) => ({
     ...state,
     combat: {
