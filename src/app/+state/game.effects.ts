@@ -13,7 +13,7 @@ import * as GameSelectors from './game.selectors';
 @Injectable()
 export class GamesEffects {
 
-  DEBUG = true;
+  DEBUG = false;
 
   /*
    * If dungeon deck is empty, reshuffle using event deck
@@ -213,8 +213,6 @@ export class GamesEffects {
       const heroSuit = suit ?? 'clubs';
       const heroValue = heroActionSelected.value + heroRelic + heroAid;
 
-      console.log({ action: heroActionSelected.value, heroRelic, heroAid, heroSuit, heroValue })
-
       if (!enemyActionSelected) {
         return GameActions.error({ error: `Invalid state for action ${GameActions.actionPlay.type}: enemyAction=${enemyActionSelected}` });
       }
@@ -393,6 +391,15 @@ export class GamesEffects {
 
       return GameActions.resolvedCard({ hpDelta });
     }),
+  ));
+
+  resolvedCard$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.resolvedCard),
+    withLatestFrom(
+      this.store.select(GameSelectors.selectHero),
+    ),
+    filter(([, hero]) => hero?.hp === 0),
+    map(() => GameActions.gameOver()),
   ));
 
   resolveCombat$ = createEffect(() => this.actions$.pipe(
@@ -632,9 +639,7 @@ export class GamesEffects {
 
   turnStarted$ = createEffect(() => this.actions$.pipe(
     ofType(GameActions.turnStarted),
-    map(() => {
-      return GameActions.actionStart();
-    }),
+    map(() => GameActions.actionStart()),
   ));
 
   constructor(

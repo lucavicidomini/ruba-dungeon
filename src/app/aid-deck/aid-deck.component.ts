@@ -26,7 +26,7 @@ export class AidDeckComponent {
     if (!this.enable) {
       return;
     }
-debugger
+
     // If some action card is selected, dany selecting aid card with different suits
     const actionSuits = this.actionSelected.cards.map(card => card.suit);
     const aidSuits = newSelection.cards.map(card => card.suit);
