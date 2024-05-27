@@ -27,7 +27,7 @@ import { Observable } from 'rxjs';
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss'
 })
-export class GameComponent implements OnInit {
+export class GameComponent {
 
   GameStatus = GameStatus;
 
@@ -75,10 +75,6 @@ export class GameComponent implements OnInit {
     private gameFacade: GameFacade,
   ) {}
 
-  ngOnInit(): void {
-    this.gameFacade.start(); 
-  }
-
   disablePlay(heroActions: Deck, heroActionSelected: Deck) {
     return heroActions.length && !heroActionSelected.length;
   }
@@ -119,6 +115,10 @@ export class GameComponent implements OnInit {
     return status === GameStatus.COMBAT;
   }
 
+  showPopup(status: GameStatus) {
+    return [GameStatus.GAME_INIT, GameStatus.GAME_OVER, GameStatus.GAME_WON].includes(status);
+  }
+
   showRevealOk(status: GameStatus): boolean {
     return status === GameStatus.ENEMY_REVEALED;
   }
@@ -153,6 +153,10 @@ export class GameComponent implements OnInit {
 
   onKeep() {
     this.gameFacade.keepSelectedAction();
+  }
+
+  onNewGame() {
+    this.gameFacade.start();
   }
 
   onPlay(suit: Suits) {

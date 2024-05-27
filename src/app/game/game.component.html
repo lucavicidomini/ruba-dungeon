@@ -166,6 +166,12 @@
         </div>
     </div>
 
+    <div *ngIf="showPopup(status)" class="popup-backdrop">
+        <div class="popup">
+            <button type="button" (click)="onNewGame()">New game</button>
+        </div>
+    </div>
+
 </ng-container> <!-- aidSelectedDeck -->
 </ng-container> <!-- heroActionSelected -->
 </ng-container> <!-- goldSelected -->
