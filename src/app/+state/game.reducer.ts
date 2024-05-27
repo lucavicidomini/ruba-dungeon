@@ -243,6 +243,7 @@ export const gameReducer = createReducer(
 
   on(GameActions.started, (state, { decks, hero }) => ({
     ...state,
+    combat: initialCombatState,
     decks: {
       aid: Deck.empty(),
       catacomb: Deck.empty(),
