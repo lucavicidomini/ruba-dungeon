@@ -16,6 +16,7 @@
 
         .body {
             display: flex;
+            flex-grow: 1;
             justify-content: center;
             text-align: center;
             margin: .5rem 0;
@@ -26,20 +27,9 @@
             justify-content: center;
         }
 
-        &.dungeon {
-
+        &.enemy-action,
+        &.hero-action {
+            grid-column-end: span 3;
         }
     }
-}
-
-
-
-table {
-    border-collapse: collapse;
-}
-
-td {
-    width: 20%;
-    border: 1px solid #555;
-    vertical-align: bottom;
 }

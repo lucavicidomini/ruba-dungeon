@@ -85,9 +85,6 @@
             </div>
         </div>
 
-        <div class="slot"></div>
-        <div class="slot"></div>
-
         <!-- 6 - Relics Obtained (Cards are arranged horizontally) -->
         <div class="obtained-relic slot" *ngIf="obtainedRelicDeck$ | async as obtainedRelic">
             <div class="heading">
@@ -131,9 +128,6 @@
                 <button type="button" (click)="onKeep()">Continue</button>
             </div>
         </div>
-
-        <div class="slot"></div>
-        <div class="slot"></div>
 
         <!-- 8 - Gold (Cards are arranged horizontally) -->
         <div class="gold slot" *ngIf="goldDeck$ | async as gold">
