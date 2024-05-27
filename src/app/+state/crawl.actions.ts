@@ -51,12 +51,14 @@ export const threwDice = createAction(
  * - after `resolveCard` if dice test was successfull
  */
 export const resolveCardSuccess = createAction(
-    '[Game/Crawl] Resolve Card Success'
+    '[Game/Crawl] Resolve Card Success',
+    props<{ eventCard: Card }>()
 );
 
 /** Calculate status effect of clubs and cups, but does not apply them. Dispatched after `resolveCard` if dice test was failed */
 export const resolveCardFailure = createAction(
-    '[Game/Crawl] Resolve Card Failure'
+    '[Game/Crawl] Resolve Card Failure',
+    props<{ eventCard: Card }>()
 );
 
 /** Apply status effect of clubs and cups. Dispatched after `resolveCardSuccess` or `resolveCardFailure`. */

@@ -331,29 +331,29 @@ export class GamesEffects {
       this.store.select(GameSelectors.selectDice),
     ),
     map(([, eventCard, dice]) => {
+      if (!dice || !eventCard) {
+        return GameActions.error({ error: `Invalid state for action ${GameActions.resolveCardByDice.type}: dice=${dice}, eventCard=${eventCard}` });
+      }
+
       // 1 always corresponts to a failure
       if (dice === 1) {
-        return GameActions.resolveCardFailure()
+        return GameActions.resolveCardFailure({ eventCard })
       }
 
       // 6 always corresponts to a success
       if (dice === 6) {
-        return GameActions.resolveCardSuccess();
+        return GameActions.resolveCardSuccess({ eventCard });
       }
 
       const eventCardValue = eventCard?.value;
 
-      if (!dice || !eventCardValue) {
-        return GameActions.error({ error: `Invalid state for action ${GameActions.resolveCardByDice.type}: dice=${dice}, eventCardValue=${eventCardValue}` });
-      }
-
       // From 2 to 5 the roll is successfull if the value is equal or greather thatn the event card
       // value
       if (dice >= eventCardValue) {
-        return GameActions.resolveCardSuccess();
+        return GameActions.resolveCardSuccess({ eventCard });
       }
 
-      return GameActions.resolveCardFailure();
+      return GameActions.resolveCardFailure({ eventCard });
     }),
   ));
 
@@ -512,7 +512,7 @@ export class GamesEffects {
       // Spending a total sum equal or greater than the value of the Event Card, the Resolution is
       // automatically successfull
       if (eventCardSuit === 'clubs' || eventCardSuit === 'cups') {
-        return GameActions.resolveCardSuccess();
+        return GameActions.resolveCardSuccess({ eventCard });
       }
       
       const eventCardValue = eventCard.value;
@@ -520,7 +520,7 @@ export class GamesEffects {
       // Spending an amount of gold equal to the value of the Event Card continues the Crawling
       // phase without engaging in combat
       if (eventCardSuit === 'swords' && selectedGoldValue === eventCardValue) {
-        return GameActions.resolveCardSuccess();
+        return GameActions.resolveCardSuccess({ eventCard });
       }
 
       // In easy mode, by spending an amount of gold greather than the value of the Event card, you

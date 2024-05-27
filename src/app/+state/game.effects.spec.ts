@@ -175,5 +175,5 @@ describe('GamesEffects', () => {
       expectDelta(4, 3, 'cups');
     });
   });
-  
+
 });
