@@ -8,14 +8,14 @@
 
 <button
     *ngFor="let suit of selectedCardSuits"
-    [disabled]="disabledPlay"
+    [disabled]="disableButton(suit)"
     type="button"
     (click)="onPlay(suit)"
 >{{ getButton(suit) }}</button>
 
 <button
     *ngIf="!deck.length"
-    [disabled]="disabledPlay"
+    [disabled]="disableButton()"
     type="button"
     (click)="onPlay()"
 >{{ getButton() }}</button>

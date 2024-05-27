@@ -12,14 +12,29 @@ import { SelectableDeckComponent } from '../selectable-deck/selectable-deck.comp
 })
 export class AidDeckComponent {
 
+  @Input() actionSelected: Deck = Deck.empty();
+
   @Input() deck: Deck = Deck.empty();
+
+  @Input() enable = false;
 
   @Input() selectedDeck: Deck = Deck.empty();
 
   @Output() selectCards = new EventEmitter<Deck>();
 
   onSelect(newSelection: Deck) {
-    
+    if (!this.enable) {
+      return;
+    }
+debugger
+    // If some action card is selected, dany selecting aid card with different suits
+    const actionSuits = this.actionSelected.cards.map(card => card.suit);
+    const aidSuits = newSelection.cards.map(card => card.suit);
+    const suitIsAllowed = aidSuits.reduce((isAllowed, suit) => isAllowed && actionSuits.includes(suit), true);
+    if (actionSuits.length && !suitIsAllowed) {
+      return;
+    }
+
     this.selectCards.emit(newSelection);
   }
 

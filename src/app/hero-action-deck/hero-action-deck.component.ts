@@ -1,9 +1,8 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { SuitLabels, Suits } from '../+models/card.model';
 import { Deck } from '../+models/deck.model';
 import { SelectableDeckComponent } from '../selectable-deck/selectable-deck.component';
-import { SuitLabels, Suits } from '../+models/card.model';
-import { CommonModule } from '@angular/common';
-import { GameFacade } from '../+state/game.facade';
 
 @Component({
   selector: 'app-hero-action-deck',
@@ -19,6 +18,8 @@ export class HeroActionDeckComponent {
 
   SuitLabel = SuitLabels;
 
+  @Input() aidSelected: Deck = Deck.empty();
+
   @Input() deck: Deck = Deck.empty();
 
   @Input() selectedDeck: Deck = Deck.empty();
@@ -28,13 +29,22 @@ export class HeroActionDeckComponent {
   @Output() selectCards = new EventEmitter<Deck>();
 
   onSelect(newSelection: Deck) {
+    // Deny selection of combos with different values
     const oldValue = this.selectedDeck.peek()?.value;
-
     if (oldValue) {
       const differentCard = newSelection.cards.find(card => card.value !== oldValue);
       if (differentCard) {
         newSelection = Deck.empty();
         newSelection.push(differentCard);
+      }
+    }
+
+    // If some aid is selected, disable selection of actions with different suits (but allow combo)
+    if (this.aidSelected.length && newSelection.length === 1) {
+      const aidSuit = this.aidSelected.peek()?.suit;
+      const differentCard = newSelection.cards.find(card => card.suit !== aidSuit);
+      if (differentCard) {
+        return;
       }
     }
 
@@ -49,12 +59,16 @@ export class HeroActionDeckComponent {
     return suit ? `Play ${SuitLabels[suit]}` : 'Play';
   }
 
-  get selectedCardSuits() {
-    return Array.from(new Set(this.selectedDeck.cards.map(card => card.suit)).values()).sort();
+  disableButton(suit?: Suits) {
+    const disablePlay = this.deck.length && !this.selectedDeck.length;
+
+    const aidSuit = this.aidSelected.peek()?.suit;
+    const disableSuit = suit && aidSuit ? aidSuit !== suit : false;
+    return disablePlay || disableSuit;
   }
 
-  get disabledPlay() {
-    return this.deck.length && !this.selectedDeck.length;
+  get selectedCardSuits() {
+    return Array.from(new Set(this.selectedDeck.cards.map(card => card.suit)).values()).sort();
   }
 
 }
