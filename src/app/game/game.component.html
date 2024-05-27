@@ -110,16 +110,24 @@
         </div>
 
         <!-- HAC - Hero Action Card -->
-        <div class="hero-action slot" *ngIf="heroActions$ | async as heroAction">
+        <div class="hero-action slot" *ngIf="getHeroActionToPlay(status) | async as heroAction">
             <div class="heading">
                 <div>Your actions</div>
             </div>
             <div class="body">
                 <app-hero-action-deck *ngIf="showPlay(status)" [deck]="heroAction" [selectedDeck]="heroActionSelected" (play)="onPlay($event)" (selectCards)="onHeroActionSelect($event)"></app-hero-action-deck>
             </div>
-            <div class="footer" *ngIf="showDiscard(status)">
-                Select actions to keep, then click continue
+        </div>
+
+        <!-- HAC - Hero Action Card (select cards to keep or discard) -->
+        <div class="hero-action slot" *ngIf="getHeroActionToDiscard(status) | async as heroAction">
+            <div class="heading">
+                <div>Select actions to keep, then click continue</div>
+            </div>
+            <div class="body">
                 <app-selectable-deck [deck]="heroAction" [selectedDeck]="heroActionSelected" (selectCards)="onHeroActionSelect($event)"></app-selectable-deck>
+            </div>
+            <div class="footer">
                 <button type="button" (click)="onKeep()">Continue</button>
             </div>
         </div>
@@ -145,7 +153,7 @@
                 <div>{{ aid.length }}</div>
             </div>
             <div class="body">
-                <app-aid-deck [deck]="aid" [selectedDeck]="aidSelectedDeck" (selectCards)="onAidSelect($event)"></app-aid-deck>
+                <app-aid-deck [deck]="aid" [enable]="showPlay(status)" [selectedDeck]="aidSelectedDeck" (selectCards)="onAidSelect($event)"></app-aid-deck>
             </div>
         </div>
 

@@ -10,6 +10,7 @@ import { DeckComponent } from '../deck/deck.component';
 import { SelectableDeckComponent } from '../selectable-deck/selectable-deck.component';
 import { HeroActionDeckComponent } from '../hero-action-deck/hero-action-deck.component';
 import { AidDeckComponent } from '../aid-deck/aid-deck.component';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-game',
@@ -86,16 +87,20 @@ export class GameComponent implements OnInit {
     return goldSelected.value < eventCard.value;
   }
 
+  getHeroActionToPlay(status: GameStatus): Observable<Deck> | undefined {
+    return status !== GameStatus.DISCARD_ACTION ? this.heroActions$ : undefined
+  }
+
+  getHeroActionToDiscard(status: GameStatus): Observable<Deck> | undefined {
+    return status === GameStatus.DISCARD_ACTION ? this.heroActions$ : undefined
+  }
+
   showCollect(status: GameStatus, eventCard: Card): boolean {
     return status === GameStatus.CRAWL_ACT && eventCard.suit === 'coins';
   }
 
   showCombat(status: GameStatus, eventCard: Card): boolean {
     return status === GameStatus.CRAWL_ACT && eventCard.suit === 'swords';
-  }
-
-  showDiscard(status: GameStatus): boolean {
-    return status === GameStatus.DISCARD_ACTION;
   }
 
   showDraw(status: GameStatus): boolean {
