@@ -29,3 +29,7 @@ The back of neapolitan deck is a cropped and resized version of
 https://it.wikipedia.org/wiki/File:Carte_Napoletane_retro.jpg.
 The original file is released under public domain by its author
 [Trocche100](https://en.wikipedia.org/wiki/it:User:Trocche100).
+
+Background image by 
+[engin akyurt](https://unsplash.com/it/@enginakyurt?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash)
+on [Unsplash](https://unsplash.com/it/foto/tessuto-verde-in-primo-piano-immagine-HEMIBJ8QQuA?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash)

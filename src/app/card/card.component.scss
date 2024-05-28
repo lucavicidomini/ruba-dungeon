@@ -8,7 +8,9 @@
     border: 1px solid black;
     border-radius: 5% / 2.91665%;
     aspect-ratio: 0.58333;
+    margin: .5em;
     width: 100px;
+    box-shadow: 0 0 1rem #00000066;
 
     span {
         background-color: #fff;
@@ -17,6 +19,7 @@
         border-radius: .2em;
         box-shadow: #00000022 .2em .2em .4em;
         display: none;
+        color: #000;
     }
 
     &.covered {
@@ -25,13 +28,14 @@
     }
 
     &.selected {
-        border-color: #aaaa00;
-        box-shadow: #aaaa00 0 0 .4em;
+        border-color: #ff0;
+        box-shadow: #ff0 0 0 .4em;
     }
 
     &:hover span {
         display: initial;
     }
+
 }
 
 .c1 { background-position-x: 0; }

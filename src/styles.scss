@@ -1,1 +1,23 @@
-/* You can add global styles to this file, and also import other style files */
+@font-face {
+    font-family: 'Crimson Text';
+    src: url('/assets/fonts/CrimsonText-Regular.ttf') format('ttf');
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body,
+button,
+input {
+    font-family: 'Crimson Text', Georgia, 'Times New Roman', Times, serif;
+}
+
+.board button {
+    margin: .25rem;
+    padding: .25em .5rem;
+    font-size: 1rem;
+}
