@@ -1,8 +1,7 @@
 .board {
     display: grid;
     grid-template-columns: repeat(5, 20%);
-    background: url('/assets/bgs/engin-akyurt-HEMIBJ8QQuA-unsplash.jpg');
-    background-size: 100%;
+    grid-template-rows: 1fr 1fr 1fr max-content;
     color: #fff;
     width: 100%;
     min-height: 100vh;
