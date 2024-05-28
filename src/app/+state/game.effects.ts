@@ -33,180 +33,6 @@ export class GamesEffects {
     return  { dungeon, event };
   }
 
-  actionStart$ = createEffect(() => this.actions$.pipe(
-    ofType(GameActions.actionStart),
-    withLatestFrom(
-      this.store.select(GameSelectors.selectCombatAction),
-    ),
-    map(([, lastAction]) => {
-      if (lastAction === undefined) {
-        return GameActions.error({ error: `Invalid state for action ${GameActions.actionStart.type}: lastAction=${lastAction}` });
-      }
-
-      const action = lastAction + 1;
-
-      this.logger.actionStart(action);
-
-      return GameActions.actionStarted({ action });
-    }),
-  ));
-
-  reveal$ = createEffect(() => this.actions$.pipe(
-    ofType(GameActions.reveal),
-    withLatestFrom(
-      this.store.select(GameSelectors.selectCharacterDeck),
-    ),
-    map(([, characterIm]) => {
-      const character = characterIm.clone();
-
-      // Reveal the enemy
-      const enemyCard = character.pop();
-
-      if (!enemyCard) {
-        return GameActions.error({ error: `No enemy found` });  
-      }
-
-      // In easy mode enemies always enter Combat with 6HP
-      // TODO In difficult mode enemies will have as much HP as the value of the respective card
-      const enemyHp = 6;
-
-      const enemy = new Character(enemyCard, enemyHp, enemyHp);
-
-      this.logger.reveal(enemy);
-
-      return GameActions.revealed({ character, enemy });
-    }),
-  ));
-
-  // Basically the same thing as bribe, but dispatches challenged()
-  challenge$ = createEffect(() => this.actions$.pipe(
-    ofType(GameActions.challenge),
-    withLatestFrom(
-      this.store.select(GameSelectors.selectCharacterDeck),
-    ),
-    map(([, characterIm]) => {
-      const character = characterIm.clone();
-
-      // Reveal the enemy
-      const enemyCard = character.pop();
-
-      if (!enemyCard) {
-        return GameActions.error({ error: `No enemy found` });  
-      }
-
-      // In easy mode enemies always enter Combat with 6HP
-      // TODO In difficult mode enemies will have as much HP as the value of the respective card
-      const enemyHp = 6;
-
-      const enemy = new Character(enemyCard, enemyHp, enemyHp);
-
-      this.logger.challenge(enemy);
-
-      return GameActions.challenged({ character, enemy });
-    }),
-  ));
-
-  challenged$ = createEffect(() => this.actions$.pipe(
-    ofType(GameActions.challenged),
-    map(() =>
-      GameActions.combatStart()
-    ),
-  ));
-
-  collect$ = createEffect(() => this.actions$.pipe(
-    ofType(GameActions.collect),
-    withLatestFrom(
-      this.store.select(GameSelectors.selectEventDeck),
-      this.store.select(GameSelectors.selectGoldDeck),
-    ),
-    map(([, eventIm, goldIm]) => {
-      const event = eventIm.clone();
-      const gold = goldIm.clone();
-
-      // Remove event card from event deck
-      const eventCard = event.pop();
-
-      if (!eventCard) {
-        return GameActions.error({ error: 'No event card' });
-      }
-
-      if (eventCard.suit !== 'coins') {
-        return GameActions.error({ error: `Event card is ${eventCard.suit} while coins where expected` });
-      }
-
-      // Place event card on gold deck
-      gold.push(eventCard);
-
-      this.logger.collect(eventCard);
-
-      return GameActions.collected({ event, gold });
-    }),
-  ));
-
-  combat$ = createEffect(() => this.actions$.pipe(
-    ofType(GameActions.combatStart),
-    map(() => {
-      return GameActions.combatStarted();
-    }),
-  ));
-
-  combatStarted$ = createEffect(() => this.actions$.pipe(
-    ofType(GameActions.combatStarted),
-    map(() =>
-      GameActions.turnStart()
-    ),
-  ));
-
-  draw$ = createEffect(() => this.actions$.pipe(
-    ofType(GameActions.draw),
-    withLatestFrom(
-      this.store.select(GameSelectors.selectEventDeck),
-      this.store.select(GameSelectors.selectDungeonDeck),
-    ),
-    map(([, eventIm, dungeonIm]) => {
-      let event = eventIm.clone();
-      let dungeon = dungeonIm.clone();
-
-      // Draw a card from dungeon deck
-      ({ dungeon, event } = this.reshuffle(dungeon, event));
-      const dungeonCard = dungeon.pop();
-
-      if (!dungeonCard) {
-        return GameActions.error({ error: 'Dungeon deck is empty' });
-      }
-
-      // Place card on event deck
-      event.push(dungeonCard);
-
-      this.logger.draw(dungeonCard);
-
-      return GameActions.drawn({ event, dungeon });
-    }),
-  ));
-
-  keepSelectedAction$ = createEffect(() => this.actions$.pipe(
-    ofType(GameActions.keepSelectedAction),
-    withLatestFrom(
-      this.store.select(GameSelectors.selectEventDeck),
-      this.store.select(GameSelectors.selectHeroActionSelected),
-      this.store.select(GameSelectors.selectHeroAction),
-    ),
-    map(([, eventIm, actionSelected, heroActionIm]) => {
-      const unselectedAction = heroActionIm.clone();
-      unselectedAction.removeAll(actionSelected);
-
-      const heroAction = heroActionIm.clone();
-      heroAction.removeAll(unselectedAction);
-
-      const event = eventIm.clone();
-      event.pushAll(unselectedAction);
-
-      this.logger.keepSelectedAction(heroAction, unselectedAction);
-
-      return GameActions.keptSelectedAction({ heroAction, event });
-    }),
-  ));
-
   actionPlay$ = createEffect(() => this.actions$.pipe(
     ofType(GameActions.actionPlay),
     withLatestFrom(
@@ -270,19 +96,6 @@ export class GamesEffects {
       // Final results
       const heroDelta = heroHealing - enemyShieldedAttack;
       const enemyDelta = enemyHealing - heroShieldedAttack;
-
-      // console.log({
-      //   heroRelic,
-      //   enemySuit, heroClubs, enemyClubs, parries, heroClubAttack, enemyClubAttack,
-      //   heroSwordAttack, enemySwordAttack,
-      //   heroTotalAttack, enemyTotalAttack,
-      //   heroShield,
-      //   enemyShield,
-      //   heroShieldedAttack,
-      //   enemyShieldedAttack,
-      //   heroHealing, enemyHealing,
-      //   heroDelta, enemyDelta
-      // })
 
       // Update characters
       hero = hero.updateHp(heroDelta);
@@ -356,6 +169,147 @@ export class GamesEffects {
       }
 
       return GameActions.actionStart();
+    }),
+  ));
+
+  actionStart$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.actionStart),
+    withLatestFrom(
+      this.store.select(GameSelectors.selectCombatAction),
+    ),
+    map(([, lastAction]) => {
+      if (lastAction === undefined) {
+        return GameActions.error({ error: `Invalid state for action ${GameActions.actionStart.type}: lastAction=${lastAction}` });
+      }
+
+      const action = lastAction + 1;
+
+      this.logger.actionStart(action);
+
+      return GameActions.actionStarted({ action });
+    }),
+  ));
+
+  // Basically the same thing as bribe, but dispatches challenged()
+  challenge$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.challenge),
+    withLatestFrom(
+      this.store.select(GameSelectors.selectCharacterDeck),
+    ),
+    map(([, characterIm]) => {
+      const character = characterIm.clone();
+
+      // Reveal the enemy
+      const enemyCard = character.pop();
+
+      if (!enemyCard) {
+        return GameActions.error({ error: `No enemy found` });  
+      }
+
+      // In easy mode enemies always enter Combat with 6HP
+      // TODO In difficult mode enemies will have as much HP as the value of the respective card
+      const enemyHp = 6;
+
+      const enemy = new Character(enemyCard, enemyHp, enemyHp);
+
+      this.logger.challenge(enemy);
+
+      return GameActions.challenged({ character, enemy });
+    }),
+  ));
+
+  challenged$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.challenged),
+    map(() => GameActions.combatStart()),
+  ));
+
+  collect$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.collect),
+    withLatestFrom(
+      this.store.select(GameSelectors.selectEventDeck),
+      this.store.select(GameSelectors.selectGoldDeck),
+    ),
+    map(([, eventIm, goldIm]) => {
+      const event = eventIm.clone();
+      const gold = goldIm.clone();
+
+      // Remove event card from event deck
+      const eventCard = event.pop();
+
+      if (!eventCard) {
+        return GameActions.error({ error: 'No event card' });
+      }
+
+      if (eventCard.suit !== 'coins') {
+        return GameActions.error({ error: `Event card is ${eventCard.suit} while coins where expected` });
+      }
+
+      // Place event card on gold deck
+      gold.push(eventCard);
+
+      this.logger.collect(eventCard);
+
+      return GameActions.collected({ event, gold });
+    }),
+  ));
+
+  combat$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.combatStart),
+    map(() => GameActions.combatStarted()),
+  ));
+
+  combatStarted$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.combatStarted),
+    map(() => GameActions.turnStart()),
+  ));
+
+  draw$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.draw),
+    withLatestFrom(
+      this.store.select(GameSelectors.selectEventDeck),
+      this.store.select(GameSelectors.selectDungeonDeck),
+    ),
+    map(([, eventIm, dungeonIm]) => {
+      let event = eventIm.clone();
+      let dungeon = dungeonIm.clone();
+
+      // Draw a card from dungeon deck
+      ({ dungeon, event } = this.reshuffle(dungeon, event));
+      const dungeonCard = dungeon.pop();
+
+      if (!dungeonCard) {
+        return GameActions.error({ error: 'Dungeon deck is empty' });
+      }
+
+      // Place card on event deck
+      event.push(dungeonCard);
+
+      this.logger.draw(dungeonCard);
+
+      return GameActions.drawn({ event, dungeon });
+    }),
+  ));
+
+  keepSelectedAction$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.keepSelectedAction),
+    withLatestFrom(
+      this.store.select(GameSelectors.selectEventDeck),
+      this.store.select(GameSelectors.selectHeroActionSelected),
+      this.store.select(GameSelectors.selectHeroAction),
+    ),
+    map(([, eventIm, actionSelected, heroActionIm]) => {
+      const unselectedAction = heroActionIm.clone();
+      unselectedAction.removeAll(actionSelected);
+
+      const heroAction = heroActionIm.clone();
+      heroAction.removeAll(unselectedAction);
+
+      const event = eventIm.clone();
+      event.pushAll(unselectedAction);
+
+      this.logger.keepSelectedAction(heroAction, unselectedAction);
+
+      return GameActions.keptSelectedAction({ heroAction, event });
     }),
   ));
 
@@ -489,6 +443,33 @@ export class GamesEffects {
     ),
     filter(([, obtainedRelic]) => obtainedRelic.length === 4),
     map(() => GameActions.gameWon()),
+  ));
+
+  reveal$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.reveal),
+    withLatestFrom(
+      this.store.select(GameSelectors.selectCharacterDeck),
+    ),
+    map(([, characterIm]) => {
+      const character = characterIm.clone();
+
+      // Reveal the enemy
+      const enemyCard = character.pop();
+
+      if (!enemyCard) {
+        return GameActions.error({ error: `No enemy found` });  
+      }
+
+      // In easy mode enemies always enter Combat with 6HP
+      // TODO In difficult mode enemies will have as much HP as the value of the respective card
+      const enemyHp = 6;
+
+      const enemy = new Character(enemyCard, enemyHp, enemyHp);
+
+      this.logger.reveal(enemy);
+
+      return GameActions.revealed({ character, enemy });
+    }),
   ));
 
   revealedOk$ = createEffect(() => this.actions$.pipe(
@@ -654,20 +635,18 @@ export class GamesEffects {
       let event = eventIm.clone();
    
       // Pick three action card for player
-      // TODO Remove cast
       const heroAction = heroActionIm.clone();
       const missingCount = 3 - heroAction.length;
       for (let i = 0; i < missingCount; i++) {
         ({ dungeon, event } = this.reshuffle(dungeon, event));
-        heroAction.push(dungeon.pop() as Card);
+        heroAction.push(dungeon.pop()!);
       }
 
       // Pick three action card for enemy
-      // TODO Remove cast
       const enemyAction = Deck.empty();
       for (let i = 0; i < 3; i++) {
         ({ dungeon, event } = this.reshuffle(dungeon, event));
-        enemyAction.push(dungeon.pop() as Card);
+        enemyAction.push(dungeon.pop()!);
       }
 
       return GameActions.turnStarted({ dungeon, event, enemyAction, heroAction });
