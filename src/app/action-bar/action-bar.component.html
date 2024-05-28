@@ -1,0 +1,23 @@
+@if (showDraw$ | async) {
+    <button type="button" (click)="onDraw()">Draw</button>
+}
+
+@if (showCollect$ | async) {
+    <button type="button" (click)="onCollect()">Collect</button>
+}
+
+@if (showDice$ | async) {
+    <button type="button" (click)="onDice()">Dice</button>
+}
+
+@if (showDiceFeedback$ | async) {
+    <button type="button" (click)="onDiceFeedback()">Got a {{ dice$ | async }}</button>
+}
+
+@if (showCombat$ | async) {
+    <button type="button" (click)="onCombat()">Combat</button>
+}
+
+@if (showSpend$ | async) {
+    <button type="button" [disabled]="disableSpend$ | async" (click)="onSpend()">{{ spendCaption$ | async }}</button>
+}

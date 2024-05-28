@@ -25,32 +25,14 @@
             <div class="heading">
               <div>Event card</div>
             </div>
-            @if (eventCard$ | async; as event) {
-              <div class="body">
-                <app-card [card]="event"></app-card>
+            <div class="body">
+                @if (eventCard$ | async; as event) {
+                  <app-card [card]="event"></app-card>
+                }
               </div>
               <div class="footer">
-
-                @if (showCollect(status, event)) {
-                  <button type="button" (click)="onCollect()">Collect</button>
-                }
-                @if (showDice(status, event)) {
-                  <button type="button" (click)="onDice()">Dice</button>
-                }
-                @if (showDiceOk(status)) {
-                  <button type="button" (click)="onDiceOk()">Got a {{ dice$ | async }}</button>
-                }
-                @if (showCombat(status, event)) {
-                  <button type="button" (click)="onCombat()">Combat</button>
-                }
-                @if (showSpend(status, event)) {
-                  <button type="button" [disabled]="disableSpend(event, goldSelectedDeck)" (click)="onSpend()">{{ event.suit === 'swords' ? 'Bribe' : 'Buy' }}</button>
-                }
+                <app-action-bar></app-action-bar>
               </div>
-            }
-            @if (showDraw(status)) {
-              <button type="button" (click)="onDraw()">Draw</button>
-            }
           </div>
           
           <!-- 3 - Character Deck -->

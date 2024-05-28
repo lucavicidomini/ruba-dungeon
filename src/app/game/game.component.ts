@@ -11,8 +11,8 @@ import { HeroActionDeckComponent } from '../hero-action-deck/hero-action-deck.co
 import { AidDeckComponent } from '../aid-deck/aid-deck.component';
 import { Observable } from 'rxjs';
 import { PopupScreenComponent } from '../popup-screen/popup-screen.component';
-import { LoggerService } from '../logger.service';
 import { CommonModule } from '@angular/common';
+import { ActionBarComponent } from '../action-bar/action-bar.component';
 
 @Component({
   selector: 'app-game',
@@ -20,6 +20,7 @@ import { CommonModule } from '@angular/common';
   imports: [
     CommonModule,
     AidDeckComponent,
+    ActionBarComponent,
     CardComponent,
     CharacterComponent,
     DeckComponent,
@@ -60,7 +61,7 @@ export class GameComponent {
 
   goldDeck$ = this.gameFacade.goldDeck$;
 
-  goldSelectedDeck$ = this.gameFacade.selectGoldSelectedDeck$;
+  goldSelectedDeck$ = this.gameFacade.goldSelectedDeck$;
 
   hero$ = this.gameFacade.hero$;
 
@@ -84,36 +85,12 @@ export class GameComponent {
     return heroActions.length && !heroActionSelected.length;
   }
 
-  disableSpend(eventCard: Card, goldSelected: Deck) {
-    return goldSelected.value < eventCard.value;
-  }
-
   getHeroActionToPlay(status: GameStatus): Observable<Deck> | undefined {
     return status !== GameStatus.DISCARD_ACTION ? this.heroActions$ : undefined
   }
 
   getHeroActionToDiscard(status: GameStatus): Observable<Deck> | undefined {
     return status === GameStatus.DISCARD_ACTION ? this.heroActions$ : undefined
-  }
-
-  showCollect(status: GameStatus, eventCard: Card): boolean {
-    return status === GameStatus.CRAWL_ACT && eventCard.suit === 'coins';
-  }
-
-  showCombat(status: GameStatus, eventCard: Card): boolean {
-    return status === GameStatus.CRAWL_ACT && eventCard.suit === 'swords';
-  }
-
-  showDraw(status: GameStatus): boolean {
-    return status === GameStatus.CRAWL_READY;
-  }
-
-  showDice(status: GameStatus, eventCard: Card): boolean {
-    return status === GameStatus.CRAWL_ACT && (eventCard.suit === 'clubs' || eventCard.suit === 'cups');
-  }
-
-  showDiceOk(status: GameStatus): boolean {
-    return status === GameStatus.RESOLVE_THREW_DICE;
   }
 
   showPlay(status: GameStatus): boolean {
@@ -124,32 +101,8 @@ export class GameComponent {
     return status === GameStatus.ENEMY_REVEALED;
   }
 
-  showSpend(status: GameStatus, eventCard: Card): boolean {
-    return status === GameStatus.CRAWL_ACT && eventCard.suit !== 'coins';
-  }
-
   onAidSelect(aidSelected: Deck) {
     this.gameFacade.aidSelected(aidSelected);
-  }
-
-  onCollect() {
-    this.gameFacade.collect();
-  }
-
-  onCombat() {
-    this.gameFacade.challenge();
-  }
-
-  onDraw() {
-    this.gameFacade.draw();
-  }
-
-  onDice() {
-    this.gameFacade.throwDice();
-  }
-
-  onDiceOk() {
-    this.gameFacade.resolveCardByDice();
   }
 
   onKeep() {
@@ -176,8 +129,6 @@ export class GameComponent {
     this.gameFacade.revealedOk();
   }
 
-  onSpend() {
-    this.gameFacade.spend();
-  }
+  
 
 }
