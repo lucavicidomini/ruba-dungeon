@@ -1,5 +1,4 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Card, Suits } from '../+models/card.model';
 import { Deck } from '../+models/deck.model';
 import { GameStatus } from '../+models/game.model';
@@ -13,6 +12,7 @@ import { AidDeckComponent } from '../aid-deck/aid-deck.component';
 import { Observable } from 'rxjs';
 import { PopupScreenComponent } from '../popup-screen/popup-screen.component';
 import { LoggerService } from '../logger.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-game',
@@ -76,8 +76,9 @@ export class GameComponent {
 
   constructor(
     private gameFacade: GameFacade,
-    private logger: LoggerService
-  ) {}
+  ) {
+    this.gameFacade.start()
+  }
 
   disablePlay(heroActions: Deck, heroActionSelected: Deck) {
     return heroActions.length && !heroActionSelected.length;

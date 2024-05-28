@@ -32,9 +32,74 @@
             justify-content: center;
         }
 
+        &.catacomb {
+            grid-column-start: 5;
+        }
+
+        &.enemy {
+            grid-column-start: 2;
+        }
+
         &.enemy-action,
         &.hero-action {
             grid-column-end: span 3;
         }
+
+        &.relic {
+            grid-column-start: 5;
+        }
     }
+}
+
+.board.compact {
+    grid-template-columns: repeat(4, 25%);
+    grid-template-rows: repeat(3, 33%);
+
+    .slot {
+        &.dungeon,
+        &.character,
+        &.catacomb,
+        &.relic {
+            display: none;
+        }
+
+        &.enemy {
+            grid-column-start: 2;
+            grid-row-start: 1;
+        }
+
+        &.enemy-action {
+            grid-column-start: 3;
+            grid-row-start: 1;
+        }
+
+        &.gold {
+            grid-column-start: 1;
+            grid-row-start: 2;
+            grid-row-end: span 2;
+        }
+
+        &.hero {
+            grid-column-start: 2;
+            grid-row-start: 2;
+        }
+
+        &.hero-action {
+            grid-column-start: 3;
+            grid-row-start: 2;
+        }
+
+        &.aid {
+            grid-column-start: 2;
+            grid-column-end: span 2;
+            grid-row-start: 3;
+        }
+
+        &.obtained-relic {
+            grid-column-start: 4;
+            grid-column-end: span 2;
+            grid-row-start: 3;
+        }
+    }
+
 }
