@@ -57,20 +57,22 @@
     
     <!-- 5 - Enemy -->
     <div class="enemy slot">
-      <div class="heading">
-        <div>Enemy</div>
-      </div>
-      @if (enemy$ | async; as enemy) {
-        <div class="body">
-          <app-character [character]="enemy"></app-character>
-        </div>
-        <div class="footer">
-          @if (showRevealOk(status)) {
-            <button type="button" (click)="onRevealedOk()">{{ enemy.card.value === 10 ? 'Combat' : 'Accept aid' }}</button>
-          }
-        </div>
-      }
+        @if (enemy$ | async; as enemy) {
+            <div class="heading">
+                <div>Enemy</div>
+                <div>{{ enemy.hp }} HP</div>
+            </div>
+            <div class="body">
+                <app-character [character]="enemy"></app-character>
+            </div>
+            <div class="footer">
+                @if (showRevealOk(status)) {
+                    <button type="button" (click)="onRevealedOk()">{{ enemy.card.value === 10 ? 'Combat' : 'Accept aid' }}</button>
+                }
+            </div>
+        }
     </div>
+
     <!-- EAC - Enemy Action Card -->
     @if (enemyActions$ | async; as enemyAction) {
       <div class="enemy-action slot">
@@ -82,6 +84,7 @@
         </div>
       </div>
     }
+
     <!-- 6 - Relics Obtained (Cards are arranged horizontally) -->
     @if (obtainedRelicDeck$ | async; as obtainedRelic) {
       <div class="obtained-relic slot">
@@ -96,14 +99,15 @@
     }
     <!-- 7 - Hero -->
     <div class="hero slot">
-      <div class="heading">
-        <div>The hero</div>
-      </div>
-      @if (hero$ | async; as hero) {
-        <div class="body">
-          <app-character [character]="hero"></app-character>
-        </div>
-      }
+        @if (hero$ | async; as hero) {
+            <div class="heading">
+                <div>The hero</div>
+                <div>{{ hero.hp }} HP</div>
+            </div>
+            <div class="body">
+                <app-character [character]="hero"></app-character>
+            </div>
+        }
     </div>
     <!-- HAC - Hero Action Card -->
     @if (getHeroActionToPlay(status) | async; as heroAction) {
