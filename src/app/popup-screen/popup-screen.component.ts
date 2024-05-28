@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { GameStatus } from '../+models/game.model';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-popup-screen',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './popup-screen.component.html',
   styleUrl: './popup-screen.component.scss'
 })

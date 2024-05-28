@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { SuitLabels, Suits } from '../+models/card.model';
 import { Deck } from '../+models/deck.model';
@@ -8,9 +8,8 @@ import { SelectableDeckComponent } from '../selectable-deck/selectable-deck.comp
   selector: 'app-hero-action-deck',
   standalone: true,
   imports: [
-    CommonModule,
-    SelectableDeckComponent,
-  ],
+    SelectableDeckComponent
+],
   templateUrl: './hero-action-deck.component.html',
   styleUrl: './hero-action-deck.component.scss'
 })

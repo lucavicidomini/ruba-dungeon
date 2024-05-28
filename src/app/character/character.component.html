@@ -1,4 +1,4 @@
-<ng-container *ngIf="character">
-    <app-card [card]="character.card"></app-card>
-    {{ character.hp }}
-</ng-container>
+@if (character) {
+  <app-card [card]="character.card"></app-card>
+  {{ character.hp }}
+}

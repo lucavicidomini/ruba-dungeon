@@ -1,12 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Deck } from '../+models/deck.model';
-import { CommonModule } from '@angular/common';
 import { SelectableDeckComponent } from '../selectable-deck/selectable-deck.component';
 
 @Component({
   selector: 'app-aid-deck',
   standalone: true,
-  imports: [CommonModule, SelectableDeckComponent],
+  imports: [SelectableDeckComponent],
   templateUrl: './aid-deck.component.html',
   styleUrl: './aid-deck.component.scss'
 })

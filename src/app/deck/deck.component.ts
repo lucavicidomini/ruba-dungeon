@@ -1,12 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { Deck } from '../+models/deck.model';
 import { CardComponent } from '../card/card.component';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-deck',
   standalone: true,
-  imports: [CommonModule, CardComponent],
+  imports: [CardComponent],
   templateUrl: './deck.component.html',
   styleUrl: './deck.component.scss'
 })

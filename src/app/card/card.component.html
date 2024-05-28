@@ -1,9 +1,10 @@
-<div *ngIf="cover; else uncovered" class="card covered">
+@if (cover) {
+  <div class="card covered">
     <span>(hidden)</span>
-</div>
+  </div>
+} @else {
+  <div [ngClass]="css" [class.selected]="selected">
+    <span>{{ card.value }} {{ suit }}{{ selected ? ' (selected)' : '' }}</span>
+  </div>
+}
 
-<ng-template #uncovered>
-    <div [ngClass]="css" [class.selected]="selected">
-        <span>{{ card.value }} {{ suit }}{{ selected ? ' (selected)' : '' }}</span>
-    </div>
-</ng-template>
