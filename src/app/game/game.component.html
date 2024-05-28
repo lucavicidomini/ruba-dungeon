@@ -5,6 +5,8 @@
 <ng-container *ngIf="heroActionSelectedDeck$ | async as heroActionSelected">
 <ng-container *ngIf="aidSelectedDeck$ | async as aidSelectedDeck">
 
+    <app-popup-screen [status]="status" (newGame)="onNewGame()"></app-popup-screen>
+
     <div class="board">
 
         <!-- 1 - Dungeon Deck -->
@@ -97,11 +99,11 @@
         </div>
 
         <!-- 7 - Hero -->
-        <div class="hero slot" *ngIf="hero$ | async as hero">
+        <div class="hero slot">
             <div class="heading">
                 <div>The hero</div>
             </div>
-            <div class="body">
+            <div class="body" *ngIf="hero$ | async as hero">
                 <app-character [character]="hero"></app-character>
             </div>
         </div>
@@ -163,12 +165,6 @@
             <div class="body">
                 <app-deck [deck]="relic" [spread]="true"></app-deck>
             </div>
-        </div>
-    </div>
-
-    <div *ngIf="showPopup(status)" class="popup-backdrop">
-        <div class="popup">
-            <button type="button" (click)="onNewGame()">New game</button>
         </div>
     </div>
 

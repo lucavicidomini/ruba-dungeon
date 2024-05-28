@@ -1,0 +1,17 @@
+<div *ngIf="isVisible" class="popup-backdrop">
+    <div class="popup">
+        <ng-container *ngIf="status === GameStatus.GAME_INIT">
+            <h1>Welcome to Ruba dungeon!</h1>
+        </ng-container>
+
+        <ng-container *ngIf="status === GameStatus.GAME_WON">
+            <h1>You won!</h1>
+        </ng-container>
+
+        <ng-container *ngIf="status === GameStatus.GAME_OVER">
+            <h1>Game over</h1>
+        </ng-container>
+
+        <button type="button" (click)="newGame.emit()">New game</button>
+    </div>
+</div>

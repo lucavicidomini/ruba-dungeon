@@ -11,6 +11,7 @@ import { SelectableDeckComponent } from '../selectable-deck/selectable-deck.comp
 import { HeroActionDeckComponent } from '../hero-action-deck/hero-action-deck.component';
 import { AidDeckComponent } from '../aid-deck/aid-deck.component';
 import { Observable } from 'rxjs';
+import { PopupScreenComponent } from '../popup-screen/popup-screen.component';
 
 @Component({
   selector: 'app-game',
@@ -20,8 +21,9 @@ import { Observable } from 'rxjs';
     AidDeckComponent,
     CardComponent,
     CharacterComponent,
-    HeroActionDeckComponent,
     DeckComponent,
+    HeroActionDeckComponent,
+    PopupScreenComponent,
     SelectableDeckComponent,
   ],
   templateUrl: './game.component.html',
@@ -113,10 +115,6 @@ export class GameComponent {
 
   showPlay(status: GameStatus): boolean {
     return status === GameStatus.COMBAT;
-  }
-
-  showPopup(status: GameStatus) {
-    return [GameStatus.GAME_INIT, GameStatus.GAME_OVER, GameStatus.GAME_WON].includes(status);
   }
 
   showRevealOk(status: GameStatus): boolean {
