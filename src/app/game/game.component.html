@@ -35,8 +35,8 @@
                 <button type="button" *ngIf="showCollect(status, event)" (click)="onCollect()">Collect</button>
                 <button type="button" *ngIf="showDice(status, event)" (click)="onDice()">Dice</button>
                 <button type="button" *ngIf="showDiceOk(status)" (click)="onDiceOk()">Got a {{ dice$ | async }}</button>
-                <button type="button" *ngIf="showSpend(status, event)" [disabled]="disableSpend(event, goldSelectedDeck)" (click)="onSpend()">Bribe</button>
                 <button type="button" *ngIf="showCombat(status, event)" (click)="onCombat()">Combat</button>
+                <button type="button" *ngIf="showSpend(status, event)" [disabled]="disableSpend(event, goldSelectedDeck)" (click)="onSpend()">{{ event.suit === 'swords' ? 'Bribe' : 'Buy' }}</button>
             </div>
         </div>
 
@@ -73,7 +73,9 @@
             </div>
             <div class="body" *ngIf="enemy$ | async as enemy">
                 <app-character [character]="enemy"></app-character>
-                <button *ngIf="showRevealOk(status)" type="button" (click)="onRevealedOk()">Ok</button>
+            </div>
+            <div class="footer" *ngIf="enemy$ | async as enemy">
+                <button *ngIf="showRevealOk(status)" type="button" (click)="onRevealedOk()">{{ enemy.card.value === 10 ? 'Combat' : 'Accept aid' }}</button>
             </div>
         </div>
 
