@@ -9,6 +9,7 @@ import { AppState } from './app.reducer';
 import * as GameActions from './game.actions';
 import { PartialDeckState } from './game.reducer';
 import * as GameSelectors from './game.selectors';
+import { LoggerService } from '../logger.service';
 
 @Injectable()
 export class GamesEffects {
@@ -26,6 +27,9 @@ export class GamesEffects {
     const dungeon = currentEvent.clone();
     dungeon.shuffle();
     const event = Deck.empty();
+
+    this.logger.reshuffle();
+
     return  { dungeon, event };
   }
 
@@ -41,11 +45,13 @@ export class GamesEffects {
 
       const action = lastAction + 1;
 
+      this.logger.actionStart(action);
+
       return GameActions.actionStarted({ action });
     }),
   ));
 
-  bribe$ = createEffect(() => this.actions$.pipe(
+  reveal$ = createEffect(() => this.actions$.pipe(
     ofType(GameActions.reveal),
     withLatestFrom(
       this.store.select(GameSelectors.selectCharacterDeck),
@@ -65,6 +71,8 @@ export class GamesEffects {
       const enemyHp = 6;
 
       const enemy = new Character(enemyCard, enemyHp, enemyHp);
+
+      this.logger.reveal(enemy);
 
       return GameActions.revealed({ character, enemy });
     }),
@@ -91,6 +99,8 @@ export class GamesEffects {
       const enemyHp = 6;
 
       const enemy = new Character(enemyCard, enemyHp, enemyHp);
+
+      this.logger.challenge(enemy);
 
       return GameActions.challenged({ character, enemy });
     }),
@@ -126,6 +136,8 @@ export class GamesEffects {
 
       // Place event card on gold deck
       gold.push(eventCard);
+
+      this.logger.collect(eventCard);
 
       return GameActions.collected({ event, gold });
     }),
@@ -166,6 +178,8 @@ export class GamesEffects {
       // Place card on event deck
       event.push(dungeonCard);
 
+      this.logger.draw(dungeonCard);
+
       return GameActions.drawn({ event, dungeon });
     }),
   ));
@@ -186,6 +200,8 @@ export class GamesEffects {
 
       const event = eventIm.clone();
       event.pushAll(unselectedAction);
+
+      this.logger.keepSelectedAction(heroAction, unselectedAction);
 
       return GameActions.keptSelectedAction({ heroAction, event });
     }),
@@ -291,6 +307,25 @@ export class GamesEffects {
       const catacomb = catacombIm.clone();
       catacomb.pushAll(aidSelected);
 
+      this.logger.actionPlay(
+        aidSelected,
+        enemyActionSelected,
+        enemyClubAttack,
+        enemyDelta,
+        enemyHealing,
+        enemyShield,
+        enemySwordAttack,
+        heroActionSelected,
+        heroClubAttack,
+        heroDelta,
+        heroHealing,
+        heroRelic,
+        heroShield,
+        heroSwordAttack,
+        parries,
+        suit,
+      );
+
       return GameActions.actionPlayed({ aid, catacomb, enemy, enemyAction: enemyActionDeck, event, hero, heroAction });
     }),
   ));
@@ -359,17 +394,16 @@ export class GamesEffects {
 
   resolveCardFailure$ = createEffect(() => this.actions$.pipe(
     ofType(GameActions.resolveCardFailure),
-    withLatestFrom(
-      this.store.select(GameSelectors.selectEventCard),
-    ),
-    map(([, eventCard]) => {
-      const eventCardSuit = eventCard?.suit;
+    map(({ eventCard }) => {
+      const eventCardSuit = eventCard.suit;
       let hpDelta = 0;
 
       // Player's health is decreased by VCE/2 (rounded down)
       if (eventCardSuit === 'clubs' || eventCardSuit == 'cups') {
-        hpDelta = -Math.floor((eventCard?.value ?? 0) / 2);
+        hpDelta = -Math.floor(eventCard.value / 2);
       }
+
+      this.logger.resolveCardFailure(eventCard, hpDelta);
 
       return GameActions.resolvedCard({ hpDelta });
     }),
@@ -377,17 +411,16 @@ export class GamesEffects {
 
   resolveCardSuccess$ = createEffect(() => this.actions$.pipe(
     ofType(GameActions.resolveCardSuccess),
-    withLatestFrom(
-      this.store.select(GameSelectors.selectEventCard),
-    ),
-    map(([, eventCard]) => {
-      const eventCardSuit = eventCard?.suit;
+    map(({ eventCard }) => {
+      const eventCardSuit = eventCard.suit;
       let hpDelta = 0;
 
       // Player's health is increased by VCE
       if (eventCardSuit === 'cups') {
-        hpDelta = eventCard?.value ?? 0;
+        hpDelta = eventCard.value;
       }
+
+      this.logger.resolveCardSuccess(eventCard, hpDelta);
 
       return GameActions.resolvedCard({ hpDelta });
     }),
@@ -398,6 +431,7 @@ export class GamesEffects {
     withLatestFrom(
       this.store.select(GameSelectors.selectHero),
     ),
+    tap(([, hero]) => hero && this.logger.resolvedCard(hero.hp)),
     filter(([, hero]) => hero?.hp === 0),
     map(() => GameActions.gameOver()),
   ));
@@ -601,6 +635,9 @@ export class GamesEffects {
     ofType(GameActions.throwDice),
     map(() => {
       const dice = Math.floor(Math.random() * 6 + 1);
+
+      this.logger.throwDice(dice);
+
       return GameActions.threwDice({ dice });
     }),
   ));
@@ -644,6 +681,7 @@ export class GamesEffects {
 
   constructor(
     private actions$: Actions,
+    private logger: LoggerService,
     private store: Store<AppState>,
   ) {}
 }

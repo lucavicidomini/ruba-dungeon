@@ -12,6 +12,7 @@ import { HeroActionDeckComponent } from '../hero-action-deck/hero-action-deck.co
 import { AidDeckComponent } from '../aid-deck/aid-deck.component';
 import { Observable } from 'rxjs';
 import { PopupScreenComponent } from '../popup-screen/popup-screen.component';
+import { LoggerService } from '../logger.service';
 
 @Component({
   selector: 'app-game',
@@ -75,6 +76,7 @@ export class GameComponent {
 
   constructor(
     private gameFacade: GameFacade,
+    private logger: LoggerService
   ) {}
 
   disablePlay(heroActions: Deck, heroActionSelected: Deck) {

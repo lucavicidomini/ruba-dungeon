@@ -5,6 +5,7 @@ import { GameFacade } from './+state/game.facade';
 import { GameComponent } from './game/game.component';
 import { provideState } from '@ngrx/store';
 import { GAME_STATE_KEY, gameReducer } from './+state/game.reducer';
+import { LoggerService } from './logger.service';
 
 export const routes: Routes = [
     {
@@ -14,6 +15,7 @@ export const routes: Routes = [
             provideState({ name: GAME_STATE_KEY, reducer: gameReducer }),
             provideEffects(GamesEffects),
             GameFacade,
+            LoggerService,
         ],
     },
     {
