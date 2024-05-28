@@ -13,20 +13,15 @@ import { Observable } from 'rxjs';
 import { PopupScreenComponent } from '../popup-screen/popup-screen.component';
 import { CommonModule } from '@angular/common';
 import { ActionBarComponent } from '../action-bar/action-bar.component';
+import { BoardComponent } from '../board/board.component';
 
 @Component({
   selector: 'app-game',
   standalone: true,
   imports: [
     CommonModule,
-    AidDeckComponent,
-    ActionBarComponent,
-    CardComponent,
-    CharacterComponent,
-    DeckComponent,
-    HeroActionDeckComponent,
+    BoardComponent,
     PopupScreenComponent,
-    SelectableDeckComponent,
   ],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss'
@@ -35,44 +30,9 @@ export class GameComponent {
 
   GameStatus = GameStatus;
 
-  aidDeck$ = this.gameFacade.aidDeck$;
-
-  aidSelectedDeck$ = this.gameFacade.aidSelectedDeck$;
-
-  catacombDeck$ = this.gameFacade.catacombDeck$;
-
-  combatAction$ = this.gameFacade.combatAction$;
-
-  characterDeck$ = this.gameFacade.characterDeck$;
-
-  dice$ = this.gameFacade.dice$;
-
-  dungeonDeck$ = this.gameFacade.dungeonDeck$;
-  
-  enemy$ = this.gameFacade.enemy$;
-
-  enemyActions$ = this.gameFacade.enemyAction$;
-
   error$ = this.gameFacade.error$;
 
-  eventDeck$ = this.gameFacade.eventDeck$;
 
-  eventCard$ = this.gameFacade.eventCard$;
-
-  goldDeck$ = this.gameFacade.goldDeck$;
-
-  goldSelectedDeck$ = this.gameFacade.goldSelectedDeck$;
-
-  hero$ = this.gameFacade.hero$;
-
-  heroActions$ = this.gameFacade.heroAction$;
-  
-  heroActionSelectedDeck$ = this.gameFacade.heroActionSelectedDeck$;
-
-  relicDeck$ = this.gameFacade.relicDeck$;
-
-  obtainedRelicDeck$ = this.gameFacade.obtainedRelicDeck$;
-  
   status$ = this.gameFacade.status$;
 
   constructor(
@@ -85,49 +45,15 @@ export class GameComponent {
     return heroActions.length && !heroActionSelected.length;
   }
 
-  getHeroActionToPlay(status: GameStatus): Observable<Deck> | undefined {
-    return status !== GameStatus.DISCARD_ACTION ? this.heroActions$ : undefined
-  }
 
-  getHeroActionToDiscard(status: GameStatus): Observable<Deck> | undefined {
-    return status === GameStatus.DISCARD_ACTION ? this.heroActions$ : undefined
-  }
-
-  showPlay(status: GameStatus): boolean {
-    return status === GameStatus.COMBAT;
-  }
-
-  showRevealOk(status: GameStatus): boolean {
-    return status === GameStatus.ENEMY_REVEALED;
-  }
-
-  onAidSelect(aidSelected: Deck) {
-    this.gameFacade.aidSelected(aidSelected);
-  }
-
-  onKeep() {
-    this.gameFacade.keepSelectedAction();
-  }
 
   onNewGame() {
     this.gameFacade.start();
   }
 
-  onPlay(suit: Suits) {
-    this.gameFacade.fight(suit);
-  }
 
-  onGoldSelect(goldSelected: Deck) {
-    this.gameFacade.goldSelected(goldSelected);
-  }
-
-  onHeroActionSelect(heroActionSelected: Deck) {
-    this.gameFacade.heroActionSelected(heroActionSelected);
-  }
   
-  onRevealedOk() {
-    this.gameFacade.revealedOk();
-  }
+
 
   
 
