@@ -3,13 +3,16 @@
 }
 
 <div class="game">
+  
   @if (status$ | async; as status) {
-    <app-popup-screen
-      [status]="status"
-      (newGame)="onNewGame()"
-    ></app-popup-screen>
+    <app-popup [visible]="(showWelcome$ | async)">
+      <app-welcome-popup
+        [status]="status"
+        (newGame)="onNewGame()"
+      ></app-welcome-popup>
+    </app-popup>
   }
-
+  
   <app-board></app-board>
   <app-action-bar></app-action-bar>
   <app-main-menu></app-main-menu>

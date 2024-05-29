@@ -3,11 +3,11 @@ import { GameStatus } from '../+models/game.model';
 
 
 @Component({
-  selector: 'app-popup-screen',
+  selector: 'app-welcome-popup',
   standalone: true,
   imports: [],
-  templateUrl: './popup-screen.component.html',
-  styleUrl: './popup-screen.component.scss'
+  templateUrl: './welcome-popup.component.html',
+  styleUrl: './welcome-popup.component.scss'
 })
 export class PopupScreenComponent {
 
@@ -17,7 +17,4 @@ export class PopupScreenComponent {
 
   @Output() newGame = new EventEmitter<void>();
 
-  get isVisible(): boolean {
-    return !!this.status && [GameStatus.GAME_INIT, GameStatus.GAME_OVER, GameStatus.GAME_WON].includes(this.status);
-  }
 }
