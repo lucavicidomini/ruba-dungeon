@@ -3,16 +3,10 @@
 }
 
 <div class="game">
-  
-  @if (status$ | async; as status) {
-    <app-popup [visible]="(showWelcome$ | async)">
-      <app-welcome-popup
-        [status]="status"
-        (newGame)="onNewGame()"
-      ></app-welcome-popup>
-    </app-popup>
-  }
-  
+  <app-game-over-popup *ngIf="showGameOver$ | async" (newGame)="onNewGame()"></app-game-over-popup>
+  <app-game-over-popup *ngIf="showGameWon$ | async" (newGame)="onNewGame()"></app-game-over-popup>
+  <app-welcome-popup *ngIf="showWelcome$ | async" (newGame)="onNewGame()"></app-welcome-popup>
+
   <app-board></app-board>
   <app-action-bar></app-action-bar>
   <app-main-menu></app-main-menu>

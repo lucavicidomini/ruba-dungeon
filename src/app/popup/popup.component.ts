@@ -9,6 +9,4 @@ import { Component, Input } from '@angular/core';
 })
 export class PopupComponent {
 
-  @Input() visible: boolean | null | undefined = false;
-
 }

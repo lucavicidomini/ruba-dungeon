@@ -2,14 +2,15 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { PopupComponent } from '../popup/popup.component';
 
 @Component({
-  selector: 'app-welcome-popup',
+  selector: 'app-game-over-popup',
   standalone: true,
   imports: [PopupComponent],
-  templateUrl: './welcome-popup.component.html',
-  styleUrl: './welcome-popup.component.scss'
+  templateUrl: './game-over-popup.component.html',
+  styleUrl: './game-over-popup.component.scss'
 })
-export class PopupScreenComponent {
+export class GameOverPopupComponent {
 
   @Output() newGame = new EventEmitter<void>();
+  
 
 }
