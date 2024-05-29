@@ -4,7 +4,9 @@
     grid-template-rows: 1fr 1fr 1fr max-content;
     color: #fff;
     width: 100%;
+    padding-left: var(--rd-menu-width);
     min-height: 100vh;
+    box-sizing: border-box;
 
     .slot {
         display: flex;
