@@ -21,11 +21,17 @@ export class HeroActionDeckComponent {
 
   @Input() deck: Deck = Deck.empty();
 
+  @Input() enable = false;
+
   @Input() selectedDeck: Deck = Deck.empty();
 
   @Output() selectCards = new EventEmitter<Deck>();
 
   onSelect(newSelection: Deck) {
+    if (!this.enable) {
+      return;
+    }
+
     // Deny selection of combos with different values
     const oldValue = this.selectedDeck.peek()?.value;
     if (oldValue) {

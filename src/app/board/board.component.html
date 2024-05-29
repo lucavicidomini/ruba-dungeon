@@ -105,6 +105,7 @@
             </div>
         }
     </div>
+
     <!-- HAC - Hero Action Card -->
     @if (heroActionToPlay$ | async; as heroAction) {
       <div class="hero-action slot">
@@ -112,9 +113,7 @@
           <div>Your actions</div>
         </div>
         <div class="body">
-          @if (showPlay$ | async) {
-            <app-hero-action-deck [deck]="heroAction" [selectedDeck]="heroActionSelected" [aidSelected]="aidSelectedDeck" (selectCards)="onHeroActionSelect($event)"></app-hero-action-deck>
-          }
+            <app-hero-action-deck [deck]="heroAction" [enable]="(inCombat$ | async) === true" [selectedDeck]="heroActionSelected" [aidSelected]="aidSelectedDeck" (selectCards)="onHeroActionSelect($event)"></app-hero-action-deck>
         </div>
       </div>
     }
@@ -149,7 +148,7 @@
           <div>{{ aid.length }}</div>
         </div>
         <div class="body">
-          <app-aid-deck [deck]="aid" [enable]="(showPlay$ | async) === true" [actionSelected]="heroActionSelected" [selectedDeck]="aidSelectedDeck" (selectCards)="onAidSelect($event)"></app-aid-deck>
+          <app-aid-deck [deck]="aid" [enable]="(inCombat$ | async) === true" [actionSelected]="heroActionSelected" [selectedDeck]="aidSelectedDeck" (selectCards)="onAidSelect($event)"></app-aid-deck>
         </div>
       </div>
     }

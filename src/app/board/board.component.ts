@@ -78,7 +78,7 @@ export class BoardComponent {
 
   obtainedRelicDeck$ = this.gameFacade.obtainedRelicDeck$;
   
-  showPlay$ = this.status$.pipe(
+  inCombat$ = this.status$.pipe(
     map(status => status === GameStatus.COMBAT),
   );
 
