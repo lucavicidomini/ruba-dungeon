@@ -1,36 +1,44 @@
 import { createReducer, on } from '@ngrx/store';
 import * as MenuActions from './menu.actions';
+import { LayoutSetting } from '../+models/settings.model';
 
 export const MENU_STATE_KEY = 'menu';
 
 export interface MenuState {
-  about: boolean;
-  newGame: boolean;
-  settings: boolean;
+  showAbout: boolean;
+  showNewGame: boolean;
+  showSettings: boolean;
+  layout: LayoutSetting;
 }
 
 export const initialState: MenuState = {
-  about: false,
-  newGame: false,
-  settings: false,
+  showAbout: false,
+  showNewGame: false,
+  showSettings: false,
+  layout: 'classic',
 };
 
 export const menuReducer = createReducer(
   initialState,
 
-  on(MenuActions.openAbout, (state) => ({
+  on(MenuActions.openAbout, (state, { show }) => ({
     ...state,
-    about: true,
+    showAbout: show === undefined ? !state.showAbout : show,
   })),
 
-  on(MenuActions.openNewGame, (state) => ({
+  on(MenuActions.openNewGame, (state, { show }) => ({
     ...state,
-    newGame: true,
+    showNewGame: show === undefined ? !state.showNewGame : show,
   })),
 
-  on(MenuActions.openSettings, (state) => ({
+  on(MenuActions.openSettings, (state, { show }) => ({
     ...state,
-    settings: true,
+    showSettings: show === undefined ? !state.showSettings : show,
   })),
+
+  on(MenuActions.setLayout, (state, { layout }) => ({
+    ...state,
+    layout,
+  }))
 
 );

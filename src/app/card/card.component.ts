@@ -1,11 +1,11 @@
+import { AsyncPipe, NgClass } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { Card, SuitLabels } from '../+models/card.model';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [AsyncPipe, NgClass],
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss'
 })

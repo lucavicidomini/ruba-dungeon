@@ -6,15 +6,20 @@ const selectFeature = (state: AppState) => state[MENU_STATE_KEY];
 
 export const selectAbout = createSelector(
   selectFeature,
-  (state: MenuState) => state.about
+  (state: MenuState) => state.showAbout
 );
 
 export const selectNewGame = createSelector(
   selectFeature,
-  (state: MenuState) => state.newGame
+  (state: MenuState) => state.showNewGame
 );
 
 export const selectSettings = createSelector(
   selectFeature,
-  (state: MenuState) => state.settings
+  (state: MenuState) => state.showSettings
 );
+
+export const selectLayout = createSelector(
+  selectFeature,
+  (state: MenuState) => state.layout
+)

@@ -1,22 +1,23 @@
+import { AsyncPipe, NgClass } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { combineLatest, map } from 'rxjs';
+import { Deck } from '../+models/deck.model';
 import { GameStatus } from '../+models/game.model';
+import { LayoutSetting } from '../+models/settings.model';
 import { GameFacade } from '../+state/game.facade';
-import { DeckComponent } from '../deck/deck.component';
-import { CommonModule } from '@angular/common';
+import { AidDeckComponent } from '../aid-deck/aid-deck.component';
 import { CardComponent } from '../card/card.component';
 import { CharacterComponent } from '../character/character.component';
-import { SelectableDeckComponent } from '../selectable-deck/selectable-deck.component';
-import { Observable, combineLatest, map } from 'rxjs';
-import { Deck } from '../+models/deck.model';
-import { Suits } from '../+models/card.model';
+import { DeckComponent } from '../deck/deck.component';
 import { HeroActionDeckComponent } from '../hero-action-deck/hero-action-deck.component';
-import { AidDeckComponent } from '../aid-deck/aid-deck.component';
+import { SelectableDeckComponent } from '../selectable-deck/selectable-deck.component';
 
 @Component({
   selector: 'app-board',
   standalone: true,
   imports: [
-    CommonModule,
+    AsyncPipe,
+    NgClass,
     AidDeckComponent,
     CardComponent,
     CharacterComponent,
@@ -28,6 +29,8 @@ import { AidDeckComponent } from '../aid-deck/aid-deck.component';
   styleUrl: './board.component.scss'
 })
 export class BoardComponent {
+
+  @Input() layout: LayoutSetting = 'classic';
 
   status$ = this.gameFacade.status$;
 

@@ -1,10 +1,10 @@
-import { CommonModule } from '@angular/common';
+import { AsyncPipe, NgClass } from '@angular/common';
 import { Component } from '@angular/core';
-import { combineLatest, filter, map } from 'rxjs';
-import { GameStatus } from '../+models/game.model';
-import { GameFacade } from '../+state/game.facade';
+import { combineLatest, map } from 'rxjs';
 import { SuitLabels, Suits } from '../+models/card.model';
 import { Deck } from '../+models/deck.model';
+import { GameStatus } from '../+models/game.model';
+import { GameFacade } from '../+state/game.facade';
 
 interface PlayButton {
   disabled: boolean,
@@ -15,7 +15,7 @@ interface PlayButton {
 @Component({
   selector: 'app-action-bar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [AsyncPipe, NgClass],
   templateUrl: './action-bar.component.html',
   styleUrl: './action-bar.component.scss'
 })

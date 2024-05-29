@@ -8,7 +8,7 @@ import { PopupComponent } from '../popup/popup.component';
   templateUrl: './welcome-popup.component.html',
   styleUrl: './welcome-popup.component.scss'
 })
-export class PopupScreenComponent {
+export class WelcomePopupComponent {
 
   @Output() newGame = new EventEmitter<void>();
 

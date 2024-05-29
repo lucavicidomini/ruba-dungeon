@@ -1,0 +1,18 @@
+.settings {
+    text-align: left;
+}
+
+.form-group:not(:last-of-type) {
+    border-bottom: 1px solid var(--rd-button-bg);
+}
+
+button.selected,
+button.selected:hover {
+    background-color: var(--rd-bg-dark);
+    color: #fff;
+}
+
+label {
+    display: block;
+}
+

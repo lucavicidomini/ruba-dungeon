@@ -2,7 +2,7 @@
       @if (heroActionSelectedDeck$ | async; as heroActionSelected) {
         @if (aidSelectedDeck$ | async; as aidSelectedDeck) {
 
-<div class="board -compact">
+<div class="board" [ngClass]="layout">
     <!-- 1 - Dungeon Deck -->
     @if (dungeonDeck$ | async; as dungeon) {
       <div class="dungeon slot">

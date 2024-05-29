@@ -1,5 +1,7 @@
 :root {
     --rd-bg-dark: #006600;
+    --rd-button-bg: #cacaca;
+    --rd-button-bg-hover: #dedede;
     --rd-menu-width: 50px;
     --rd-shadow: 0 0 1rem #000000cc;
 }
@@ -72,11 +74,11 @@ button {
         text-align: center;
 
         button {
-            background-color: #cacaca;
+            background-color: var(--rd-button-bg);
             color: #000;
 
             &:hover {
-                background-color: #dedede;
+                background-color: var(--rd-button-bg-hover);
                 border-color: #000;
             }
         }
