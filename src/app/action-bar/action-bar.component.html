@@ -1,23 +1,41 @@
-@if (showDraw$ | async) {
-    <button type="button" (click)="onDraw()">Draw</button>
-}
+<div class="action-bar">
+    @if (showDraw$ | async) {
+        <button type="button" (click)="onDraw()">Draw</button>
+    }
 
-@if (showCollect$ | async) {
-    <button type="button" (click)="onCollect()">Collect</button>
-}
+    @if (showCollect$ | async) {
+        <button type="button" (click)="onCollect()">Collect</button>
+    }
 
-@if (showDice$ | async) {
-    <button type="button" (click)="onDice()">Dice</button>
-}
+    @if (showDice$ | async) {
+        <button type="button" (click)="onDice()">Dice</button>
+    }
 
-@if (showDiceFeedback$ | async) {
-    <button type="button" (click)="onDiceFeedback()">Got a {{ dice$ | async }}</button>
-}
+    @if (showDiceFeedback$ | async) {
+        <button type="button" (click)="onDiceFeedback()">Got a {{ dice$ | async }}</button>
+    }
 
-@if (showCombat$ | async) {
-    <button type="button" (click)="onCombat()">Combat</button>
-}
+    @if (showCombat$ | async) {
+        <button type="button" (click)="onCombat()">Combat</button>
+    }
 
-@if (showSpend$ | async) {
-    <button type="button" [disabled]="disableSpend$ | async" (click)="onSpend()">{{ spendCaption$ | async }}</button>
-}
+    @if (showKeep$ | async) {
+        <button type="button" (click)="onKeep()">Continue</button>
+    }
+
+    @if (showSpend$ | async) {
+        <button type="button" [disabled]="disableSpend$ | async" (click)="onSpend()">{{ spendCaption$ | async }}</button>
+    }
+
+    @if (showRevealOk$ | async) {
+        <button type="button" (click)="onRevealedOk()">{{ revealOkCaption$ | async }}</button>
+    }
+
+    @for (button of playActions$ | async; track button) {
+        <button
+            [disabled]="button.disabled"
+            type="button"
+            (click)="onPlayAction(button.suit)"
+        >{{ button.caption }}</button>
+    }
+</div>

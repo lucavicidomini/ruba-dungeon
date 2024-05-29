@@ -3,14 +3,14 @@
 }
 
 <div class="game">
-@if (status$ | async; as status) {
-  <app-popup-screen
-    [status]="status"
-    (newGame)="onNewGame()"
-  ></app-popup-screen>
+  @if (status$ | async; as status) {
+    <app-popup-screen
+      [status]="status"
+      (newGame)="onNewGame()"
+    ></app-popup-screen>
+  }
+  
+    <app-board></app-board>
 
-  <app-board
-    [status]="status"
-  ></app-board>
-}
+    <app-action-bar></app-action-bar>
 </div>

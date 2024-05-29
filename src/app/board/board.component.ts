@@ -4,10 +4,9 @@ import { GameFacade } from '../+state/game.facade';
 import { DeckComponent } from '../deck/deck.component';
 import { CommonModule } from '@angular/common';
 import { CardComponent } from '../card/card.component';
-import { ActionBarComponent } from '../action-bar/action-bar.component';
 import { CharacterComponent } from '../character/character.component';
 import { SelectableDeckComponent } from '../selectable-deck/selectable-deck.component';
-import { Observable } from 'rxjs';
+import { Observable, combineLatest, map } from 'rxjs';
 import { Deck } from '../+models/deck.model';
 import { Suits } from '../+models/card.model';
 import { HeroActionDeckComponent } from '../hero-action-deck/hero-action-deck.component';
@@ -18,7 +17,6 @@ import { AidDeckComponent } from '../aid-deck/aid-deck.component';
   standalone: true,
   imports: [
     CommonModule,
-    ActionBarComponent,
     AidDeckComponent,
     CardComponent,
     CharacterComponent,
@@ -30,6 +28,8 @@ import { AidDeckComponent } from '../aid-deck/aid-deck.component';
   styleUrl: './board.component.scss'
 })
 export class BoardComponent {
+
+  status$ = this.gameFacade.status$;
 
   aidDeck$ = this.gameFacade.aidDeck$;
 
@@ -60,26 +60,28 @@ export class BoardComponent {
   hero$ = this.gameFacade.hero$;
 
   heroActions$ = this.gameFacade.heroAction$;
+
+  heroActionToDiscard$ = combineLatest([this.status$, this.heroActions$]).pipe(
+    map(([status, heroAction]) => status === GameStatus.DISCARD_ACTION ? heroAction : undefined)
+  );
+  
+  heroActionToPlay$ = combineLatest([this.status$, this.heroActions$]).pipe(
+    map(([status, heroAction]) => status !== GameStatus.DISCARD_ACTION ? heroAction : undefined),
+  );
   
   heroActionSelectedDeck$ = this.gameFacade.heroActionSelectedDeck$;
 
   relicDeck$ = this.gameFacade.relicDeck$;
 
   obtainedRelicDeck$ = this.gameFacade.obtainedRelicDeck$;
-
-  @Input() status!: GameStatus;
   
+  showPlay$ = this.status$.pipe(
+    map(status => status === GameStatus.COMBAT),
+  );
+
   constructor(
     private gameFacade: GameFacade,
   ) {}
-
-  getHeroActionToDiscard(status: GameStatus): Observable<Deck> | undefined {
-    return status === GameStatus.DISCARD_ACTION ? this.heroActions$ : undefined
-  }
-
-  getHeroActionToPlay(status: GameStatus): Observable<Deck> | undefined {
-    return status !== GameStatus.DISCARD_ACTION ? this.heroActions$ : undefined
-  }
 
   onAidSelect(aidSelected: Deck) {
     this.gameFacade.aidSelected(aidSelected);
@@ -93,24 +95,6 @@ export class BoardComponent {
     this.gameFacade.heroActionSelected(heroActionSelected);
   }
 
-  onKeep() {
-    this.gameFacade.keepSelectedAction();
-  }
 
-  onPlay(suit: Suits) {
-    this.gameFacade.fight(suit);
-  }
-
-  onRevealedOk() {
-    this.gameFacade.revealedOk();
-  }
-
-  showPlay(status: GameStatus): boolean {
-    return status === GameStatus.COMBAT;
-  }
-
-  showRevealOk(status: GameStatus): boolean {
-    return status === GameStatus.ENEMY_REVEALED;
-  }
 
 }

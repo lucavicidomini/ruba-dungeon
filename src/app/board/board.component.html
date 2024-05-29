@@ -25,9 +25,6 @@
             <app-card [card]="event"></app-card>
           }
         </div>
-        <div class="footer">
-          <app-action-bar></app-action-bar>
-        </div>
     </div>
     
     <!-- 3 - Character Deck -->
@@ -64,11 +61,6 @@
             </div>
             <div class="body">
                 <app-character [character]="enemy"></app-character>
-            </div>
-            <div class="footer">
-                @if (showRevealOk(status)) {
-                    <button type="button" (click)="onRevealedOk()">{{ enemy.card.value === 10 ? 'Combat' : 'Accept aid' }}</button>
-                }
             </div>
         } @else {
             <div class="heading">
@@ -114,29 +106,26 @@
         }
     </div>
     <!-- HAC - Hero Action Card -->
-    @if (getHeroActionToPlay(status) | async; as heroAction) {
+    @if (heroActionToPlay$ | async; as heroAction) {
       <div class="hero-action slot">
         <div class="heading">
           <div>Your actions</div>
         </div>
         <div class="body">
-          @if (showPlay(status)) {
-            <app-hero-action-deck [deck]="heroAction" [selectedDeck]="heroActionSelected" [aidSelected]="aidSelectedDeck" (play)="onPlay($event)" (selectCards)="onHeroActionSelect($event)"></app-hero-action-deck>
+          @if (showPlay$ | async) {
+            <app-hero-action-deck [deck]="heroAction" [selectedDeck]="heroActionSelected" [aidSelected]="aidSelectedDeck" (selectCards)="onHeroActionSelect($event)"></app-hero-action-deck>
           }
         </div>
       </div>
     }
     <!-- HAC - Hero Action Card (select cards to keep or discard) -->
-    @if (getHeroActionToDiscard(status) | async; as heroAction) {
+    @if (heroActionToDiscard$ | async; as heroAction) {
       <div class="hero-action slot">
         <div class="heading">
           <div>Select actions to keep, then click continue</div>
         </div>
         <div class="body">
           <app-selectable-deck [deck]="heroAction" [selectedDeck]="heroActionSelected" (selectCards)="onHeroActionSelect($event)"></app-selectable-deck>
-        </div>
-        <div class="footer">
-          <button type="button" (click)="onKeep()">Continue</button>
         </div>
       </div>
     }
@@ -160,7 +149,7 @@
           <div>{{ aid.length }}</div>
         </div>
         <div class="body">
-          <app-aid-deck [deck]="aid" [enable]="showPlay(status)" [actionSelected]="heroActionSelected" [selectedDeck]="aidSelectedDeck" (selectCards)="onAidSelect($event)"></app-aid-deck>
+          <app-aid-deck [deck]="aid" [enable]="(showPlay$ | async) === true" [actionSelected]="heroActionSelected" [selectedDeck]="aidSelectedDeck" (selectCards)="onAidSelect($event)"></app-aid-deck>
         </div>
       </div>
     }

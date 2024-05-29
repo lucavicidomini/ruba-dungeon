@@ -3,19 +3,3 @@
   [selectedDeck]="selectedDeck"
   (selectCards)="onSelect($event)"
 ></app-selectable-deck>
-
-@for (suit of selectedCardSuits; track suit) {
-  <button
-    [disabled]="disableButton(suit)"
-    type="button"
-    (click)="onPlay(suit)"
-  >{{ getButton(suit) }}</button>
-}
-
-@if (!deck.length) {
-  <button
-    [disabled]="disableButton()"
-    type="button"
-    (click)="onPlay()"
-  >{{ getButton() }}</button>
-}

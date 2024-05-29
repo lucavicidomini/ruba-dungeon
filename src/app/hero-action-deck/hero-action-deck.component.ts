@@ -23,8 +23,6 @@ export class HeroActionDeckComponent {
 
   @Input() selectedDeck: Deck = Deck.empty();
 
-  @Output() play = new EventEmitter<Suits>();
-
   @Output() selectCards = new EventEmitter<Deck>();
 
   onSelect(newSelection: Deck) {
@@ -48,26 +46,6 @@ export class HeroActionDeckComponent {
     }
 
     this.selectCards.emit(newSelection);
-  }
-
-  onPlay(suit?: Suits) {
-    this.play.emit(suit);
-  }
-
-  getButton(suit?: Suits) {
-    return suit ? `Play ${SuitLabels[suit]}` : 'Play';
-  }
-
-  disableButton(suit?: Suits) {
-    const disablePlay = this.deck.length && !this.selectedDeck.length;
-
-    const aidSuit = this.aidSelected.peek()?.suit;
-    const disableSuit = suit && aidSuit ? aidSuit !== suit : false;
-    return disablePlay || disableSuit;
-  }
-
-  get selectedCardSuits() {
-    return Array.from(new Set(this.selectedDeck.cards.map(card => card.suit)).values()).sort();
   }
 
 }
