@@ -1,3 +1,9 @@
+:root {
+    --rd-bg-dark: #006600;
+    --rd-menu-width: 50px;
+    --rd-shadow: 0 0 1rem #000000cc;
+}
+
 @font-face {
     font-family: 'Crimson Text';
     src: url('/assets/fonts/CrimsonText-Regular.ttf') format('ttf');
@@ -16,8 +22,30 @@ input {
     font-family: 'Crimson Text', Georgia, 'Times New Roman', Times, serif;
 }
 
-.action-bar button {
+button {
     margin: .25rem;
     padding: .25em .5rem;
     font-size: 1rem;
+
+    background-color: transparent;
+    color: #fff;
+    border: 1px solid transparent;
+    border-radius: .25em;
+    padding: .5em;
+
+    svg {
+        vertical-align: -.125em;
+        margin-right: .25em;
+        width: 1em;
+        height: 1em;
+    }
+
+    &:disabled {
+        border-color: #bbb;
+        color: #bbb;
+    }
+
+    &:hover:not(:disabled) {
+        border-color: #fff;
+    }
 }

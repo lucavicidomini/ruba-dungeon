@@ -6,6 +6,7 @@ import { GameFacade } from '../+state/game.facade';
 import { ActionBarComponent } from '../action-bar/action-bar.component';
 import { BoardComponent } from '../board/board.component';
 import { PopupScreenComponent } from '../popup-screen/popup-screen.component';
+import { MainMenuComponent } from '../main-menu/main-menu.component';
 
 @Component({
   selector: 'app-game',
@@ -14,6 +15,7 @@ import { PopupScreenComponent } from '../popup-screen/popup-screen.component';
     CommonModule,
     ActionBarComponent,
     BoardComponent,
+    MainMenuComponent,
     PopupScreenComponent,
   ],
   templateUrl: './game.component.html',

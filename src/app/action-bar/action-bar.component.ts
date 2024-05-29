@@ -29,6 +29,8 @@ export class ActionBarComponent {
  
   dice$ = this.gameFacade.dice$;
 
+  enemy$ = this.gameFacade.enemy$;
+
   goldSelected$ = this.gameFacade.goldSelectedDeck$;
 
   eventCard$ = this.gameFacade.eventCard$;
@@ -37,11 +39,6 @@ export class ActionBarComponent {
 
   disableSpend$ = combineLatest([this.eventCard$, this.goldSelected$]).pipe(
     map(([eventCard, goldSelected]) => eventCard && goldSelected.value < eventCard.value),
-  );
-
-  revealOkCaption$ = this.gameFacade.enemy$.pipe(
-    map(enemy => enemy?.card.value ?? ''),
-    map(enemyValue => enemyValue === 10 ? 'Combat' : 'Accept aid'),
   );
 
   showDraw$ = this.status$.pipe(
@@ -96,8 +93,14 @@ export class ActionBarComponent {
     map(({ buttons, status }) => status === GameStatus.COMBAT ? buttons : []),
   );
 
-  showRevealOk$ = this.status$.pipe(
-    map(status => status === GameStatus.ENEMY_REVEALED),
+  showRevealAid$ = combineLatest([this.enemy$, this.status$]).pipe(
+    map(([enemy, status]) => ({ enemyValue: enemy?.card.value ?? '', status })),
+    map(({ enemyValue, status }) => status === GameStatus.ENEMY_REVEALED && enemyValue !== 10),
+  );
+
+  showRevealCombat$ = combineLatest([this.enemy$, this.status$]).pipe(
+    map(([enemy, status]) => ({ enemyValue: enemy?.card.value ?? '', status })),
+    map(({ enemyValue, status }) => status === GameStatus.ENEMY_REVEALED && enemyValue === 10),
   );
 
   showSpend$ = combineLatest([this.eventCard$, this.status$]).pipe(
