@@ -61,3 +61,15 @@ export const revealedOk = createAction(
 export const spend = createAction(
     '[Game/UI] Spend'
 );
+
+export const menuAbout = createAction(
+    '[Game/UI] Menu About'
+);
+
+export const menuNewGame = createAction(
+    '[Game/UI] Menu New Game'
+);
+
+export const menuSettings = createAction(
+    '[Game/UI] Menu Settings'
+);

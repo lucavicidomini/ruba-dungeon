@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MenuFacade } from '../+state/menu.facade';
 
 @Component({
   selector: 'app-main-menu',
@@ -9,16 +10,20 @@ import { Component } from '@angular/core';
 })
 export class MainMenuComponent {
 
-  onNewGame() {
+  constructor(
+    private menuFacade: MenuFacade,
+  ) {}
 
+  onNewGame() {
+    this.menuFacade.newGame();
   }
 
   onSettings() {
-
+    this.menuFacade.settings();
   }
 
   onAbout() {
-
+    this.menuFacade.about();
   }
 
 }
