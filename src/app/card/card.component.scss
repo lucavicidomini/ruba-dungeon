@@ -3,7 +3,7 @@
     align-items: center;
     justify-content: center;
 
-    background-image: url('/assets/decks/neapolitan.jpg');
+    background-image: url('../../assets/decks/neapolitan.jpg');
     background-size: 1000%;
     border: 1px solid black;
     border-radius: 5% / 2.91665%;
@@ -23,7 +23,7 @@
     }
 
     &.covered {
-        background-image: url('/assets/backs/neapolitan.jpg');
+        background-image: url('../../assets/backs/neapolitan.jpg');
         background-size: 100%;
     }
 
