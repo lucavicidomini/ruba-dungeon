@@ -9,7 +9,7 @@
   }
 
   @if (showGameWon$ | async) {
-    <app-game-over-popup (newGame)="onNewGame()"></app-game-over-popup>
+    <app-game-won-popup (newGame)="onNewGame()"></app-game-won-popup>
   }
 
   @if (showWelcome$ | async) {
