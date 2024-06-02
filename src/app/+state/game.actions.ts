@@ -2,6 +2,7 @@ import { createAction, props } from '@ngrx/store';
 import { Character } from '../+models/character.model';
 import { PartialDeckState } from './game.reducer';
 import { Deck } from '../+models/deck.model';
+import { KeepDiscardAction } from '../+models/game.model';
 
 export * from './combat.actions';
 export * from './crawl.actions';
@@ -19,7 +20,8 @@ export const discardAction = createAction(
 );
 
 export const keepSelectedAction = createAction(
-    '[Game] Keep Selected Action'
+    '[Game] Keep Selected Action',
+    props<{ action: KeepDiscardAction }>()
 );
 
 export const keptSelectedAction = createAction(

@@ -298,9 +298,9 @@ export class GamesEffects {
       this.store.select(GameSelectors.selectHeroActionSelected),
       this.store.select(GameSelectors.selectHeroAction),
     ),
-    map(([, eventIm, actionSelected, heroActionIm]) => {
+    map(([{ action }, eventIm, actionSelected, heroActionIm]) => {
       const unselectedAction = heroActionIm.clone();
-      unselectedAction.removeAll(actionSelected);
+      unselectedAction.removeAll(action == 'keep' ? actionSelected : Deck.empty());
 
       const heroAction = heroActionIm.clone();
       heroAction.removeAll(unselectedAction);

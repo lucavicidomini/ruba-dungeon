@@ -24,3 +24,5 @@ export enum GameStatus {
     /** Dice was thrown and user can acknowledge it */
     RESOLVE_THREW_DICE = 'RESOLVE_THREW_DICE',
 }
+
+export type KeepDiscardAction = 'keep' | 'discard';

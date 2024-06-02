@@ -4,6 +4,7 @@ import * as GameActions from './game.actions';
 import * as GameSelectors from './game.selectors';
 import { Deck } from "../+models/deck.model";
 import { Suits } from "../+models/card.model";
+import { KeepDiscardAction } from "../+models/game.model";
 
 @Injectable()
 export class GameFacade {
@@ -90,8 +91,8 @@ export class GameFacade {
     }
 
     /** User choose which action to keep */
-    keepSelectedAction() {
-        this.store.dispatch(GameActions.keepSelectedAction());
+    keepSelectedAction(action: KeepDiscardAction) {
+        this.store.dispatch(GameActions.keepSelectedAction({ action }));
     }
 
     resolveCardByDice() {

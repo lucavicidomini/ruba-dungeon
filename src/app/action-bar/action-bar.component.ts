@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { combineLatest, map } from 'rxjs';
 import { SuitLabels, Suits } from '../+models/card.model';
 import { Deck } from '../+models/deck.model';
-import { GameStatus } from '../+models/game.model';
+import { GameStatus, KeepDiscardAction } from '../+models/game.model';
 import { GameFacade } from '../+state/game.facade';
 
 interface PlayButton {
@@ -139,8 +139,8 @@ export class ActionBarComponent {
     this.gameFacade.fight(suit);
   }
 
-  onKeep() {
-    this.gameFacade.keepSelectedAction();
+  onKeep(action: KeepDiscardAction) {
+    this.gameFacade.keepSelectedAction(action);
   }
 
   onRevealedOk() {
