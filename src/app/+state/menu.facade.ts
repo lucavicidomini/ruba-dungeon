@@ -9,6 +9,8 @@ export class MenuFacade {
 
     private store = inject(Store);
 
+    about$ = this.store.select(MenuSelectors.selectAbout);
+
     layout$ = this.store.select(MenuSelectors.selectLayout);
 
     settings$ = this.store.select(MenuSelectors.selectSettings);

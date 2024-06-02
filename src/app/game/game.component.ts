@@ -10,7 +10,7 @@ import { GameOverPopupComponent } from '../game-over-popup/game-over-popup.compo
 import { GameWonPopupComponent } from '../game-won-popup/game-won-popup.component';
 import { MainMenuComponent } from '../main-menu/main-menu.component';
 import { SettingsPopupComponent } from '../settings-popup/settings-popup.component';
-import { WelcomePopupComponent } from '../welcome-popup/welcome-popup.component';
+import { AboutPopupComponent } from '../welcome-popup/about-popup.component';
 
 @Component({
   selector: 'app-game',
@@ -23,7 +23,7 @@ import { WelcomePopupComponent } from '../welcome-popup/welcome-popup.component'
     GameOverPopupComponent,
     GameWonPopupComponent,
     MainMenuComponent,
-    WelcomePopupComponent,
+    AboutPopupComponent,
     SettingsPopupComponent,
   ],
   templateUrl: './game.component.html',
@@ -49,9 +49,7 @@ export class GameComponent {
 
   showSettings$ = this.menuFacade.settings$;
 
-  showWelcome$ = this.gameFacade.status$.pipe(
-    map(status => status === GameStatus.GAME_INIT),
-  );
+  showAbout$ = this.menuFacade.about$;
 
   constructor(
     private gameFacade: GameFacade,

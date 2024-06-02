@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { WelcomePopupComponent } from './welcome-popup.component';
+import { AboutPopupComponent } from './about-popup.component';
 
 describe('PopupScreenComponent', () => {
-  let component: WelcomePopupComponent;
-  let fixture: ComponentFixture<WelcomePopupComponent>;
+  let component: AboutPopupComponent;
+  let fixture: ComponentFixture<AboutPopupComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [WelcomePopupComponent]
+      imports: [AboutPopupComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(WelcomePopupComponent);
+    fixture = TestBed.createComponent(AboutPopupComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

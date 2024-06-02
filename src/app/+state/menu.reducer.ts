@@ -12,7 +12,7 @@ export interface MenuState {
 }
 
 export const initialState: MenuState = {
-  showAbout: false,
+  showAbout: true,
   showNewGame: false,
   showSettings: false,
   layout: 'classic',

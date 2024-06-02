@@ -12,8 +12,8 @@
     <app-game-won-popup (newGame)="onNewGame()"></app-game-won-popup>
   }
 
-  @if (showWelcome$ | async) {
-    <app-welcome-popup (newGame)="onNewGame()"></app-welcome-popup>
+  @if (showAbout$ | async) {
+    <app-about-popup></app-about-popup>
   }
 
   @if (showSettings$ | async) {

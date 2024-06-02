@@ -10,6 +10,7 @@ import * as GameActions from './game.actions';
 import { PartialDeckState } from './game.reducer';
 import * as GameSelectors from './game.selectors';
 import { LoggerService } from '../logger.service';
+import { MenuFacade } from './menu.facade';
 
 @Injectable()
 export class GamesEffects {
@@ -556,6 +557,7 @@ export class GamesEffects {
 
   start$ = createEffect(() => this.actions$.pipe(
     ofType(GameActions.start),
+    tap(() => this.menuFacade.about(false)),
     filter(() => !this.DEBUG),
     map(() => {
         const dungeon = Deck.full();
@@ -660,6 +662,7 @@ export class GamesEffects {
 
   constructor(
     private actions$: Actions,
+    private menuFacade: MenuFacade,
     private logger: LoggerService,
     private store: Store<AppState>,
   ) {}
