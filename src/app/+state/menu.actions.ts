@@ -1,6 +1,10 @@
 import { createAction, props } from '@ngrx/store';
 import { LayoutSetting } from '../+models/settings.model';
 
+export const init = createAction(
+    '[Game/Menu] Init'
+);
+
 export const openAbout = createAction(
     '[Game/Menu] About Open',
     props<{ show?: boolean }>()
