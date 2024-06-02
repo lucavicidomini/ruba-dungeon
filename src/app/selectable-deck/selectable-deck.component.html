@@ -1,5 +1,10 @@
 <div class="deck">
   @for (card of deck.cards; track card) {
-    <app-card [card]="card" [selected]="isSelected(card)" (click)="onToggle(card)"></app-card>
+    <app-card
+      [card]="card"
+      [selected]="isSelected(card)"
+      [shortcut]="getShortcut(deck, card)"
+      (click)="onToggle(card)"
+    ></app-card>
   }
 </div>

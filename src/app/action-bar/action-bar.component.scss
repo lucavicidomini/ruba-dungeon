@@ -12,3 +12,24 @@
 button:not(:disabled):not(:hover) {
     border-color: #5a5;
 }
+
+.action-bar button {
+    .sc-only {
+        display: none;
+    }
+    
+    u {
+        text-decoration: none;
+    }
+}
+
+.action-bar.show-shortcuts button {
+    
+    .sc-only {
+        display: inline;
+    }
+
+    u {
+        text-decoration: underline;
+    }
+}

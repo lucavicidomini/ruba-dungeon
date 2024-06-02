@@ -25,6 +25,8 @@ export class HeroActionDeckComponent {
 
   @Input() selectedDeck: Deck = Deck.empty();
 
+  @Input() shortcuts: boolean | undefined | null = true;
+
   @Output() selectCards = new EventEmitter<Deck>();
 
   onSelect(newSelection: Deck) {

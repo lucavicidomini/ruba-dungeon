@@ -1,10 +1,13 @@
 @if (cover) {
   <div class="card covered">
-    <span>(hidden)</span>
+    <span class="tooltip">(hidden)</span>
   </div>
 } @else {
   <div [ngClass]="css" [class.selected]="selected">
-    <span>{{ card.value }} {{ suit }}{{ selected ? ' (selected)' : '' }}</span>
+    <span class="tooltip">{{ card.value }} {{ suit }}{{ selected ? ' (selected)' : '' }}</span>
+    @if (shortcut) {
+      <span class="shortcut">[<u>{{ shortcut }}</u>]</span>
+    }
   </div>
 }
 

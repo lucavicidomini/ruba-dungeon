@@ -17,6 +17,8 @@ export class CardComponent {
 
   @Input() selected = false;
 
+  @Input() shortcut: string | null | undefined = undefined;
+
   @Input() cover = false;
 
   get css() {

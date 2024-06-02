@@ -1,6 +1,6 @@
-    @if (goldSelectedDeck$ | async; as goldSelectedDeck) {
-      @if (heroActionSelectedDeck$ | async; as heroActionSelected) {
-        @if (aidSelectedDeck$ | async; as aidSelectedDeck) {
+@if (goldSelectedDeck$ | async; as goldSelectedDeck) {
+@if (heroActionSelectedDeck$ | async; as heroActionSelected) {
+@if (aidSelectedDeck$ | async; as aidSelectedDeck) {
 
 <div class="board" [ngClass]="layout">
     <!-- 1 - Dungeon Deck -->
@@ -15,6 +15,7 @@
         </div>
       </div>
     }
+
     <!-- 2 - Event Card -->
     <div class="event slot">
       <div class="heading">
@@ -39,6 +40,7 @@
         </div>
       </div>
     }
+
     <!-- 4 - Catacomb -->
     @if (catacombDeck$ | async; as catacomb) {
       <div class="catacomb slot">
@@ -93,6 +95,7 @@
         </div>
       </div>
     }
+
     <!-- 7 - Hero -->
     <div class="hero slot">
         @if (hero$ | async; as hero) {
@@ -117,6 +120,7 @@
         </div>
       </div>
     }
+
     <!-- HAC - Hero Action Card (select cards to keep or discard) -->
     @if (heroActionToDiscard$ | async; as heroAction) {
       <div class="hero-action slot">
@@ -124,10 +128,11 @@
           <div>Select actions to keep, then click continue</div>
         </div>
         <div class="body">
-          <app-selectable-deck [deck]="heroAction" [selectedDeck]="heroActionSelected" (selectCards)="onHeroActionSelect($event)"></app-selectable-deck>
+          <app-selectable-deck [deck]="heroAction" [shortcuts]="true" [selectedDeck]="heroActionSelected" (selectCards)="onHeroActionSelect($event)"></app-selectable-deck>
         </div>
       </div>
     }
+
     <!-- 8 - Gold (Cards are arranged horizontally) -->
     @if (goldDeck$ | async; as gold) {
       <div class="gold slot">
@@ -136,10 +141,11 @@
           <div>{{ gold.length }}</div>
         </div>
         <div class="body">
-          <app-selectable-deck [deck]="gold" [selectedDeck]="goldSelectedDeck" (selectCards)="onGoldSelect($event)"></app-selectable-deck>
+          <app-selectable-deck [deck]="gold" [shortcuts]="enableGoldShortcuts$ | async" [selectedDeck]="goldSelectedDeck" (selectCards)="onGoldSelect($event)"></app-selectable-deck>
         </div>
       </div>
     }
+
     <!-- 9 - Aid (Cards are arranged vertically) -->
     @if (aidDeck$ | async; as aid) {
       <div class="aid slot">

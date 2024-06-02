@@ -47,6 +47,10 @@ export class BoardComponent {
   dice$ = this.gameFacade.dice$;
 
   dungeonDeck$ = this.gameFacade.dungeonDeck$;
+
+  enableGoldShortcuts$ = this.status$.pipe(
+    map(status => status === GameStatus.CRAWL_ACT)
+  );
   
   enemy$ = this.gameFacade.enemy$;
 

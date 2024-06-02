@@ -1,6 +1,6 @@
 import { AsyncPipe, NgClass } from '@angular/common';
-import { Component } from '@angular/core';
-import { combineLatest, map } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { BehaviorSubject, Subject, combineLatest, filter, fromEvent, map, merge, takeUntil, tap, withLatestFrom } from 'rxjs';
 import { SuitLabels, Suits } from '../+models/card.model';
 import { Deck } from '../+models/deck.model';
 import { GameStatus, KeepDiscardAction } from '../+models/game.model';
@@ -9,6 +9,7 @@ import { GameFacade } from '../+state/game.facade';
 interface PlayButton {
   disabled: boolean,
   caption: string,
+  shortcut: string,
   suit?: Suits,
 }
 
@@ -19,13 +20,22 @@ interface PlayButton {
   templateUrl: './action-bar.component.html',
   styleUrl: './action-bar.component.scss'
 })
-export class ActionBarComponent {
+export class ActionBarComponent implements OnInit, OnDestroy {
+
+  playActionShortcuts: Record<Suits, string> = {
+    'clubs': 'l',
+    'coins': 'o',
+    'cups': 'u',
+    'swords': 'w'
+  };
 
   aidSelected$ = this.gameFacade.aidSelectedDeck$;
 
   heroAction$ = this.gameFacade.heroAction$;
 
   heroActionSelected$ = this.gameFacade.heroActionSelectedDeck$;
+
+  destroy$ = new Subject<void>();
  
   dice$ = this.gameFacade.dice$;
 
@@ -36,6 +46,10 @@ export class ActionBarComponent {
   eventCard$ = this.gameFacade.eventCard$;
   
   status$ = this.gameFacade.status$;
+
+  disableKeep$ = this.heroActionSelected$.pipe(
+    map(heroActionSelected => !heroActionSelected.length),
+  );
 
   disableSpend$ = combineLatest([this.eventCard$, this.goldSelected$]).pipe(
     map(([eventCard, goldSelected]) => eventCard && goldSelected.value < eventCard.value),
@@ -71,15 +85,17 @@ export class ActionBarComponent {
     const disablePlay = heroAction.length && !heroActionSelected.length;
     const aidSuit = aidSelected.peek()?.suit;
     const disableSuit = suit && aidSuit ? aidSuit !== suit : false;
+    const caption = SuitLabels[suit].replace(/^(.)(.)(.*)$/, '$1<u>$2</u>$3');
 
     return {
       disabled: disablePlay || disableSuit,
-      caption: `Play ${SuitLabels[suit]}`,
+      caption: `Play ${caption}`,
+      shortcut: this.playActionShortcuts[suit],
       suit,
     }
   }
 
-  mapEmptyButtons = (heroAction: Deck, buttons: PlayButton[]): PlayButton[] => heroAction.length ? buttons : ([{ disabled: false, caption: 'Play' }]);
+  mapEmptyButtons = (heroAction: Deck, buttons: PlayButton[]): PlayButton[] => heroAction.length ? buttons : ([{ disabled: false, caption: 'Play', shortcut: 'c' }]);
 
   playActions$ = combineLatest([this.aidSelected$, this.heroAction$, this.heroActionSelected$, this.status$]).pipe(
     map(([ aidSelected, heroAction, heroActionSelected, status ]) => ({ aidSelected, heroAction, heroActionSelected, status })),
@@ -93,6 +109,12 @@ export class ActionBarComponent {
     map(({ buttons, status }) => status === GameStatus.COMBAT ? buttons : []),
   );
 
+  playActionsShortcuts$ = this.playActions$.pipe(
+    map(playActions => Object.fromEntries(
+      playActions.map(({ shortcut, suit }) => [shortcut, suit])
+    )),
+  );
+
   showRevealAid$ = combineLatest([this.enemy$, this.status$]).pipe(
     map(([enemy, status]) => ({ enemyValue: enemy?.card.value ?? '', status })),
     map(({ enemyValue, status }) => status === GameStatus.ENEMY_REVEALED && enemyValue !== 10),
@@ -103,12 +125,20 @@ export class ActionBarComponent {
     map(({ enemyValue, status }) => status === GameStatus.ENEMY_REVEALED && enemyValue === 10),
   );
 
+  showShortcuts$ = merge(
+    fromEvent(document, 'keydown'),
+    fromEvent(document, 'keyup'),
+  ).pipe(
+    takeUntil(this.destroy$),
+    map(e => (e as KeyboardEvent).shiftKey),
+  );
+
   showSpend$ = combineLatest([this.eventCard$, this.status$]).pipe(
     map(([eventCard, status]) => status === GameStatus.CRAWL_ACT && eventCard?.suit !== 'coins'),
   );
 
   spendCaption$ = this.eventCard$.pipe(
-    map(eventCard => eventCard?.suit === 'swords' ? 'Bribe' : 'Buy'),
+    map(eventCard => eventCard?.suit === 'swords' ? 'ribe' : 'uy'),
   );
 
   constructor(
@@ -151,5 +181,87 @@ export class ActionBarComponent {
     this.gameFacade.spend();
   }
 
+  ngOnInit(): void {
+    fromEvent(document, 'keydown').pipe(
+      takeUntil(this.destroy$),
+      map(e => (e as KeyboardEvent).key.toLocaleLowerCase()),
+      filter(key => /^[a-z]$/.test(key)),
+      withLatestFrom(
+        this.disableKeep$,
+        this.disableSpend$,
+        this.playActions$,
+        this.playActionsShortcuts$,
+        this.showCollect$,
+        this.showCombat$,
+        this.showDice$,
+        this.showDiceFeedback$,
+        this.showDraw$,
+        this.showKeep$,
+        this.showRevealAid$,
+        this.showRevealCombat$,
+        this.showSpend$,
+      ),
+      tap(([
+        key,
+        disableKeep,
+        disableSpend,
+        playActions,
+        playActionsShortcuts,
+        showCollect,
+        showCombat,
+        showDice,
+        showDiceFeedback,
+        showDraw,
+        showKeep,
+        showRevealAid,
+        showRevealCombat,
+        showSpend,
+      ]) => {
+        switch (key) {
+          case 'a':
+            // <A>ccept aid
+            showRevealAid && this.onRevealedOk();
+            break;
+          case 'b':
+            // <B>uy, <B>ribe
+            showSpend && !disableSpend && this.onSpend();
+            break;
+          case 'c':
+            // <C>ombat (event card is swords)
+            showCombat && this.onCombat();
+            // <C>ollect
+            showCollect && this.onCollect();
+            // <C>ombat (tried to bribe a King)
+            showRevealCombat && this.onRevealedOk();
+            // If there is a single suit to play (or no suit at all), use "c" shortcut
+            playActions.length === 1 && this.onPlayAction(playActions[0].suit);
+            break;
+          case 'd':
+            // <D>raw
+            showDraw && this.onDraw();
+            // <D>ice
+            showDice && this.onDice();
+            // <D>ice got X
+            showDiceFeedback && this.onDiceFeedback();
+            // <D>iscard
+            showKeep && this.onKeep('discard');
+            break;
+          case 'k':
+          case 's':
+            // <K>eep <s>elected
+            showKeep && !disableKeep && this.onKeep('keep');
+            break;
+        }
+
+        // C<l>ubs, C<o>ins, C<u>ps, S<w>ord
+        playActionsShortcuts[key] && this.onPlayAction(playActionsShortcuts[key]);
+      })
+    ).subscribe();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
 }
