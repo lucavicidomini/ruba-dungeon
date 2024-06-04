@@ -11,6 +11,7 @@ import { GameWonPopupComponent } from '../game-won-popup/game-won-popup.componen
 import { MainMenuComponent } from '../main-menu/main-menu.component';
 import { SettingsPopupComponent } from '../settings-popup/settings-popup.component';
 import { AboutPopupComponent } from '../welcome-popup/about-popup.component';
+import { NewGamePopupComponent } from '../new-game-popup/new-game-popup.component';
 
 @Component({
   selector: 'app-game',
@@ -18,12 +19,13 @@ import { AboutPopupComponent } from '../welcome-popup/about-popup.component';
   imports: [
     AsyncPipe,
     JsonPipe,
+    AboutPopupComponent,
     ActionBarComponent,
     BoardComponent,
     GameOverPopupComponent,
     GameWonPopupComponent,
     MainMenuComponent,
-    AboutPopupComponent,
+    NewGamePopupComponent,
     SettingsPopupComponent,
   ],
   templateUrl: './game.component.html',
@@ -39,6 +41,8 @@ export class GameComponent {
 
   status$ = this.gameFacade.status$;
 
+  showAbout$ = this.menuFacade.about$;
+
   showGameOver$ = this.gameFacade.status$.pipe(
     map(status => status === GameStatus.GAME_OVER),
   );
@@ -47,9 +51,9 @@ export class GameComponent {
     map(status => status === GameStatus.GAME_WON),
   );
 
-  showSettings$ = this.menuFacade.settings$;
+  showNewGame$ = this.menuFacade.newGame$;
 
-  showAbout$ = this.menuFacade.about$;
+  showSettings$ = this.menuFacade.settings$;
 
   constructor(
     private gameFacade: GameFacade,

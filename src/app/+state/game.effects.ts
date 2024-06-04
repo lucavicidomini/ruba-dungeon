@@ -314,6 +314,12 @@ export class GamesEffects {
     }),
   ));
 
+  newGame$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.start),
+    tap(() => this.menuFacade.newGame(false)),
+    filter(() => false),
+  ));
+
   resolveCard$ = createEffect(() => this.actions$.pipe(
     ofType(GameActions.resolveCardByDice),
     withLatestFrom(

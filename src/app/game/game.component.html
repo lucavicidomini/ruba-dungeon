@@ -4,6 +4,10 @@
 
 <div class="game">
 
+  @if (showAbout$ | async) {
+    <app-about-popup></app-about-popup>
+  }
+  
   @if (showGameOver$ | async) {
     <app-game-over-popup (newGame)="onNewGame()"></app-game-over-popup>
   }
@@ -12,8 +16,8 @@
     <app-game-won-popup (newGame)="onNewGame()"></app-game-won-popup>
   }
 
-  @if (showAbout$ | async) {
-    <app-about-popup></app-about-popup>
+  @if (showNewGame$ | async) {
+    <app-new-game-popup (newGame)="onNewGame()"></app-new-game-popup>
   }
 
   @if (showSettings$ | async) {

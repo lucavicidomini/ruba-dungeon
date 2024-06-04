@@ -11,6 +11,8 @@ export class MenuFacade {
 
     about$ = this.store.select(MenuSelectors.selectAbout);
 
+    newGame$ = this.store.select(MenuSelectors.selectNewGame);
+
     layout$ = this.store.select(MenuSelectors.selectLayout);
 
     settings$ = this.store.select(MenuSelectors.selectSettings);
