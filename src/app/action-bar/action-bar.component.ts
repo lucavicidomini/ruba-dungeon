@@ -44,6 +44,8 @@ export class ActionBarComponent implements OnInit, OnDestroy {
   goldSelected$ = this.gameFacade.goldSelectedDeck$;
 
   eventCard$ = this.gameFacade.eventCard$;
+
+  obtainedRelic$ = this.gameFacade.obtainedRelicDeck$;
   
   status$ = this.gameFacade.status$;
 
@@ -144,6 +146,17 @@ export class ActionBarComponent implements OnInit, OnDestroy {
   constructor(
     private gameFacade: GameFacade,
   ) {}
+
+  caption(button: PlayButton, aidSelected: Deck, obtainedRelic: Deck) {
+    if (!button.suit) {
+      return button.caption;
+    }
+
+    const bonus = obtainedRelic.filterBySuit(button.suit).length + aidSelected.filterBySuit(button.suit).length;
+
+    const captionBonus = bonus ? ` (+${bonus})` : '';
+    return `${button.caption}${captionBonus}`;
+  }
 
   onDraw() {
     this.gameFacade.draw();

@@ -84,12 +84,16 @@
         </button>
     }
 
-    @for (button of playActions$ | async; track button) {
-        <button
-            [disabled]="button.disabled"
-            type="button"
-            (click)="onPlayAction(button.suit)"
-            [innerHTML]="button.caption"
-        ></button>
+    @if (aidSelected$ | async; as aidSelected) {
+        @if (obtainedRelic$ | async; as obtainedRelic) {
+            @for (button of playActions$ | async; track button) {
+                <button
+                    [disabled]="button.disabled"
+                    type="button"
+                    (click)="onPlayAction(button.suit)"
+                    [innerHTML]="caption(button, aidSelected, obtainedRelic)"
+                ></button>
+            }
+        }
     }
 </div>
