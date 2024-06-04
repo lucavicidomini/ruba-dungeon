@@ -3,6 +3,7 @@ import { Character } from '../+models/character.model';
 import { Deck } from '../+models/deck.model';
 import { GameStatus } from '../+models/game.model';
 import * as GameActions from './game.actions';
+import { Card } from '../+models/card.model';
 
 export const GAME_STATE_KEY = 'game';
 
@@ -34,6 +35,7 @@ export interface GameState {
   dice?: number,
   enemy?: Character,
   error: any;
+  eventCard?: Card,
   hero?: Character,
   status: GameStatus;
 }
@@ -61,6 +63,7 @@ export const initialState: GameState = {
   },
   enemy: undefined,
   error: undefined,
+  eventCard: undefined,
   hero: undefined,
   status: GameStatus.GAME_INIT,
 };
@@ -103,6 +106,7 @@ export const gameReducer = createReducer(
       event,
       gold,
     },
+    eventCard: undefined,
     status: GameStatus.CRAWL_READY,
   })),
 
@@ -139,6 +143,7 @@ export const gameReducer = createReducer(
       event,
       dungeon,
     },
+    eventCard: event.peek(),
     status: GameStatus.CRAWL_ACT,
   })),
 
@@ -208,6 +213,7 @@ export const gameReducer = createReducer(
 
   on(GameActions.resolvedCard, (state, { hpDelta }) => ({
     ...state,
+    eventCard: undefined,
     hero: state.hero?.updateHp(hpDelta),
     status: GameStatus.CRAWL_READY,
   })),
@@ -228,6 +234,7 @@ export const gameReducer = createReducer(
       relic,
     },
     enemy: undefined,
+    eventCard: undefined,
     status: GameStatus.CRAWL_READY,
   })),
 
