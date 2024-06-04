@@ -10,7 +10,7 @@ import { GameOverPopupComponent } from '../game-over-popup/game-over-popup.compo
 import { GameWonPopupComponent } from '../game-won-popup/game-won-popup.component';
 import { MainMenuComponent } from '../main-menu/main-menu.component';
 import { SettingsPopupComponent } from '../settings-popup/settings-popup.component';
-import { AboutPopupComponent } from '../welcome-popup/about-popup.component';
+import { AboutPopupComponent } from '../about-popup/about-popup.component';
 import { NewGamePopupComponent } from '../new-game-popup/new-game-popup.component';
 
 @Component({

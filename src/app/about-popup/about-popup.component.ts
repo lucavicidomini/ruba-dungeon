@@ -4,6 +4,7 @@ import { GameStatus } from '../+models/game.model';
 import { GameFacade } from '../+state/game.facade';
 import { MenuFacade } from '../+state/menu.facade';
 import { PopupComponent } from '../popup/popup.component';
+import { APP_VERSION } from '../version';
 
 @Component({
   selector: 'app-about-popup',
@@ -17,6 +18,8 @@ export class AboutPopupComponent {
   GameStatus = GameStatus;
 
   status$ = this.gameFacade.status$;
+
+  version = APP_VERSION;
 
   constructor(
     private gameFacade: GameFacade,
