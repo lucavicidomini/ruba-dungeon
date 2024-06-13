@@ -112,6 +112,11 @@ export class GameFacade {
         this.store.dispatch(GameActions.spend());
     }
 
+    /** User choose to skip a concoction */
+    skip() {
+        this.store.dispatch(GameActions.skip());
+    }
+
     /** Starts a new game */
     start() {
         this.store.dispatch(GameActions.start());

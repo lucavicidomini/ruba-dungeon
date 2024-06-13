@@ -154,6 +154,10 @@ export class LoggerService {
     this.append(`Hero has ${hp} HPs.`);
   }
 
+  skip(eventCard: Card) {
+    this.append(`Skipped ${this.card(eventCard)}.`);
+  }
+
   throwDice(dice: number) {
     this.append(`Thrown dice. Value is ${dice}.`);
   }

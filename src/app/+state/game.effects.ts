@@ -500,6 +500,22 @@ export class GamesEffects {
     }),
   ));
 
+  skip$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.skip),
+    withLatestFrom(
+      this.store.select(GameSelectors.selectEventCard),
+    ),
+    map(([, eventCard]) => {
+      if (!eventCard) {
+        return GameActions.error({ error: `Invalid state for action ${GameActions.spend.type}: eventCard=${eventCard}` });
+      }
+
+      this.logger.skip(eventCard);
+
+      return GameActions.skipped();
+    }),
+  ));
+
   spend$ = createEffect(() => this.actions$.pipe(
     ofType(GameActions.spend),
     withLatestFrom(

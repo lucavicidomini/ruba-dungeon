@@ -21,6 +21,11 @@ export const drawn = createAction(
     props<{ dungeon: Deck, event: Deck }>()
 );
 
+/** Dispatched after `skip` */
+export const skipped = createAction(
+    '[Game/Crawl] Skipped'
+);
+
 /** Dispatched after `spent` if event card is swords and selected gold is > event card value  */
 export const reveal = createAction(
     '[Game/Crawl] Reveal'

@@ -81,6 +81,10 @@ export class ActionBarComponent implements OnInit, OnDestroy {
     map(status => status === GameStatus.DISCARD_ACTION),
   );
 
+  showSkip$ = combineLatest([this.eventCard$, this.status$]).pipe(
+    map(([eventCard, status]) => status === GameStatus.CRAWL_ACT && eventCard?.suit === 'cups'),
+  );
+
   mapSelectedActionToSuit = (selectedActions: Deck) => Array.from(new Set(selectedActions.cards.map(card => card.suit)).values()).sort()
 
   mapSuitToButton = (aidSelected: Deck, heroAction: Deck, heroActionSelected: Deck, suit: Suits): PlayButton => {
@@ -194,6 +198,10 @@ export class ActionBarComponent implements OnInit, OnDestroy {
     this.gameFacade.spend();
   }
 
+  onSkip() {
+    this.gameFacade.skip();
+  }
+
   ngOnInit(): void {
     fromEvent(document, 'keydown').pipe(
       takeUntil(this.destroy$),
@@ -213,6 +221,7 @@ export class ActionBarComponent implements OnInit, OnDestroy {
         this.showRevealAid$,
         this.showRevealCombat$,
         this.showSpend$,
+        this.showSkip$,
       ),
       tap(([
         key,
@@ -229,6 +238,7 @@ export class ActionBarComponent implements OnInit, OnDestroy {
         showRevealAid,
         showRevealCombat,
         showSpend,
+        showSkip,
       ]) => {
         switch (key) {
           case 'a':
@@ -260,9 +270,14 @@ export class ActionBarComponent implements OnInit, OnDestroy {
             showKeep && this.onKeep('discard');
             break;
           case 'k':
+            // <K>eep <s>elected
+            showKeep && !disableKeep && this.onKeep('keep');
+            break;
+
           case 's':
             // <K>eep <s>elected
             showKeep && !disableKeep && this.onKeep('keep');
+            showSkip && this.onSkip();
             break;
         }
 

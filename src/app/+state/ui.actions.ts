@@ -61,6 +61,11 @@ export const spend = createAction(
     '[Game/UI] Spend'
 );
 
+/** Player choses to skip a concoction */
+export const skip = createAction(
+    '[Game/UI] Skip'
+);
+
 export const menuAbout = createAction(
     '[Game/UI] Menu About'
 );

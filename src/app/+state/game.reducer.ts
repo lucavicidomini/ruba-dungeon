@@ -257,6 +257,12 @@ export const gameReducer = createReducer(
     status: GameStatus.ENEMY_REVEALED,
   })),
 
+  on(GameActions.skipped, (state) => ({
+    ...state,
+    eventCard: undefined,
+    status: GameStatus.CRAWL_READY,
+  })),
+
   on(GameActions.started, (state, { decks, hero }) => ({
     ...state,
     combat: initialCombatState,
