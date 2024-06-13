@@ -2,7 +2,7 @@ import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { TutorialFacade } from '../+state/tutorial.facade';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { map } from 'rxjs';
+import { TutorialStep } from '../+models/tutorial.model';
 
 @Component({
   selector: 'app-tutorial-popup',
@@ -20,6 +20,17 @@ export class TutorialPopupComponent {
   constructor(
     private tutorialFacade: TutorialFacade,
   ) {}
+
+  format(step: TutorialStep) {
+    const { m } = step;
+    const v = Array.isArray(m) ? m : [m];
+    return v.map(line => {
+      if (typeof line == 'object' && 'content' in line) {
+        return `<p>${line.content}</p>`;
+      }
+      return `<p>${line}</p>`;
+    }).join('');
+  }
 
   onNext() {
     this.confirmExit = false;

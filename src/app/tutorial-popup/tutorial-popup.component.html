@@ -6,7 +6,7 @@
             </svg>
         </div>
 
-        <div [innerHTML]="step.m"></div>
+        <div [innerHTML]="format(step)"></div>
 
         @if (confirmExit) {
             <button type="button" (click)="onExitConfirm()" id="tutorial-exit-confirm">

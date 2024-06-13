@@ -1,5 +1,10 @@
+export interface TutorialMessage {
+  content: string;
+  style?: 'info' | 'easy'
+}
+
 export interface TutorialStep {
-  m: string;
+  m: string | TutorialMessage | (string | TutorialMessage)[];
   // If of element to user is obliged to click
   e?: string;
   // Id of element to highlight
@@ -13,7 +18,7 @@ const AUTO_CLICK_DISABLE = { m: '** STOP AUTO CLICK ***', autoclick: false };
 
 export const tutorialSteps: TutorialStep[] = [
   // Intro
-  { m: 'Welcome to Ruba Dungeon, a solitaire dungeon crawler-style card game.<br>I will teach you the basics of the game.' },
+  { m: ['Welcome to Ruba Dungeon, a solitaire dungeon crawler-style card game.', 'I will teach you the basics of the game.'] },
   { m: 'This tutorial covers the rules for EASY mode, but it will highlight differences with NORMAL mode.' },
   { m: 'Note: use the icon on top right of this window to drag it around and have a better view of the game board.' },
 
