@@ -270,6 +270,7 @@ export const gameReducer = createReducer(
       ...decks,
     },
     enemy: undefined,
+    eventCard: undefined,
     hero,
     status: GameStatus.CRAWL_READY,
   })),
