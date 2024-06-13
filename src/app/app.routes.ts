@@ -9,6 +9,9 @@ import { MENU_STATE_KEY, menuReducer } from './+state/menu.reducer';
 import { GameComponent } from './game/game.component';
 import { LoggerService } from './logger.service';
 import { MenuEffects } from './+state/menu.effects';
+import { TutorialEffects } from './+state/tutorial.effects';
+import { TutorialService } from './tutorial.service';
+import { TutorialFacade } from './+state/tutorial.facade';
 
 export const routes: Routes = [
     {
@@ -17,10 +20,12 @@ export const routes: Routes = [
         providers: [
             provideState({ name: GAME_STATE_KEY, reducer: gameReducer }),
             provideState({ name: MENU_STATE_KEY, reducer: menuReducer }),
-            provideEffects(GamesEffects, MenuEffects),
+            provideEffects(GamesEffects, MenuEffects, TutorialEffects),
             GameFacade,
             MenuFacade,
+            TutorialFacade,
             LoggerService,
+            TutorialService,
         ],
     },
     {

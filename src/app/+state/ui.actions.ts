@@ -51,7 +51,6 @@ export const heroActionSelected = createAction(
     props<{ heroActionSelected: Deck }>()
 );
 
-
 /** Bribe was successfull and player acknowledges the bribed enemy by clicking Ok */
 export const revealedOk = createAction(
     '[Game/UI] Revealed Ok'

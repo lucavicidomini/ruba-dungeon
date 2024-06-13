@@ -101,7 +101,7 @@
         @if (hero$ | async; as hero) {
             <div class="heading">
                 <div>The hero</div>
-                <div>{{ hero.hp }} HP</div>
+                <div class="hp">{{ hero.hp }} HP</div>
             </div>
             <div class="body">
                 <app-character [character]="hero"></app-character>

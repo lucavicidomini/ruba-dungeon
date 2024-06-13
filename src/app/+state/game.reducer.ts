@@ -3,7 +3,9 @@ import { Character } from '../+models/character.model';
 import { Deck } from '../+models/deck.model';
 import { GameStatus } from '../+models/game.model';
 import * as GameActions from './game.actions';
+import * as TutorialActions from './tutorial.actions';
 import { Card } from '../+models/card.model';
+import { TutorialStep } from '../+models/tutorial.model';
 
 export const GAME_STATE_KEY = 'game';
 
@@ -38,6 +40,9 @@ export interface GameState {
   eventCard?: Card,
   hero?: Character,
   status: GameStatus;
+
+  tutorialIndex?: number;
+  tutorialStep?: TutorialStep;
 }
 
 export const initialCombatState = {
@@ -66,10 +71,14 @@ export const initialState: GameState = {
   eventCard: undefined,
   hero: undefined,
   status: GameStatus.GAME_INIT,
+
+  tutorialIndex: undefined,
 };
 
 export const gameReducer = createReducer(
   initialState,
+
+  on(GameActions.reset, () => initialState),
 
   on(GameActions.aidSelected, (state, { aidSelected }) => ({
     ...state,
@@ -295,6 +304,26 @@ export const gameReducer = createReducer(
       dungeon,
       event,
     }
+  })),
+
+  on(TutorialActions.next, (state) => ({
+    ...state,
+    tutorialIndex: (state.tutorialIndex ?? 0) + 1,
+  })),
+
+  on(TutorialActions.nextReady, (state, { step }) => ({
+    ...state,
+    tutorialStep: step,
+  })),
+
+  on(TutorialActions.start, (state) => ({
+    ...state,
+    tutorialIndex: 0,
+  })),
+
+  on(TutorialActions.exit, (state) => ({
+    ...state,
+    tutorialIndex: undefined,
   })),
 
 );

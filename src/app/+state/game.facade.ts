@@ -103,6 +103,10 @@ export class GameFacade {
         this.store.dispatch(GameActions.revealedOk())
     }
 
+    reset() {
+        this.store.dispatch(GameActions.reset());
+    }
+
     /** User choose to spend coins to resolve an event card */
     spend() {
         this.store.dispatch(GameActions.spend());
@@ -114,7 +118,7 @@ export class GameFacade {
     }
 
     throwDice() {
-        this.store.dispatch(GameActions.throwDice())
+        this.store.dispatch(GameActions.throwDice());
     }
 
 }

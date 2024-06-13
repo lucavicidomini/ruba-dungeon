@@ -1,0 +1,38 @@
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    width: fit-content;
+    max-width: 50%;
+    margin: 0;
+    z-index: 255;
+    opacity: .75;
+    transition: opacity .25s ease-out;
+
+    &:hover {
+        opacity: 1;
+    }
+
+    & > div {
+        margin-bottom: 1rem;
+    }
+
+    #tutorial-exit-confirm {
+        color: #fa0;
+        border-color: #fa0;
+    }
+
+    #tutorial-exit:not(:hover),
+    #tutorial-exit-confirm:not(:hover) {
+        border-color: var(--rd-button-bg);
+        background-color: #fff;
+    }
+
+    button:disabled,
+    button:disabled:hover {
+        border-color: var(--rd-button-bg);
+        background-color: var(--rd-button-bg-hover);
+        color: var(--rd-button-bg);
+    }
+}

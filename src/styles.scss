@@ -63,24 +63,33 @@ button {
     left: 0;
     z-index: 99;
     background-color: #00000055;
+}
 
-    .popup {
-        background-color: #fafafa;
-        border: 1px solid #000;
-        box-shadow: 0 0 2rem #00000055;
-        padding: 2rem;
-        margin: 0 15%;
+.popup {
+    background-color: #fafafa;
+    border: 1px solid #000;
+    box-shadow: 0 0 2rem #00000055;
+    padding: 2rem;
+    margin: 0 15%;
 
-        text-align: center;
+    text-align: center;
 
-        button {
-            background-color: var(--rd-button-bg);
-            color: #000;
+    button {
+        background-color: var(--rd-button-bg);
+        color: #000;
 
-            &:hover {
-                background-color: var(--rd-button-bg-hover);
-                border-color: #000;
-            }
+        &:hover {
+            background-color: var(--rd-button-bg-hover);
+            border-color: #000;
         }
     }
+}
+
+#tutorial-highlight {
+    position: absolute;
+    border: 5px solid yellow;
+    border-radius: 5px;
+    transform: translate(-5px, -5px);
+    z-index: 127;
+    pointer-events: none;
 }

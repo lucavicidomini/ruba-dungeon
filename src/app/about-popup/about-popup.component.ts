@@ -5,6 +5,7 @@ import { GameFacade } from '../+state/game.facade';
 import { MenuFacade } from '../+state/menu.facade';
 import { PopupComponent } from '../popup/popup.component';
 import { APP_VERSION } from '../version';
+import { TutorialFacade } from '../+state/tutorial.facade';
 
 @Component({
   selector: 'app-about-popup',
@@ -23,7 +24,8 @@ export class AboutPopupComponent {
 
   constructor(
     private gameFacade: GameFacade,
-    private manuFacade: MenuFacade,
+    private menuFacade: MenuFacade,
+    private tutorialFacade: TutorialFacade,
   ) {}
 
   onNewGame() {
@@ -31,7 +33,11 @@ export class AboutPopupComponent {
   };
 
   onClose() {
-    this.manuFacade.about(false);
+    this.menuFacade.about(false);
+  }
+
+  onTutorial() {
+    this.tutorialFacade.tutorialStart();
   }
 
 }

@@ -12,6 +12,7 @@ import { MainMenuComponent } from '../main-menu/main-menu.component';
 import { SettingsPopupComponent } from '../settings-popup/settings-popup.component';
 import { AboutPopupComponent } from '../about-popup/about-popup.component';
 import { NewGamePopupComponent } from '../new-game-popup/new-game-popup.component';
+import { TutorialPopupComponent } from '../tutorial-popup/tutorial-popup.component';
 
 @Component({
   selector: 'app-game',
@@ -27,6 +28,7 @@ import { NewGamePopupComponent } from '../new-game-popup/new-game-popup.componen
     MainMenuComponent,
     NewGamePopupComponent,
     SettingsPopupComponent,
+    TutorialPopupComponent,
   ],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss'

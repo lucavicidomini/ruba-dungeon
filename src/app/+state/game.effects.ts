@@ -11,6 +11,7 @@ import { PartialDeckState } from './game.reducer';
 import * as GameSelectors from './game.selectors';
 import { LoggerService } from '../logger.service';
 import { MenuFacade } from './menu.facade';
+import { TutorialFacade } from './tutorial.facade';
 
 @Injectable()
 export class GamesEffects {
@@ -563,8 +564,11 @@ export class GamesEffects {
 
   start$ = createEffect(() => this.actions$.pipe(
     ofType(GameActions.start),
+    withLatestFrom(
+      this.tutorialFacade.index$,
+    ),
+    filter(([, tutorial]) => !this.DEBUG && tutorial === undefined),
     tap(() => this.menuFacade.about(false)),
-    filter(() => !this.DEBUG),
     map(() => {
         const dungeon = Deck.full();
         dungeon.shuffle();
@@ -579,6 +583,7 @@ export class GamesEffects {
   startDebug$ = createEffect(() => this.actions$.pipe(
     ofType(GameActions.start),
     filter(() => this.DEBUG),
+    tap(() => this.menuFacade.about(false)),
     map(() => {
       const hero = new Character(new Card(8, 'swords'), 12, 12);
 
@@ -620,10 +625,91 @@ export class GamesEffects {
     }),
   ));
 
+  startTutorial$ = createEffect(() => this.actions$.pipe(
+    ofType(GameActions.start),
+    withLatestFrom(
+      this.tutorialFacade.index$,
+    ),
+    filter(([, tutorial]) => tutorial !== undefined),
+    tap(() => this.menuFacade.about(false)),
+    map(() => {
+      const hero = new Character(new Card(9, 'swords'), 12, 12);
+
+      const character = Deck.empty();
+      character.push(new Card(10, 'clubs'));
+      character.push(new Card(8, 'cups'));
+      character.push(new Card(10, 'swords'));
+      character.reverse();
+
+      const relic = Deck.empty();
+      relic.push(new Card(1, 'clubs'));
+      relic.push(new Card(1, 'coins'));
+      relic.push(new Card(1, 'cups'));
+      relic.push(new Card(1, 'swords'));
+
+      const dungeon = Deck.empty();
+      // Crawling
+      dungeon.push(new Card(3, 'coins'));  // Collect
+      dungeon.push(new Card(2, 'coins'));  // Collect
+      dungeon.push(new Card(7, 'clubs'));  // Trap
+      dungeon.push(new Card(4, 'cups'));   // Concoction
+      dungeon.push(new Card(3, 'swords')); // Combat
+      // Combat 1 - Turn 1 - Hero actions
+      dungeon.push(new Card(4, 'coins')); 
+      dungeon.push(new Card(6, 'clubs'));
+      dungeon.push(new Card(3, 'clubs'));
+      // Combat 1 - Turn 1 - Enemy actions
+      dungeon.push(new Card(6, 'swords'));
+      dungeon.push(new Card(4, 'clubs'));
+      dungeon.push(new Card(5, 'swords'));
+      // Combat 1 - Turn 2 - Hero actions
+      dungeon.push(new Card(4, 'swords'));
+      dungeon.push(new Card(4, 'clubs'));
+      dungeon.push(new Card(4, 'coins'));
+      // Combat 1 - Turn 2 - Enemy actions
+      dungeon.push(new Card(3, 'coins'));  // Hidden
+      dungeon.push(new Card(2, 'cups'));
+      dungeon.push(new Card(7, 'cups'));
+      // Crawling
+      dungeon.push(new Card(5, 'coins'));  // Collect
+      dungeon.push(new Card(5, 'swords')); // Skip combat
+      dungeon.push(new Card(6, 'coins'));  // Collect
+      dungeon.push(new Card(7, 'coins'));  // Collect
+      dungeon.push(new Card(4, 'swords')); // Bribe (8 Cups)
+      dungeon.push(new Card(2, 'swords')); // Bribe (10 Sword)
+      // Combat 2 - Turn 1 - Hero actions
+      dungeon.push(new Card(2, 'cups'));
+      dungeon.push(new Card(3, 'clubs'));
+      dungeon.push(new Card(2, 'coins'));
+      // Combat 2 - Turn 1 - Enemy actions
+      dungeon.push(new Card(3, 'coins'));
+      dungeon.push(new Card(4, 'clubs'));
+      dungeon.push(new Card(7, 'swords'));
+      // Combat 2 - Turn 2 - Hero actions
+      dungeon.push(new Card(6, 'clubs'));
+      dungeon.push(new Card(5, 'coins'));
+      dungeon.push(new Card(3, 'cups'));
+      // Combat 2 - Turn 2 - Enemy actions
+      dungeon.push(new Card(2, 'clubs')); // hidden
+      dungeon.push(new Card(2, 'clubs')); // hidden
+      dungeon.push(new Card(2, 'clubs'));
+      
+      dungeon.reverse();
+      
+      const decks: PartialDeckState = { dungeon, character, relic };
+      return GameActions.started({ decks, hero });
+    }),
+  ));
+
   throwDice$ = createEffect(() => this.actions$.pipe(
     ofType(GameActions.throwDice),
-    map(() => {
-      const dice = Math.floor(Math.random() * 6 + 1);
+    withLatestFrom(
+      this.tutorialFacade.index$,
+    ),
+    map(([, tutorialIndex]) => {
+      const isTutorial = tutorialIndex !== undefined;
+
+      const dice = isTutorial ? 5 : Math.floor(Math.random() * 6 + 1);
 
       this.logger.throwDice(dice);
 
@@ -669,6 +755,7 @@ export class GamesEffects {
   constructor(
     private actions$: Actions,
     private menuFacade: MenuFacade,
+    private tutorialFacade: TutorialFacade,
     private logger: LoggerService,
     private store: Store<AppState>,
   ) {}

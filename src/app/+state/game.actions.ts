@@ -7,6 +7,7 @@ import { KeepDiscardAction } from '../+models/game.model';
 export * from './combat.actions';
 export * from './crawl.actions';
 export * from './ui.actions';
+export * from './tutorial.actions';
 
 /** Unexpected error in the game */
 export const error = createAction(
@@ -48,4 +49,9 @@ export const start = createAction(
 export const started = createAction(
     '[Game] Started',
     props<{ decks: PartialDeckState, hero: Character }>()
+);
+
+/** Starts a new game */
+export const reset = createAction(
+    '[Game] Reset'
 );
