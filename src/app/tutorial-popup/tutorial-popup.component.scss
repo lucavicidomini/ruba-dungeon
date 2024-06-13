@@ -24,8 +24,11 @@
 
     .drag-handle {
         position: absolute;
-        top: .5rem;
-        right: .5rem;
+        top: 0;
+        right: 0;
+        left: 0;
+        padding: .5rem .5rem 0 0;
+        text-align: right;
         cursor: move;
     }
 
