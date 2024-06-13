@@ -14,6 +14,8 @@ const AUTO_CLICK_DISABLE = { m: '** STOP AUTO CLICK ***', autoclick: false };
 export const tutorialSteps: TutorialStep[] = [
   // Intro
   { m: 'Welcome to Ruba Dungeon, a solitaire dungeon crawler-style card game.<br>I will teach you the basics of the game.' },
+  { m: 'This tutorial covers the rules for EASY mode, but it will highlight differences with NORMAL mode.' },
+  { m: 'Note: use the icon on top right of this window to drag it around and have a better view of the game board.' },
 
   // Game set up
   { m: 'Let’s start the game by setting up the board…' },

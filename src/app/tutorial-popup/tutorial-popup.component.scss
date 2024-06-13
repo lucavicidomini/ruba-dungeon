@@ -10,12 +10,23 @@
     opacity: .75;
     transition: opacity .25s ease-out;
 
+    &:not(.has-action) {
+        opacity: 1;
+    }
+
     &:hover {
         opacity: 1;
     }
 
     & > div {
         margin-bottom: 1rem;
+    }
+
+    .drag-handle {
+        position: absolute;
+        top: .5rem;
+        right: .5rem;
+        cursor: move;
     }
 
     #tutorial-exit-confirm {

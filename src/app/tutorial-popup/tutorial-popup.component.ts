@@ -1,12 +1,13 @@
 import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
-import { map } from 'rxjs';
 import { TutorialFacade } from '../+state/tutorial.facade';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-tutorial-popup',
   standalone: true,
-  imports: [AsyncPipe],
+  imports: [AsyncPipe, DragDropModule],
   templateUrl: './tutorial-popup.component.html',
   styleUrl: './tutorial-popup.component.scss'
 })
